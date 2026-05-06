@@ -1,0 +1,185 @@
+variable "vpcs" {
+  type = map(object({
+    # project_id = string
+    # network_name = string
+    routing_mode = optional(string, "GLOBAL")
+    description  = optional(string, "")
+    # auto_create_subnetworks                   = optional(bool, false)
+    delete_default_internet_gateway_routes    = optional(bool, false)
+    mtu                                       = optional(number, 0)
+    enable_ipv6_ula                           = optional(bool, false)
+    internal_ipv6_range                       = optional(string, null)
+    network_firewall_policy_enforcement_order = optional(string, null)
+    network_profile                           = optional(string, null)
+    bgp_best_path_selection_mode              = optional(string, "LEGACY")
+    bgp_always_compare_med                    = optional(bool, false)
+    bgp_inter_region_cost                     = optional(string, null)
+  }))
+}
+
+variable "subnetworks" {
+  type = map(object({
+    network_name               = string
+    description                = optional(string, null)
+    ip_cidr_range              = string
+    reserved_internal_range    = optional(string, null)
+    purpose                    = optional(string, "PRIVATE")
+    role                       = optional(string, null)
+    private_ip_google_access   = optional(bool, null)
+    private_ipv6_google_access = optional(string, null) // "DISABLE_GOOGLE_ACCESS"
+    region                     = string
+    secondary_ip_range = optional(map(object({
+      range_name              = string
+      ip_cidr_range           = string
+      reserved_internal_range = optional(string, null)
+    })), {})
+    ipv6_access_type     = optional(string, null)
+    external_ipv6_prefix = optional(string, null)
+    log_config = object({
+      aggregation_interval = optional(string, "INTERVAL_10_MIN")
+      flow_sampling        = optional(number, 0.5)
+      metadata             = optional(string, "INCLUDE_ALL_METADATA")
+      metadata_fields      = optional(list(string), [])
+      filter_expr          = optional(string, null)
+      stack_type           = optional(string, "IPV4_ONLY")
+    })
+    stack_type                       = optional(string, "IPV4_ONLY")
+    send_secondary_ip_range_if_empty = optional(bool, false)
+  }))
+}
+
+variable "cloud_routers" {
+  type = map(object({
+    name              = string
+    network_name      = string
+    description       = optional(string, null)
+    asn               = number
+    advertise_mode    = optional(string, "DEFAULT")
+    advertised_groups = optional(list(string), [])
+    advertised_ip_ranges = optional(map(object({ // pass only if advertise_mode is custom
+      range       = string
+      description = optional(string, null)
+    })), {})
+    keepalive_interval            = optional(number, 20)
+    identifier_range              = optional(string, null)
+    encrypted_interconnect_router = optional(bool, false)
+    region                        = string
+    router_interfaces = map(object({
+      interface_name          = string
+      ip_range                = optional(string, null)
+      ip_version              = optional(string, "IPV4")
+      vpn_tunnel              = optional(string, null)
+      subnetwork              = optional(string, null)
+      private_ip_address      = optional(string, null)
+      interconnect_attachment = optional(string, null)
+      redundant_interface     = optional(string, null)
+    }))
+    router_peers = map(object({
+      peer_name                 = string
+      interface                 = string
+      peer_asn                  = number
+      ip_address                = optional(string, null)
+      peer_ip_address           = string
+      advertised_route_priority = optional(number, 100)
+      advertise_mode            = optional(string, "DEFAULT")
+      advertised_groups         = optional(list(string), [])
+      advertised_ip_ranges = optional(map(object({
+        range       = string
+        description = string
+      })), {})
+      # custom_learned_route_priority = number
+      # custom_learned_ip_ranges = map(object({
+      #   range = string
+      # }))
+      bfd = optional(map(object({
+        session_initialization_mode = string
+        min_receive_interval        = number
+        min_transmit_interval       = number
+        multiplier                  = number
+      })), {})
+      enable                    = optional(bool, true)
+      router_appliance_instance = optional(string, null)
+      enable_ipv6               = optional(bool, false)
+      enable_ipv4               = optional(bool, true)
+      # ipv4_nexthop_address      = string
+      # ipv6_nexthop_address      = string
+      # peer_ipv4_nexthop_address = string
+      # peer_ipv6_nexthop_address = string
+      md5_authentication_key = optional(map(object({
+        name = string
+        key  = string
+      })), {})
+    }))
+  }))
+}
+
+variable "cloud_nats" {
+  type = map(object({
+    name                               = string
+    source_subnetwork_ip_ranges_to_nat = optional(string, "ALL_SUBNETWORKS_ALL_IP_RANGES")
+    router_name                        = string
+    nat_ip_allocate_option             = optional(string, "AUTO_ONLY")
+    # initial_nat_ips                     = optional(set(string), [])
+    nat_ips = optional(set(string), [])
+    # drain_nat_ips                       = optional(set(string), [])
+    min_ports_per_vm                    = optional(number, 64)
+    max_ports_per_vm                    = optional(number, null)
+    enable_dynamic_port_allocation      = optional(bool, false)
+    udp_idle_timeout_sec                = optional(number, 30)
+    icmp_idle_timeout_sec               = optional(number, 30)
+    tcp_established_idle_timeout_sec    = optional(number, 1200)
+    tcp_transitory_idle_timeout_sec     = optional(number, 30)
+    tcp_time_wait_timeout_sec           = optional(number, 120)
+    endpoint_types                      = optional(list(string), ["ENDPOINT_TYPE_VM"])
+    enable_endpoint_independent_mapping = optional(bool, false)
+    type                                = optional(string, "PUBLIC")
+    auto_network_tier                   = optional(string, "PREMIUM")
+    region                              = string
+    # project                             = string
+    subnetwork = optional(map(object({
+      name                     = string
+      source_ip_ranges_to_nat  = set(string)
+      secondary_ip_range_names = set(string)
+    })), {})
+    # log_config = map(object({
+    #   enable = bool
+    #   filter = string
+    # }))
+    enable = optional(bool, false)
+    filter = optional(string, "ALL")
+    rules = optional(map(object({
+      rule_number = number
+      description = optional(string, null)
+      match       = string
+      action = object({
+        source_nat_active_ips = list(string)
+        source_nat_drain_ips  = list(string)
+      })
+    })), {})
+  }))
+}
+
+variable "static_routes" {
+  type = map(object({
+    dest_range             = string
+    network_name           = string
+    description            = optional(string, null)
+    priority               = number
+    tags                   = optional(set(string), [])
+    next_hop_gateway       = optional(string, null)
+    next_hop_instance      = optional(string, null)
+    next_hop_ip            = optional(string, null)
+    next_hop_vpn_tunnel    = optional(string, null)
+    next_hop_ilb           = optional(string, null)
+    next_hop_instance_zone = optional(string, null)
+    resource_manager_tags  = optional(map(string), {})
+  }))
+}
+
+variable "subnet_iam_bindings" {
+  type = map(object({
+    subnetwork_name = string
+    role            = string
+    members         = list(string)
+  }))
+}
