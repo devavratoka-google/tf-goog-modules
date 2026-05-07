@@ -1,3 +1,5 @@
+env_project_id = "infra-proj-id"
+
 vpcs = {
   "tf-vpc-01" : {
     network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
