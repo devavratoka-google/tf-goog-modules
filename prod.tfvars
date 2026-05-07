@@ -191,3 +191,16 @@ dns_policies = {
     networks                  = ["tf-vpc-01"]
   }
 }
+
+addresses = {
+  "ext-ip-01" : {
+    address_type = "EXTERNAL"
+    region       = "us-central1"
+  },
+  "int-ip-01" : {
+    address_type    = "INTERNAL"
+    network_name    = "tf-vpc-01"
+    subnetwork_name = "tf-vpc-01-sn01-usc1"
+    region          = "us-central1"
+  }
+}

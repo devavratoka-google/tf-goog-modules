@@ -259,3 +259,18 @@ variable "dns_policies" {
   }))
   default = {}
 }
+
+variable "addresses" {
+  type = map(object({
+    description     = optional(string, null)
+    address         = optional(string, null)
+    address_type    = optional(string, "EXTERNAL")
+    purpose         = optional(string, null)
+    network_name    = optional(string, null)
+    subnetwork_name = optional(string, null)
+    region          = optional(string, null)
+    project         = optional(string, null)
+  }))
+  default = {}
+}
+

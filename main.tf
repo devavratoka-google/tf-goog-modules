@@ -233,3 +233,20 @@ module "dns_policies" {
   networks                  = [for n in each.value.networks : module.networks[n].network_self_link]
   project                   = coalesce(each.value.project, var.env_project_id)
 }
+
+module "addresses" {
+  depends_on = [module.networks, module.subnetworks]
+
+  source   = "./modules/addresses"
+  for_each = var.addresses
+
+  name         = each.key
+  description  = each.value.description
+  address      = each.value.address
+  address_type = each.value.address_type
+  purpose      = each.value.purpose
+  network      = each.value.network_name != null ? module.networks[each.value.network_name].network_self_link : null
+  subnetwork   = each.value.subnetwork_name != null ? module.subnetworks[each.value.subnetwork_name].subnets_self_link : null
+  region       = each.value.region
+  project      = coalesce(each.value.project, var.env_project_id)
+}
