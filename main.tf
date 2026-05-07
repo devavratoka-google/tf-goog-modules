@@ -175,7 +175,7 @@ module "vlan-attachments" {
 }
 
 resource "google_compute_shared_vpc_host_project" "this" {
-  project = local.project_id
+  project = var.env_project_id
 }
 
 module "shared_vpc" {
