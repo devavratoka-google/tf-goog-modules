@@ -9,9 +9,9 @@ vpcs = {
 }
 
 subnetworks = {
-  "tf-vpc-01-sn01-usc1" : {
+  "tf-vpc-01-sn01-use4" : {
     network_name             = "tf-vpc-01"
-    region                   = "us-central1"
+    region                   = "us-east4"
     ip_cidr_range            = "192.168.100.0/24"
     purpose                  = "PRIVATE"
     private_ip_google_access = true
@@ -30,10 +30,10 @@ subnetworks = {
 }
 
 cloud_routers = {
-  "cr-tf-vpc-01-usc1" : {
-    name           = "cr-tf-vpc-01-usc1"
+  "cr-tf-vpc-01-use4" : {
+    name           = "cr-tf-vpc-01-use4"
     network_name   = "tf-vpc-01"
-    region         = "us-central1"
+    region         = "us-east4"
     asn            = 64521
     advertise_mode = "CUSTOM"
     advertised_ip_ranges = {
@@ -53,10 +53,10 @@ cloud_routers = {
     router_interfaces = {}
     router_peers      = {}
   },
-  "cr-tf-vpc-01-usc1-ic" : {
-    name              = "cr-tf-vpc-01-usc1-ic"
+  "cr-tf-vpc-01-use4-ic" : {
+    name              = "cr-tf-vpc-01-use4-ic"
     network_name      = "tf-vpc-01"
-    region            = "us-central1"
+    region            = "us-east4"
     asn               = 16550
     advertise_mode    = "DEFAULT"
     router_interfaces = {}
@@ -65,10 +65,10 @@ cloud_routers = {
 }
 
 cloud_nats = {
-  "nat-cr-tf-vpc-01-usc1" : {
-    name        = "nat-cr-tf-vpc-01-usc1"
-    region      = "us-central1"
-    router_name = "cr-tf-vpc-01-usc1"
+  "nat-cr-tf-vpc-01-use4" : {
+    name        = "nat-cr-tf-vpc-01-use4"
+    region      = "us-east4"
+    router_name = "cr-tf-vpc-01-use4"
     enable      = true
     filter      = "TRANSLATIONS_ONLY"
   }
@@ -85,28 +85,28 @@ static_routes = {
 
 vlan_attachments = {
   # "vlan-att-a" = {
-  #   router_name              = "cr-tf-vpc-01-usc1-ic"
+  #   router_name              = "cr-tf-vpc-01-use4-ic"
   #   admin_enabled            = true
   #   edge_availability_domain = "AVAILABILITY_DOMAIN_1"
   # },
   # "vlan-att-b" = {
-  #   router_name              = "cr-tf-vpc-01-usc1-ic"
+  #   router_name              = "cr-tf-vpc-01-use4-ic"
   #   admin_enabled            = true
   #   edge_availability_domain = "AVAILABILITY_DOMAIN_2"
   # }
 }
 
 subnet_iam_bindings = {
-  "tf-vpc-01-sn01-usc1-user" : {
-    subnetwork_name = "tf-vpc-01-sn01-usc1"
+  "tf-vpc-01-sn01-use4-user" : {
+    subnetwork_name = "tf-vpc-01-sn01-use4"
     role            = "roles/compute.networkUser"
     members = [
       "user:example@example.com",
       "serviceAccount:svc-terraform@<proj-id>.iam.gserviceaccount.com"
     ]
   },
-  "tf-vpc-01-sn01-usc1-viewer" : {
-    subnetwork_name = "tf-vpc-01-sn01-usc1"
+  "tf-vpc-01-sn01-use4-viewer" : {
+    subnetwork_name = "tf-vpc-01-sn01-use4"
     role            = "roles/compute.networkViewer"
     members = [
       "serviceAccount:terraform-svc-account@<proj-id>.iam.gserviceaccount.com"
@@ -195,12 +195,12 @@ dns_policies = {
 addresses = {
   "ext-ip-01" : {
     address_type = "EXTERNAL"
-    region       = "us-central1"
+    region       = "us-east4"
   },
   "int-ip-01" : {
     address_type    = "INTERNAL"
     network_name    = "tf-vpc-01"
-    subnetwork_name = "tf-vpc-01-sn01-usc1"
-    region          = "us-central1"
+    subnetwork_name = "tf-vpc-01-sn01-use4"
+    region          = "us-east4"
   }
 }

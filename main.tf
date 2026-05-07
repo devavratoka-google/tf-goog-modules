@@ -3,7 +3,7 @@ module "networks" {
   source   = "./modules/vpc"
   for_each = var.vpcs
 
-  project_id   = local.project_id
+  project_id   = var.env_project_id
   network_name = each.key
   routing_mode = each.value.routing_mode
   description  = each.value.description
@@ -44,7 +44,7 @@ module "subnetworks" {
   send_secondary_ip_range_if_empty = each.value.send_secondary_ip_range_if_empty
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
-  project                          = module.networks[each.value.network_name].network_project // local.project_id
+  project                          = module.networks[each.value.network_name].network_project // var.env_project_id
 }
 
 module "cloud_routers" {

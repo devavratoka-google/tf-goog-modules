@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "google" {
-  project = local.project_id
+  project = var.env_project_id
   region  = local.primary_region
   zone    = local.primary_region_zonea
 }
