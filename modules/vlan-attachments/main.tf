@@ -23,5 +23,5 @@ resource "google_network_management_vpc_flow_logs_config" "this" {
   description             = "VPC Flow Logs for ${google_compute_interconnect_attachment.this.name}"
   flow_sampling           = var.flow_sampling
   metadata                = var.metadata
-  labels                  = var.flow_log_labels
+  # labels                  = var.flow_log_labels
 }

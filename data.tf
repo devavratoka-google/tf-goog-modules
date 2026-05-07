@@ -12,11 +12,11 @@ data "google_billing_account" "argolis" {
 
 // data.google_billing_account.argolis.id
 
-data "google_project" "project_int_demo" {
-  project_id = local.project_id
+data "google_project" "infra-project" {
+  project_id = var.env_project_id
 }
 
 data "google_compute_zones" "available" {
-  project = data.google_project.project_int_demo.project_id
+  project = data.google_project.infra-project.project_id
   region  = local.primary_region
 }

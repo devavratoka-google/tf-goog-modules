@@ -148,18 +148,43 @@ module "subnet_iam_bindings" {
   region     = module.subnetworks[each.value.subnetwork_name].subnets_region
 }
 
-# module "vlan-attachments" {
-#   depends_on               = [google_compute_router.cr-vlanatt-test]
-#   source                   = "./modules/vlan_attachment"
-#   router                   = "cr-vlanatt-test"
-#   name                     = "vlan-att-test-a"
-#   region                   = local.primary_region
-#   project                  = local.project_id
-#   admin_enabled            = true
-#   edge_availability_domain = "AVAILABILITY_DOMAIN_1"
-#   // Flow Logs
-#   vpc_flow_logs_config_id = "vpc-flowlog-vlan-att-test-a"
-#   state                   = "ENABLED"
-#   aggregation_interval    = "INTERVAL_10_MIN"
-#   flow_sampling           = 1.0
-# }
+module "vlan-attachments" {
+
+  depends_on = [module.cloud_routers]
+
+  source   = "./modules/vlan-attachments"
+  for_each = var.vlan_attachments
+
+  router                   = module.cloud_routers[each.value.router_name].router_name
+  name                     = each.key
+  region                   = module.cloud_routers[each.value.router_name].router_region
+  project                  = module.cloud_routers[each.value.router_name].router_project
+  admin_enabled            = each.value.admin_enabled
+  edge_availability_domain = each.value.edge_availability_domain
+  type                     = each.value.type
+  vlan_tag8021q            = each.value.vlan_tag8021q
+  description              = each.value.description
+  mtu                      = each.value.mtu
+  encryption               = each.value.encryption
+  labels                   = each.value.labels
+  vpc_flow_logs_config_id  = "${each.key}-vpc-flowlog"
+  state                    = each.value.state
+  aggregation_interval     = each.value.aggregation_interval
+  flow_sampling            = each.value.flow_sampling
+  metadata                 = each.value.metadata
+}
+
+resource "google_compute_shared_vpc_host_project" "this" {
+  project = local.project_id
+}
+
+module "shared_vpc" {
+
+  depends_on = [module.networks]
+
+  source   = "./modules/shared_vpc"
+  for_each = var.shared_vpcs
+
+  host_project    = google_compute_shared_vpc_host_project.this.project
+  service_project = each.key
+}

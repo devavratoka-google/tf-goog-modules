@@ -1,3 +1,7 @@
+variable "env_project_id" {
+  type = string
+}
+
 variable "vpcs" {
   type = map(object({
     # project_id = string
@@ -176,6 +180,24 @@ variable "static_routes" {
   }))
 }
 
+variable "vlan_attachments" {
+  type = map(object({
+    router_name              = string
+    admin_enabled            = bool
+    description              = optional(string, null)
+    mtu                      = optional(number, 8896)
+    edge_availability_domain = string
+    type                     = optional(string, "PARTNER")
+    vlan_tag8021q            = optional(string, null)
+    encryption               = optional(string, "NONE")
+    labels                   = optional(map(string), {})
+    state                    = optional(string, "ENABLED")
+    aggregation_interval     = optional(string, "INTERVAL_10_MIN")
+    flow_sampling            = optional(number, 1.0)
+    metadata                 = optional(string, "INCLUDE_ALL_METADATA")
+  }))
+}
+
 variable "subnet_iam_bindings" {
   type = map(object({
     subnetwork_name = string
@@ -183,3 +205,9 @@ variable "subnet_iam_bindings" {
     members         = list(string)
   }))
 }
+
+variable "shared_vpcs" {
+  type = map(object({
+  }))
+}
+

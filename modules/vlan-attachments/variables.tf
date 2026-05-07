@@ -33,7 +33,7 @@ variable "description" {
 
 variable "mtu" {
   description = "Maximum Transmission Unit (MTU), in bytes, of packets passing through this interconnect attachment. Valid values are 1440, 1460, 1500, and 8896. If not specified, the value will default to 1440."
-  type        = string
+  type        = number
   default     = 8896
 }
 
@@ -94,8 +94,8 @@ variable "metadata" {
   default     = "INCLUDE_ALL_METADATA"
 }
 
-variable "flow_log_labels" {
-  description = "Labels for this resource. These can only be added or modified by the setLabels method. Each label key/value pair must comply with RFC1035. Label values may be empty."
-  type        = map(string)
-  default     = {}
-}
+# variable "flow_log_labels" {
+#   description = "Labels for this resource. These can only be added or modified by the setLabels method. Each label key/value pair must comply with RFC1035. Label values may be empty."
+#   type        = map(string)
+#   default     = {}
+# }

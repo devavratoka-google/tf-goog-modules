@@ -9,3 +9,7 @@ output "router_link" {
 output "router_project" {
   value = google_compute_router.this.project
 }
+
+output "router_region" {
+  value = google_compute_router.this.region
+}
