@@ -188,3 +188,18 @@ module "shared_vpc" {
   host_project    = google_compute_shared_vpc_host_project.this.project
   service_project = each.key
 }
+
+module "ncc_hub" {
+  source          = "./modules/ncc_hub"
+  depends_on      = [module.networks]
+  for_each        = var.ncc_hubs
+  name            = each.key
+  description     = each.value.description
+  labels          = each.value.labels
+  preset_topology = each.value.preset_topology
+  #  policy_mode = each.value.policy_mode
+  export_psc = each.value.export_psc
+  project    = var.env_project_id
+  ncc_groups = each.value.ncc_groups
+
+}

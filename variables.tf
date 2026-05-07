@@ -211,3 +211,15 @@ variable "shared_vpcs" {
   }))
 }
 
+variable "ncc_hubs" {
+  type = map(object({
+    description     = optional(string, null)
+    labels          = optional(map(string), {})
+    preset_topology = optional(string, "STAR")
+    export_psc      = optional(bool, true)
+    ncc_groups = optional(map(object({
+      description          = string
+      auto_accept_projects = list(string)
+    })), {})
+  }))
+}

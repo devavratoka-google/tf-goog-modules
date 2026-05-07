@@ -119,3 +119,20 @@ shared_vpcs = {
   "<svc-proj-02>" : {},
   "<svc-proj-03>" : {}
 }
+
+ncc_hubs = {
+  "tf-hub-01" : {
+    ncc_groups = {
+      "center" : {
+        description          = "Central group for core services"
+        auto_accept_projects = []
+      },
+      "edge" : {
+        description          = "Edge group for workload VPCs"
+        auto_accept_projects = []
+      }
+    }
+  },
+  "tf-hub-02" : {
+  }
+}
