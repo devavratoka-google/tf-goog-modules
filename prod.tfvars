@@ -100,20 +100,20 @@ subnet_iam_bindings = {
     role            = "roles/compute.networkUser"
     members = [
       "user:example@example.com",
-      "serviceAccount:svc-terraform@proj-0628.iam.gserviceaccount.com"
+      "serviceAccount:svc-terraform@<proj-id>.iam.gserviceaccount.com"
     ]
   },
   "tf-vpc-01-sn01-usc1-viewer" : {
     subnetwork_name = "tf-vpc-01-sn01-usc1"
     role            = "roles/compute.networkViewer"
     members = [
-      "serviceAccount:terraform-svc-account@proj-060625.iam.gserviceaccount.com"
+      "serviceAccount:terraform-svc-account@<proj-id>.iam.gserviceaccount.com"
     ]
   }
 }
 
 shared_vpcs = {
-  "proj-oka-ext-demo" : {},
-  "proj-0628" : {},
-  "proj-060625" : {},
+  "<svc-proj-01>" : {},
+  "<svc-proj-02>" : {},
+  "<svc-proj-03>" : {}
 }
