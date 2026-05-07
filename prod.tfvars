@@ -136,3 +136,58 @@ ncc_hubs = {
   "tf-hub-02" : {
   }
 }
+
+dns_zones = {
+  "gcp-example-com" : {
+    dns_name    = "gcp.example.com."
+    description = "Private zone for GCP"
+    visibility  = "private"
+    networks    = ["tf-vpc-01"]
+    record_sets = {
+      "test-a" : {
+        name    = "test.gcp.example.com."
+        type    = "A"
+        ttl     = 300
+        rrdatas = ["10.100.1.10"]
+      }
+    }
+  },
+
+  "example-com-forwarding" : {
+    dns_name    = "example.com."
+    description = "Forwarding zone to on-prem"
+    visibility  = "private"
+    networks    = ["tf-vpc-01"]
+    forwarding_config = {
+      target_name_servers = [
+        {
+          ipv4_address    = "10.20.30.1"
+          forwarding_path = "default"
+        },
+        {
+          ipv4_address    = "10.20.30.2"
+          forwarding_path = "default"
+        }
+      ]
+    }
+  },
+
+  "peering-zone-example" : {
+    dns_name    = "peering.example.com."
+    description = "DNS Peering zone"
+    visibility  = "private"
+    networks    = ["tf-vpc-02"]
+    peering_config = {
+      target_network = "https://www.googleapis.com/compute/v1/projects/infra-proj-id/global/networks/tf-vpc-01"
+    }
+  }
+}
+
+
+dns_policies = {
+  "inbound-policy-tf-vpc-01" : {
+    enable_inbound_forwarding = true
+    enable_logging            = true
+    networks                  = ["tf-vpc-01"]
+  }
+}
