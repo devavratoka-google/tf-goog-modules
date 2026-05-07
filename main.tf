@@ -201,5 +201,35 @@ module "ncc_hub" {
   export_psc = each.value.export_psc
   project    = var.env_project_id
   ncc_groups = each.value.ncc_groups
+}
 
+module "dns_zones" {
+  depends_on = [module.networks]
+
+  source   = "./modules/dns"
+  for_each = var.dns_zones
+
+  name              = each.key
+  dns_name          = each.value.dns_name
+  description       = each.value.description
+  visibility        = each.value.visibility
+  networks          = [for n in each.value.networks : module.networks[n].network_self_link]
+  forwarding_config = each.value.forwarding_config
+  peering_config    = each.value.peering_config
+  record_sets       = each.value.record_sets
+  project           = coalesce(each.value.project, var.env_project_id)
+}
+
+
+module "dns_policies" {
+  depends_on = [module.networks]
+
+  source   = "./modules/dns_policy"
+  for_each = var.dns_policies
+
+  name                      = each.key
+  enable_inbound_forwarding = each.value.enable_inbound_forwarding
+  enable_logging            = each.value.enable_logging
+  networks                  = [for n in each.value.networks : module.networks[n].network_self_link]
+  project                   = coalesce(each.value.project, var.env_project_id)
 }

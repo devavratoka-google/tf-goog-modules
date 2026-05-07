@@ -223,3 +223,39 @@ variable "ncc_hubs" {
     })), {})
   }))
 }
+
+variable "dns_zones" {
+  type = map(object({
+    dns_name    = string
+    description = optional(string, "Managed by Terraform")
+    visibility  = optional(string, "private")
+    networks    = optional(list(string), [])
+    forwarding_config = optional(object({
+      target_name_servers = list(object({
+        ipv4_address    = string
+        forwarding_path = optional(string, "default")
+      }))
+    }), null)
+    peering_config = optional(object({
+      target_network = string
+    }), null)
+    record_sets = optional(map(object({
+      name    = string
+      type    = string
+      ttl     = number
+      rrdatas = list(string)
+    })), {})
+    project = optional(string, null)
+  }))
+  default = {}
+}
+
+variable "dns_policies" {
+  type = map(object({
+    enable_inbound_forwarding = optional(bool, false)
+    enable_logging            = optional(bool, false)
+    networks                  = optional(list(string), [])
+    project                   = optional(string, null)
+  }))
+  default = {}
+}
