@@ -299,3 +299,27 @@ module "secure_tags" {
   iam_viewer_members = each.value.iam_viewer_members
   iam_user_members   = each.value.iam_user_members
 }
+
+module "pscendpoints" {
+  source   = "./modules/pscendpoints"
+  for_each = var.pscendpoints
+
+  project      = var.env_project_id
+  network      = "projects/${var.env_project_id}/global/networks/${each.value.network_name}"
+  subnetwork   = "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}"
+  region       = each.value.region
+  address_name = each.key
+  address      = each.value.address
+
+  target_google_api                       = each.value.target_google_api
+  access_type                             = each.value.access_type
+  regional_endpoint_subnetwork            = each.value.regional_endpoint_subnetwork
+  regional_endpoint_address_use_self_link = each.value.regional_endpoint_address_use_self_link
+
+  target_service_attachment = each.value.target_service_attachment
+  allow_psc_global_access   = each.value.allow_psc_global_access
+  no_automate_dns_zone      = each.value.no_automate_dns_zone
+  forwarding_rule_name      = each.value.forwarding_rule_name
+
+  service_attachment = each.value.service_attachment
+}

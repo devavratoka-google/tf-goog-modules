@@ -347,3 +347,37 @@ variable "secure_tags" {
     }))
   }))
 }
+
+variable "pscendpoints" {
+  type = map(object({
+    network_name                            = string
+    subnetwork_name                         = string
+    region                                  = string
+    address                                 = optional(string, null)
+    target_google_api                       = optional(string, null)
+    access_type                             = optional(string, "REGIONAL")
+    regional_endpoint_subnetwork            = optional(bool, false)
+    regional_endpoint_address_use_self_link = optional(bool, false)
+    target_service_attachment               = optional(string, null)
+    allow_psc_global_access                 = optional(bool, false)
+    no_automate_dns_zone                    = optional(bool, false)
+    forwarding_rule_name                    = optional(string, null)
+    service_attachment = optional(object({
+      name                  = string
+      description           = optional(string, null)
+      target_service        = string
+      nat_subnets           = list(string)
+      connection_preference = string
+      enable_proxy_protocol = optional(bool, false)
+      reconcile_connections = optional(bool, false)
+      domain_names          = optional(list(string), [])
+      consumer_reject_lists = optional(list(string), [])
+      consumer_accept_lists = optional(list(object({
+        project_id_or_num = string
+        connection_limit  = number
+      })), [])
+    }), null)
+  }))
+  default     = {}
+  description = "Map of PSC Endpoints configurations."
+}

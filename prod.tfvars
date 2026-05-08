@@ -1,3 +1,5 @@
+#env_project_id = "infra-proj-id"
+
 env_project_id = "infra-proj-id"
 
 vpcs = {
@@ -271,14 +273,14 @@ secure_tags = {
   #     },
   #   }
   #   iam_viewer_members = []
-  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  #   iam_user_members   = ["serviceAccount:iac-deployer@infra-proj-id.iam.gserviceaccount.com"]
   # },
   # "tag-fw-nw-vpc" : {   // example of nw-level tag for ngfw firewall policies
   #   parent      = "projects/506688492995"
   #   short_name  = "tag-fw-nw-vpc"
   #   description = "test nw tag"
   #   purpose_data = {
-  #     network = "proj-oka-int-demo/tf-vpc-01"
+  #     network = "infra-proj-id/tf-vpc-01"
   #   }
   #   tag_values = {
   #     "value01" : {
@@ -287,6 +289,57 @@ secure_tags = {
   #     },
   #   }
   #   iam_viewer_members = []
-  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  #   iam_user_members   = ["serviceAccount:iac-deployer@infra-proj-id.iam.gserviceaccount.com"]
   # },
+}
+
+pscendpoints = {
+  "psc-endpoint-01" : {
+    network_name      = "tf-vpc-01"
+    subnetwork_name   = "tf-vpc-01-sn01-usc1"
+    region            = "us-central1"
+    address           = "192.168.100.10"
+    target_google_api = "storage.us-central1.rep.googleapis.com"
+    access_type       = "REGIONAL"
+  },
+
+  "psc-endpoint-01-global" : {
+    network_name                            = "tf-vpc-01"
+    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
+    region                                  = "us-central1"
+    address                                 = "192.168.100.13"
+    target_google_api                       = "storage.us-central1.rep.googleapis.com"
+    regional_endpoint_subnetwork            = true
+    regional_endpoint_address_use_self_link = true
+    access_type                             = "GLOBAL"
+  }
+
+  # Example for consumer forwarding rule:
+  # "psc-consumer-forwarding-rule-01" : {
+  #   network_name              = "tf-vpc-01"
+  #   subnetwork_name           = "tf-vpc-01-sn01-usc1"
+  #   region                    = "us-central1"
+  #   address                   = "192.168.100.12"
+  #   forwarding_rule_name      = "psc-fr-consumer-01"
+  #   target_service_attachment = "projects/producer-project-id/regions/us-central1/serviceAttachments/sa-producer-01"
+  #   allow_psc_global_access   = false
+  #   no_automate_dns_zone      = true
+  # }
+
+  # Example producer service attachment:
+  # "psc-service-attachment-01" : {
+  #   network_name    = "vpc-security"
+  #   subnetwork_name = "vpc-security-sn-usc1"
+  #   region          = "us-central1"
+  #   address         = "172.16.1.30"
+  #
+  #   service_attachment = {
+  #     name                  = "sa-producer-01"
+  #     description           = "Example PSC producer service attachment"
+  #     target_service        = "projects/infra-proj-id/regions/us-central1/forwardingRules/producer-ilb"
+  #     nat_subnets           = ["projects/infra-proj-id/regions/us-central1/subnetworks/psc-nat-sn-usc1"]
+  #     connection_preference = "ACCEPT_AUTOMATIC"
+  #     enable_proxy_protocol = false
+  #   }
+  # }
 }
