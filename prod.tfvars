@@ -312,7 +312,19 @@ pscendpoints = {
     regional_endpoint_subnetwork            = true
     regional_endpoint_address_use_self_link = true
     access_type                             = "GLOBAL"
-  }
+  },
+
+  "psc-all-apis-global" : {
+    network_name                            = "tf-vpc-01"
+    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
+    region                                  = "us-central1"
+    address                                 = "192.168.200.10"
+    target_google_api                       = "all-apis"
+    regional_endpoint_subnetwork            = true
+    regional_endpoint_address_use_self_link = true
+    access_type                             = "GLOBAL"
+    forwarding_rule_name                    = "pscallapis"
+  },
 
   # Example for consumer forwarding rule:
   # "psc-consumer-forwarding-rule-01" : {
