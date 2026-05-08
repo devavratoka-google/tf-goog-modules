@@ -83,6 +83,17 @@ static_routes = {
   }
 }
 
+policy_based_routes = {
+  "tf-pbr-01" : {
+    network_name    = "tf-vpc-01"
+    next_hop_ilb_ip = "10.0.0.10"
+    priority        = 1000
+    src_range       = "1.1.1.1/32"
+    dest_range      = "2.2.2.2/32"
+  }
+}
+
+
 vlan_attachments = {
   # "vlan-att-a" = {
   #   router_name              = "cr-tf-vpc-01-use4-ic"
@@ -203,4 +214,79 @@ addresses = {
     subnetwork_name = "tf-vpc-01-sn01-use4"
     region          = "us-east4"
   }
+}
+
+hierarchical_fw_policies = {
+  # "tf-hfw-pol-001" = {
+  #   short_name  = "tf-hfw-pol-001"
+  #   description = "Hierarchical Firewall Policy 001"
+  #   parent      = "organizations/340934488751"
+  #   fw_policy_associations = {
+  #     "tf-hfw-pol-001-assoc-cxdemo-02" = {
+  #       association_name  = "tf-hfw-pol-001-assoc-cxdemo-02"
+  #       attachment_target = "folders/597023195559"
+  #     },
+  #   }
+  #   fw_policy_rules = {
+  #     "1011" = { # Allow IAP Traffic to OST: iap-ssh, iap-rdp
+  #       priority                = 1011
+  #       direction               = "INGRESS"
+  #       action                  = "allow"
+  #       rule_name               = "1011"
+  #       disabled                = false
+  #       description             = "Allow IAP Traffic to OST iap-ssh, iap-rdp"
+  #       enable_logging          = true
+  #       target_service_accounts = []
+  #       target_resources        = []
+  #       tls_inspect             = false
+  #       target_secure_tags = [
+  #         "tagValues/281475312690663",
+  #       ]
+  #       match = {
+  #         src_ip_ranges = ["35.235.240.0/20"]
+  #         layer4_configs = [
+  #           {
+  #             ip_protocol = "tcp"
+  #             ports       = ["3389", "22"]
+  #           },
+  #         ]
+  #       }
+  #     },
+  #   }
+  # }
+}
+
+secure_tags = {
+  # "tag-fw-org-global" : {   // example of org-level tag for ngfw firewall policies
+  #   parent      = "organizations/340934488751"
+  #   short_name  = "tag-fw-org-global"
+  #   description = "test org tag"
+  #   purpose_data = {
+  #     "organization" = "340934488751"
+  #   }
+  #   tag_values = {
+  #     "value01" : {
+  #       tagvalue_short_name  = "value01"
+  #       tagvalue_description = "value01"
+  #     },
+  #   }
+  #   iam_viewer_members = []
+  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  # },
+  # "tag-fw-nw-vpc" : {   // example of nw-level tag for ngfw firewall policies
+  #   parent      = "projects/506688492995"
+  #   short_name  = "tag-fw-nw-vpc"
+  #   description = "test nw tag"
+  #   purpose_data = {
+  #     network = "proj-oka-int-demo/tf-vpc-01"
+  #   }
+  #   tag_values = {
+  #     "value01" : {
+  #       tagvalue_short_name  = "value01"
+  #       tagvalue_description = "value01"
+  #     },
+  #   }
+  #   iam_viewer_members = []
+  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  # },
 }

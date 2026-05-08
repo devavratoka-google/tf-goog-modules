@@ -180,6 +180,20 @@ variable "static_routes" {
   }))
 }
 
+variable "policy_based_routes" {
+  type = map(object({
+    network_name          = string
+    next_hop_other_routes = optional(string, null)
+    next_hop_ilb_ip       = optional(string, null)
+    priority              = number
+    virtual_machine_tags  = optional(list(string), [])
+    src_range             = string
+    dest_range            = string
+    ip_protocol           = optional(string, "ALL")
+    protocol_version      = optional(string, "IPV4")
+  }))
+}
+
 variable "vlan_attachments" {
   type = map(object({
     router_name              = string
@@ -274,3 +288,62 @@ variable "addresses" {
   default = {}
 }
 
+variable "hierarchical_fw_policies" {
+  type = map(object({
+    parent      = string // Required
+    short_name  = string // Required
+    description = optional(string, null)
+    fw_policy_associations = map(object({
+      attachment_target = string
+      association_name  = string
+    }))
+    fw_policy_rules = map(object({
+      priority           = number
+      direction          = string
+      action             = string // "allow", "deny", "goto_next" and "apply_security_profile_group"
+      rule_name          = optional(string, null)
+      disabled           = optional(bool, false)
+      description        = optional(string, null)
+      enable_logging     = optional(bool, false)
+      target_secure_tags = optional(list(string))
+      match = object({
+        src_ip_ranges             = optional(list(string), [])
+        src_fqdns                 = optional(list(string), [])
+        src_region_codes          = optional(list(string), [])
+        src_threat_intelligences  = optional(list(string), [])
+        src_address_groups        = optional(list(string), [])
+        dest_ip_ranges            = optional(list(string), [])
+        dest_fqdns                = optional(list(string), [])
+        dest_region_codes         = optional(list(string), [])
+        dest_threat_intelligences = optional(list(string), [])
+        dest_address_groups       = optional(list(string), [])
+        src_secure_tags           = optional(list(string), [])
+        layer4_configs = optional(list(object({
+          ip_protocol = string
+          ports       = optional(list(string), [])
+        })))
+      })
+      security_profile_group  = optional(string, null)
+      tls_inspect             = optional(bool, false)
+      target_service_accounts = optional(list(string), [])
+      target_resources        = optional(list(string), [])
+
+    }))
+  }))
+  # default = {}
+}
+
+variable "secure_tags" {
+  type = map(object({
+    parent             = string
+    short_name         = string
+    description        = string
+    purpose_data       = map(string)
+    iam_viewer_members = optional(list(string), [])
+    iam_user_members   = optional(list(string), [])
+    tag_values = map(object({
+      tagvalue_short_name  = string
+      tagvalue_description = string
+    }))
+  }))
+}

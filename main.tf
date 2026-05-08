@@ -134,6 +134,26 @@ module "static_routes" {
   resource_manager_tags  = each.value.resource_manager_tags
 }
 
+module "policy_based_routes" {
+
+  depends_on = [module.networks]
+
+  source   = "./modules/policy_based_routes"
+  for_each = var.policy_based_routes
+
+  name                  = each.key
+  network               = module.networks[each.value.network_name].network_id
+  next_hop_other_routes = each.value.next_hop_other_routes
+  next_hop_ilb_ip       = each.value.next_hop_ilb_ip
+  priority              = each.value.priority
+  project               = module.networks[each.value.network_name].network_project
+  virtual_machine_tags  = each.value.virtual_machine_tags
+  src_range             = each.value.src_range
+  dest_range            = each.value.dest_range
+  ip_protocol           = each.value.ip_protocol
+  protocol_version      = each.value.protocol_version
+}
+
 module "subnet_iam_bindings" {
 
   depends_on = [module.subnetworks]
@@ -249,4 +269,33 @@ module "addresses" {
   subnetwork   = each.value.subnetwork_name != null ? module.subnetworks[each.value.subnetwork_name].subnets_self_link : null
   region       = each.value.region
   project      = coalesce(each.value.project, var.env_project_id)
+}
+
+module "hierarchical_fw_policy" {
+  source   = "./modules/hfw_pol_rules"
+  for_each = var.hierarchical_fw_policies
+
+  // Cloud NGFW Hierarchical Firewall Policy
+  parent      = each.value.parent
+  short_name  = each.value.short_name
+  description = each.value.description
+
+  // Cloud NGFW Hierarchical Firewall Policy Associations
+  fw_policy_associations = each.value.fw_policy_associations
+
+  // Cloud NGFW Hierarchical Firewall Hierarchical FW Policy Rule
+  fw_policy_rules = each.value.fw_policy_rules
+
+}
+
+module "secure_tags" {
+  source             = "./modules/secure_tags"
+  for_each           = var.secure_tags
+  parent             = each.value.parent
+  short_name         = each.value.short_name
+  description        = each.value.description
+  purpose_data       = each.value.purpose_data
+  tag_values         = each.value.tag_values
+  iam_viewer_members = each.value.iam_viewer_members
+  iam_user_members   = each.value.iam_user_members
 }

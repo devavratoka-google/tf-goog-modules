@@ -1,5 +1,4 @@
 locals {
-  project_id             = "<project_id>"
   primary_region         = "us-east4"
   secondary_region       = "us-west1"
   primary_region_zonea   = "us-east4-a"
