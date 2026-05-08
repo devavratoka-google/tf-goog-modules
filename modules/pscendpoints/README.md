@@ -10,10 +10,7 @@ This module manages Google Cloud Private Service Connect (PSC) resources.
 - **Consumer Forwarding Rule**: Creates a forwarding rule pointing to a published service (Service Attachment) when `target_service_attachment` is provided.
 - **Producer Service Attachment**: Creates a service attachment to publish a service when the `service_attachment` object is provided.
 
-## Important Note
 
-> [!IMPORTANT]
-> For **Producer Service Attachment**, the subnetworks specified in `nat_subnets` must be created with `purpose = "PRIVATE_SERVICE_CONNECT"`.
 
 ## Inputs
 
