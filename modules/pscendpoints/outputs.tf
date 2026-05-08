@@ -1,15 +1,15 @@
 output "address" {
-  value       = google_compute_address.this.address
+  value       = var.target_google_api == "all-apis" ? google_compute_global_address.this[0].address : google_compute_address.this[0].address
   description = "The IP address reserved."
 }
 
 output "address_name" {
-  value       = google_compute_address.this.name
+  value       = var.target_google_api == "all-apis" ? google_compute_global_address.this[0].name : google_compute_address.this[0].name
   description = "The name of the address."
 }
 
 output "address_self_link" {
-  value       = google_compute_address.this.self_link
+  value       = local.address_self_link
   description = "The self-link of the address."
 }
 
