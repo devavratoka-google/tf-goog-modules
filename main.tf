@@ -303,7 +303,7 @@ module "secure_tags" {
 module "vpc_peering" {
 
   depends_on = [module.networks]
-  
+
   source   = "./modules/vpc_peering"
   for_each = var.vpc_peerings
 
