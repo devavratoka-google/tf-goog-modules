@@ -17,3 +17,12 @@ output "subnets_self_link" {
 output "subnets_name" {
   value = { for k, v in module.subnetworks : k => v.subnets_name }
 }
+
+output "tag_values" {
+  value       = { for k, v in module.secure_tags : k => v.tagvalue }
+  description = "Tag Values"
+}
+
+output "local_peering_state" {
+  value = { for k, v in module.vpc_peering : k => v.local_peering_state }
+}

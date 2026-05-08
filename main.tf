@@ -299,3 +299,23 @@ module "secure_tags" {
   iam_viewer_members = each.value.iam_viewer_members
   iam_user_members   = each.value.iam_user_members
 }
+
+module "vpc_peering" {
+
+  depends_on = [module.networks]
+  
+  source   = "./modules/vpc_peering"
+  for_each = var.vpc_peerings
+
+  local_network_peering_name                = each.value.local_network_peering_name
+  peer_network_peering_name                 = each.value.peer_network_peering_name
+  local_network                             = module.networks[each.value.local_network_name].network_self_link
+  peer_network                              = module.networks[each.value.peer_network_name].network_self_link
+  export_local_custom_routes                = each.value.export_local_custom_routes
+  export_peer_custom_routes                 = each.value.export_peer_custom_routes
+  export_local_subnet_routes_with_public_ip = each.value.export_local_subnet_routes_with_public_ip
+  export_peer_subnet_routes_with_public_ip  = each.value.export_peer_subnet_routes_with_public_ip
+  stack_type                                = each.value.stack_type
+  update_strategy                           = each.value.update_strategy
+
+}

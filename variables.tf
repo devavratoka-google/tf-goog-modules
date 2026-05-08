@@ -347,3 +347,18 @@ variable "secure_tags" {
     }))
   }))
 }
+
+variable "vpc_peerings" {
+  type = map(object({
+    local_network_peering_name                = string
+    peer_network_peering_name                 = string
+    local_network_name                        = string
+    peer_network_name                         = string
+    export_local_custom_routes                = optional(bool, false)
+    export_peer_custom_routes                 = optional(bool, false)
+    export_local_subnet_routes_with_public_ip = optional(bool, true)
+    export_peer_subnet_routes_with_public_ip  = optional(bool, false)
+    stack_type                                = optional(string, "IPV4_ONLY")
+    update_strategy                           = optional(string, "INDEPENDENT")
+  }))
+}

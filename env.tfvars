@@ -290,3 +290,14 @@ secure_tags = {
   #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
   # },
 }
+
+vpc_peerings = {
+  # "tf-vpc-01-to-tf-vpc-02" : {
+  #   local_network_peering_name = "tf-vpc-01-to-tf-vpc-02"
+  #   peer_network_peering_name  = "tf-vpc-02-to-tf-vpc-01"
+  #   local_network_name         = "tf-vpc-01"
+  #   peer_network_name          = "tf-vpc-02"
+  #   export_local_custom_routes = true
+  #   export_peer_custom_routes  = true
+  # }
+}
