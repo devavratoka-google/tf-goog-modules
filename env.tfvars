@@ -216,6 +216,30 @@ addresses = {
   # }
 }
 
+global_addresses = {
+  # "tf-vpc-01-psa-01" : {
+  #   address       = "192.168.21.0"
+  #   prefix_length = 24
+  #   address_type  = "INTERNAL"
+  #   purpose       = "VPC_PEERING"
+  #   network_name  = "tf-vpc-01"
+  # },
+  # "tf-vpc-01-psa-02" : {
+  #   address       = "192.168.22.0"
+  #   prefix_length = 24
+  #   address_type  = "INTERNAL"
+  #   purpose       = "VPC_PEERING"
+  #   network_name  = "tf-vpc-01"
+  # },
+}
+
+psa = {
+  # "tf-vpc-01-psa" : {
+  #   network_name                 = "tf-vpc-01"
+  #   reserved_peering_ranges_name = ["tf-vpc-01-psa-01", "tf-vpc-01-psa-02"]
+  # },
+}
+
 firewall_endpoints = {
   # "fwed-usea4a-01" = {
   #   name               = "fwed-usea4a-01"

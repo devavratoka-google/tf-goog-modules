@@ -331,6 +331,26 @@ variable "addresses" {
   default = {}
 }
 
+variable "global_addresses" {
+  type = map(object({
+    address       = string
+    description   = optional(string, null)
+    labels        = optional(map(string), {})
+    ip_version    = optional(string, "IPV4")
+    prefix_length = optional(number, 32) // not applicable for internal
+    address_type  = optional(string, "INTERNAL")
+    purpose       = optional(string, "PRIVATE_SERVICE_CONNECT")
+    network_name  = string
+  }))
+}
+
+variable "psa" {
+  type = map(object({
+    network_name                 = string
+    reserved_peering_ranges_name = list(string)
+  }))
+}
+
 variable "firewall_endpoints" {
   type = map(object({
     name               = string

@@ -290,6 +290,39 @@ module "addresses" {
   project      = coalesce(each.value.project, var.env_project_id)
 }
 
+module "global_addresses" {
+  depends_on = [module.subnetworks]
+
+  source   = "./modules/global_addresses"
+  for_each = var.global_addresses
+
+  name          = each.key
+  address       = each.value.address
+  description   = each.value.description
+  labels        = each.value.labels
+  ip_version    = each.value.ip_version
+  prefix_length = each.value.prefix_length
+  address_type  = each.value.address_type
+  purpose       = each.value.purpose
+  network       = module.networks[each.value.network_name].network_self_link
+  project       = module.networks[each.value.network_name].network_project
+
+}
+
+module "psa" {
+
+  depends_on = [module.networks, module.global_addresses]
+
+  source   = "./modules/psa"
+  for_each = var.psa
+
+  network = module.networks[each.value.network_name].network_name
+  reserved_peering_ranges = [
+    for name in each.value.reserved_peering_ranges_name : module.global_addresses[name].global_address_name
+  ]
+  // module.global_addresses[each.value.reserved_peering_ranges_name].address_name
+}
+
 ## Firewall Endpoints take a long time to deploy (15+ minutes), so it is recommended to create them individually and not combine with another resource. 
 ## After endpoint is created, association takes time as well (~10 minutes).
 
