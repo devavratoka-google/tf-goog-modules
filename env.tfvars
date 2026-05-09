@@ -216,6 +216,26 @@ addresses = {
   # }
 }
 
+firewall_endpoints = {
+  # "fwed-usea4a-01" = {
+  #   name               = "fwed-usea4a-01"
+  #   parent             = "organizations/1234567890"
+  #   location           = "us-east4-a"
+  #   billing_project_id = "project-abcd"
+  #   labels             = {}
+  #   fw_ep_associations = {
+  #     "network-shared-vpc" : {
+  #       fw_ip_association_parent   = "projects/project-abcd"
+  #       network                    = "projects/project-abcd/global/networks/network-shared-vpc"
+  #       fw_ip_association_location = "us-east4-a"
+  #       fw_ep_association_labels   = {}
+  #       tls_inspection_policy      = null
+  #       disabled                   = false
+  #     },
+  #   },
+  # },
+}
+
 hierarchical_fw_policies = {
   # "tf-hfw-pol-001" = {
   #   short_name  = "tf-hfw-pol-001"
@@ -256,8 +276,52 @@ hierarchical_fw_policies = {
   # }
 }
 
+global_nw_fw_policies = {
+  # "tf-nwfw-pol-001" : {
+  #   nw_fw_policy_name        = "tf-nwfw-pol-001"
+  #   nw_fw_policy_description = "terraform test of tf-nwfw-pol-001"
+  #   nw_fw_policy_project     = "proj-oka-int-demo"
+  #   association_targets = {
+  #     "network-1" = "projects/proj-oka-int-demo/global/networks/tf-vpc-01"
+  #     "network-2" = "projects/proj-oka-int-demo/global/networks/tf-vpc-02"
+  #   }
+  #   nw_fw_policy_rules = {
+  #     "1001" = {
+  #       action                  = "deny"
+  #       direction               = "INGRESS"
+  #       description             = "test rule 1001"
+  #       disabled                = false
+  #       enable_logging          = true
+  #       security_profile_group  = null
+  #       target_service_accounts = null
+  #       tls_inspect             = false
+  #       target_secure_tags = [
+  #         "tagValues/281481163640514",
+  #       ]
+  #       match = {
+  #         src_ip_ranges = ["1.1.1.1/32"]
+  #         layer4_configs = {
+  #           "tcp" = {
+  #             ip_protocol = "tcp"
+  #             ports       = ["25"]
+  #           },
+  #           "udp" = {
+  #             ip_protocol = "udp"
+  #             ports       = ["53"]
+  #           },
+  #           "icmp" = {
+  #             ip_protocol = "icmp"
+  #             ports       = []
+  #           }
+  #         }
+  #       }
+  #     },
+  #   }
+  # }
+}
+
 secure_tags = {
-  # "tag-fw-org-global" : {   // example of org-level tag for ngfw firewall policies
+  # "tag-fw-org-global" : { // example of org-level tag for ngfw firewall policies
   #   parent      = "organizations/340934488751"
   #   short_name  = "tag-fw-org-global"
   #   description = "test org tag"
@@ -273,7 +337,7 @@ secure_tags = {
   #   iam_viewer_members = []
   #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
   # },
-  # "tag-fw-nw-vpc" : {   // example of nw-level tag for ngfw firewall policies
+  # "tag-fw-nw-vpc" : { // example of nw-level tag for ngfw firewall policies
   #   parent      = "projects/506688492995"
   #   short_name  = "tag-fw-nw-vpc"
   #   description = "test nw tag"

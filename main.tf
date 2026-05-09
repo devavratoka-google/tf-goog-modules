@@ -44,7 +44,7 @@ module "subnetworks" {
   send_secondary_ip_range_if_empty = each.value.send_secondary_ip_range_if_empty
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
-  project                          = module.networks[each.value.network_name].network_project // var.env_project_id
+  project                          = module.networks[each.value.network_name].network_project
 }
 
 module "cloud_routers" {
@@ -221,7 +221,26 @@ module "ncc_hub" {
   export_psc = each.value.export_psc
   project    = var.env_project_id
   ncc_groups = each.value.ncc_groups
+
 }
+
+# module "ncc_spoke" {
+#   source                            = "./modules/ncc_spoke"
+#   depends_on                        = [module.networks]
+#   for_each                          = var.ncc_spokes
+#   name                              = each.value.name
+#   hub                               = module.ncc_hub[each.value.hub_name].ncc_hub_id
+#   location                          = each.value.location
+#   labels                            = each.value.labels
+#   description                       = each.value.description
+#   group                             = each.value.group
+#   project                           = each.value.project
+#   linked_interconnect_attachments   = each.value.linked_interconnect_attachments
+#   linked_vpn_tunnels                = each.value.linked_vpn_tunnels
+#   linked_vpc_network                = each.value.linked_vpc_network
+#   linked_producer_vpc_network       = each.value.linked_producer_vpc_network
+#   linked_router_appliance_instances = each.value.linked_router_appliance_instances
+# }
 
 module "dns_zones" {
   depends_on = [module.networks]
@@ -271,8 +290,30 @@ module "addresses" {
   project      = coalesce(each.value.project, var.env_project_id)
 }
 
+## Firewall Endpoints take a long time to deploy (15+ minutes), so it is recommended to create them individually and not combine with another resource. 
+## After endpoint is created, association takes time as well (~10 minutes).
+
+module "ngfw_endpoints" {
+
+  depends_on = [module.networks]
+
+  source   = "./modules/ngfw_endpoint"
+  for_each = var.firewall_endpoints
+
+  name               = each.value.name
+  parent             = each.value.parent
+  location           = each.value.location
+  billing_project_id = each.value.billing_project_id
+  labels             = each.value.labels
+  fw_ep_associations = each.value.fw_ep_associations
+
+}
+
 module "hierarchical_fw_policy" {
-  source   = "./modules/hfw_pol_rules"
+
+  depends_on = [module.secure_tags]
+
+  source   = "./modules/ngfw_hfw"
   for_each = var.hierarchical_fw_policies
 
   // Cloud NGFW Hierarchical Firewall Policy
@@ -285,6 +326,21 @@ module "hierarchical_fw_policy" {
 
   // Cloud NGFW Hierarchical Firewall Hierarchical FW Policy Rule
   fw_policy_rules = each.value.fw_policy_rules
+
+}
+
+module "global_nw_fw_policy" {
+
+  depends_on = [module.secure_tags]
+
+  source   = "./modules/ngfw_nwfw"
+  for_each = var.global_nw_fw_policies
+
+  nw_fw_policy_name        = each.value.nw_fw_policy_name
+  nw_fw_policy_description = each.value.nw_fw_policy_description
+  nw_fw_policy_project     = each.value.nw_fw_policy_project
+  association_targets      = each.value.association_targets
+  nw_fw_policy_rules       = each.value.nw_fw_policy_rules
 
 }
 

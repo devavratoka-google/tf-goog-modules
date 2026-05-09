@@ -57,7 +57,7 @@ variable "cloud_routers" {
     name              = string
     network_name      = string
     description       = optional(string, null)
-    asn               = number
+    asn               = optional(number, 16550)
     advertise_mode    = optional(string, "DEFAULT")
     advertised_groups = optional(list(string), [])
     advertised_ip_ranges = optional(map(object({ // pass only if advertise_mode is custom
@@ -238,6 +238,49 @@ variable "ncc_hubs" {
   }))
 }
 
+# variable "ncc_spokes" {
+#   type = map(object({
+#     name        = string
+#     hub_name    = string
+#     location    = optional(string, "global")
+#     labels      = optional(map(string), {})
+#     description = optional(string, null)
+#     group       = optional(string, null)
+#     project     = optional(string, "proj-060625")
+#     linked_interconnect_attachments = optional(map(object({
+#       uris                       = optional(list(string), [])
+#       site_to_site_data_transfer = optional(bool, false)
+#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+#     })), {})
+#     linked_vpn_tunnels = optional(map(object({
+#       uris                       = optional(list(string), [])
+#       site_to_site_data_transfer = optional(bool, false)
+#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+#     })), {})
+#     linked_vpc_network = optional(map(object({
+#       uri                   = string
+#       exclude_export_ranges = optional(list(string), [])
+#       include_export_ranges = optional(list(string), [])
+#     })), {})
+#     linked_producer_vpc_network = optional(map(object({
+#       network = string
+#       peering = string
+#       # producer_network      = string
+#       include_export_ranges = optional(list(string), [])
+#       exclude_export_ranges = optional(list(string), [])
+#     })), {})
+#     linked_router_appliance_instances = optional(map(object({
+#       site_to_site_data_transfer = optional(bool, false)
+#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+#       instances = map(object({
+#         virtual_machine = string
+#         ip_address      = string
+#       }))
+#     })), {})
+#   }))
+# }
+
+
 variable "dns_zones" {
   type = map(object({
     dns_name    = string
@@ -288,6 +331,24 @@ variable "addresses" {
   default = {}
 }
 
+variable "firewall_endpoints" {
+  type = map(object({
+    name               = string
+    parent             = string
+    location           = string
+    billing_project_id = string
+    labels             = optional(map(string), null)
+    fw_ep_associations = map(object({
+      fw_ip_association_parent   = string
+      network                    = string
+      fw_ip_association_location = string
+      fw_ep_association_labels   = optional(map(string), null)
+      tls_inspection_policy      = optional(string, null)
+      disabled                   = optional(bool, false)
+    }))
+  }))
+}
+
 variable "hierarchical_fw_policies" {
   type = map(object({
     parent      = string // Required
@@ -332,6 +393,47 @@ variable "hierarchical_fw_policies" {
   }))
   # default = {}
 }
+
+variable "global_nw_fw_policies" {
+  type = map(object({
+    nw_fw_policy_name        = string
+    nw_fw_policy_description = string
+    nw_fw_policy_project     = string
+    association_targets      = map(string)
+    nw_fw_policy_rules = map(object({
+      action    = string
+      direction = string
+      # priority                = number
+      # project                 = string
+      description    = string
+      disabled       = bool
+      enable_logging = bool
+      # rule_name               = string
+      security_profile_group  = string
+      target_service_accounts = list(string)
+      tls_inspect             = bool
+      target_secure_tags      = optional(list(string))
+      match = object({
+        src_ip_ranges             = optional(list(string), [])
+        src_fqdns                 = optional(list(string), [])
+        src_region_codes          = optional(list(string), [])
+        src_threat_intelligences  = optional(list(string), [])
+        src_address_groups        = optional(list(string), [])
+        dest_ip_ranges            = optional(list(string), [])
+        dest_fqdns                = optional(list(string), [])
+        dest_region_codes         = optional(list(string), [])
+        dest_threat_intelligences = optional(list(string), [])
+        dest_address_groups       = optional(list(string), [])
+        src_secure_tags           = optional(list(string), [])
+        layer4_configs = map(object({
+          ip_protocol = string
+          ports       = list(string)
+        }))
+      })
+    }))
+  }))
+}
+
 
 variable "secure_tags" {
   type = map(object({
