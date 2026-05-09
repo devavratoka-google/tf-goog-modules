@@ -408,3 +408,21 @@ module "vpc_peering" {
   update_strategy                           = each.value.update_strategy
 
 }
+
+module "network_attachments" {
+
+  depends_on = [module.subnetworks]
+
+  source   = "./modules/network_attachments"
+  for_each = var.network_attachments
+
+  name                  = each.key
+  description           = each.value.description
+  connection_preference = each.value.connection_preference
+  subnetworks           = [for name in each.value.subnetwork_name : module.subnetworks[name].subnets_self_link]
+  // subnetworks           = module.subnetworks[each.value.subnetwork_name].subnets_self_link
+  producer_accept_lists = each.value.producer_accept_lists
+  producer_reject_lists = each.value.producer_reject_lists
+  region                = module.subnetworks[each.value.subnetwork_name[0]].subnets_region
+  project               = module.subnetworks[each.value.subnetwork_name[0]].subnets_project
+}

@@ -484,3 +484,13 @@ variable "vpc_peerings" {
     update_strategy                           = optional(string, "INDEPENDENT")
   }))
 }
+
+variable "network_attachments" {
+  type = map(object({
+    description           = optional(string, null)
+    connection_preference = optional(string, "ACCEPT_AUTOMATIC")
+    subnetwork_name       = list(string)
+    producer_accept_lists = optional(list(string), [])
+    producer_reject_lists = optional(list(string), [])
+  }))
+}

@@ -389,3 +389,11 @@ vpc_peerings = {
   #   export_peer_custom_routes  = true
   # }
 }
+
+network_attachments = {
+  # "nw-att-1" : {
+  #   subnetwork_name = ["tf-vpc-01-sn01-usc1"]
+  #   connection_preference = "ACCEPT_MANUAL"
+  #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
+  # }
+}
