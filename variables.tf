@@ -238,48 +238,56 @@ variable "ncc_hubs" {
   }))
 }
 
-# variable "ncc_spokes" {
-#   type = map(object({
-#     name        = string
-#     hub_name    = string
-#     location    = optional(string, "global")
-#     labels      = optional(map(string), {})
-#     description = optional(string, null)
-#     group       = optional(string, null)
-#     project     = optional(string, "proj-060625")
-#     linked_interconnect_attachments = optional(map(object({
-#       uris                       = optional(list(string), [])
-#       site_to_site_data_transfer = optional(bool, false)
-#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
-#     })), {})
-#     linked_vpn_tunnels = optional(map(object({
-#       uris                       = optional(list(string), [])
-#       site_to_site_data_transfer = optional(bool, false)
-#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
-#     })), {})
-#     linked_vpc_network = optional(map(object({
-#       uri                   = string
-#       exclude_export_ranges = optional(list(string), [])
-#       include_export_ranges = optional(list(string), [])
-#     })), {})
-#     linked_producer_vpc_network = optional(map(object({
-#       network = string
-#       peering = string
-#       # producer_network      = string
-#       include_export_ranges = optional(list(string), [])
-#       exclude_export_ranges = optional(list(string), [])
-#     })), {})
-#     linked_router_appliance_instances = optional(map(object({
-#       site_to_site_data_transfer = optional(bool, false)
-#       include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
-#       instances = map(object({
-#         virtual_machine = string
-#         ip_address      = string
-#       }))
-#     })), {})
-#   }))
-# }
-
+variable "ncc_spokes" {
+  type = map(object({
+    name        = string
+    hub_name    = string
+    location    = optional(string, "global")
+    labels      = optional(map(string), {})
+    description = optional(string, null)
+    group       = optional(string, null)
+    project     = string
+    linked_interconnect_attachments = optional(map(object({
+      uris                       = optional(list(string), [])
+      site_to_site_data_transfer = optional(bool, false)
+      include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+      exclude_import_ranges      = optional(list(string), [])
+      include_export_ranges      = optional(list(string), [])
+      exclude_export_ranges      = optional(list(string), [])
+    })), {})
+    linked_vpn_tunnels = optional(map(object({
+      uris                       = optional(list(string), [])
+      site_to_site_data_transfer = optional(bool, false)
+      include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+      exclude_import_ranges      = optional(list(string), [])
+      include_export_ranges      = optional(list(string), [])
+      exclude_export_ranges      = optional(list(string), [])
+    })), {})
+    linked_vpc_network = optional(map(object({
+      uri                   = string
+      exclude_export_ranges = optional(list(string), [])
+      include_export_ranges = optional(list(string), [])
+    })), {})
+    linked_producer_vpc_network = optional(map(object({
+      network = string
+      peering = string
+      # producer_network      = string
+      include_export_ranges = optional(list(string), [])
+      exclude_export_ranges = optional(list(string), [])
+    })), {})
+    linked_router_appliance_instances = optional(map(object({
+      site_to_site_data_transfer = optional(bool, false)
+      include_import_ranges      = optional(list(string), ["ALL_IPV4_RANGES"])
+      exclude_import_ranges      = optional(list(string), [])
+      include_export_ranges      = optional(list(string), [])
+      exclude_export_ranges      = optional(list(string), [])
+      instances = map(object({
+        virtual_machine = string
+        ip_address      = string
+      }))
+    })), {})
+  }))
+}
 
 variable "dns_zones" {
   type = map(object({

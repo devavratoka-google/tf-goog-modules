@@ -18,3 +18,8 @@ provider "google" {
   region  = local.primary_region
   zone    = local.primary_region_zonea
 }
+
+provider "google-beta" {
+  project = var.env_project_id
+  region  = local.primary_region
+}

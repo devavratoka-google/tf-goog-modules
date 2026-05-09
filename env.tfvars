@@ -148,6 +148,71 @@ ncc_hubs = {
   # }
 }
 
+ncc_spokes = {
+  # "spk-tf-vpc-01" : {
+  #   name     = "spk-tf-vpc-01"
+  #   hub_name = "tf-hub-01"
+  #   project  = "<proj-id>"
+  #   group    = "center"
+  #   linked_vpc_network = {
+  #     "tf-vpc-01" : {
+  #       uri = "https://www.googleapis.com/compute/v1/projects/<proj-id>/global/networks/tf-vpc-01"
+  #     }
+  #   }
+  # },
+  # "spk-tf-vpc-02" : {
+  #   name     = "spk-tf-vpc-02"
+  #   hub_name = "tf-hub-01"
+  #   project  = "<proj-id>"
+  #   group    = "edge"
+  #   linked_vpc_network = {
+  #     "tf-vpc-01" : {
+  #       uri = "https://www.googleapis.com/compute/v1/projects/<proj-id>/global/networks/tf-vpc-02"
+  #     }
+  #   }
+  # },
+  # "spk-tunnel-vpc01proj01-vpc01proj02" : {
+  #   name     = "spk-tunnel-vpc01proj01-vpc01proj02"
+  #   hub_name = "tf-hub-01"
+  #   location = "us-central1"
+  #   linked_vpn_tunnels = {
+  #     "tunnel-vpc01proj01-vpc01proj02" : {
+  #       uris = [
+  #         "https://www.googleapis.com/compute/v1/projects/<proj-id>/regions/us-central1/vpnTunnels/tunnel-01-vpc01proj01-vpc01proj02",
+  #         "https://www.googleapis.com/compute/v1/projects/<proj-id>/regions/us-central1/vpnTunnels/tunnel-02-vpc01proj01-vpc01proj02"
+  #       ]
+  #     }
+  #   }
+  # }
+  # "spk-workload1-psa-db" : {
+  #   name     = "spk-workload1-psa-db"
+  #   hub_name = "lab-ncc-hub"
+  #   # group    = "projects/<proj-id>/locations/global/hubs/lab-ncc-hub/groups/edge"
+  #   labels = {}
+  #   linked_producer_vpc_network = {
+  #     "workload1" : {
+  #       network = "https://www.googleapis.com/compute/beta/projects/<proj-id>/global/networks/workload1"
+  #       peering = "servicenetworking-googleapis-com"
+  #     }
+  #   }
+  # },
+  # "spk-vlan-att" : {
+  #   name     = "spk-vlan-att"
+  #   hub_name = "tf-hub-01"
+  #   project  = "<proj-id>"
+  #   group    = "center"
+  #   location = "us-central1"
+  #   linked_interconnect_attachments = {
+  #     "vlan-att-tf-vpc-01" : {
+  #       uris = [
+  #         "https://www.googleapis.com/compute/v1/projects/<proj-id>/regions/us-central1/interconnectAttachments/vlan-att-a",
+  #         "https://www.googleapis.com/compute/v1/projects/<proj-id>/regions/us-central1/interconnectAttachments/vlan-att-b"
+  #       ]
+  #     }
+  #   }
+  # },
+}
+
 dns_zones = {
   # "gcp-example-com" : {
   #   dns_name    = "gcp.example.com."
@@ -304,10 +369,10 @@ global_nw_fw_policies = {
   # "tf-nwfw-pol-001" : {
   #   nw_fw_policy_name        = "tf-nwfw-pol-001"
   #   nw_fw_policy_description = "terraform test of tf-nwfw-pol-001"
-  #   nw_fw_policy_project     = "proj-oka-int-demo"
+  #   nw_fw_policy_project     = "<proj-id>"
   #   association_targets = {
-  #     "network-1" = "projects/proj-oka-int-demo/global/networks/tf-vpc-01"
-  #     "network-2" = "projects/proj-oka-int-demo/global/networks/tf-vpc-02"
+  #     "network-1" = "projects/<proj-id>/global/networks/tf-vpc-01"
+  #     "network-2" = "projects/<proj-id>/global/networks/tf-vpc-02"
   #   }
   #   nw_fw_policy_rules = {
   #     "1001" = {
@@ -359,14 +424,14 @@ secure_tags = {
   #     },
   #   }
   #   iam_viewer_members = []
-  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  #   iam_user_members   = ["serviceAccount:iac-deployer@<proj-id>.iam.gserviceaccount.com"]
   # },
   # "tag-fw-nw-vpc" : { // example of nw-level tag for ngfw firewall policies
   #   parent      = "projects/506688492995"
   #   short_name  = "tag-fw-nw-vpc"
   #   description = "test nw tag"
   #   purpose_data = {
-  #     network = "proj-oka-int-demo/tf-vpc-01"
+  #     network = "<proj-id>/tf-vpc-01"
   #   }
   #   tag_values = {
   #     "value01" : {
@@ -375,7 +440,7 @@ secure_tags = {
   #     },
   #   }
   #   iam_viewer_members = []
-  #   iam_user_members   = ["serviceAccount:iac-deployer@proj-oka-int-demo.iam.gserviceaccount.com"]
+  #   iam_user_members   = ["serviceAccount:iac-deployer@<proj-id>.iam.gserviceaccount.com"]
   # },
 }
 

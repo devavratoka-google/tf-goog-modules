@@ -224,23 +224,26 @@ module "ncc_hub" {
 
 }
 
-# module "ncc_spoke" {
-#   source                            = "./modules/ncc_spoke"
-#   depends_on                        = [module.networks]
-#   for_each                          = var.ncc_spokes
-#   name                              = each.value.name
-#   hub                               = module.ncc_hub[each.value.hub_name].ncc_hub_id
-#   location                          = each.value.location
-#   labels                            = each.value.labels
-#   description                       = each.value.description
-#   group                             = each.value.group
-#   project                           = each.value.project
-#   linked_interconnect_attachments   = each.value.linked_interconnect_attachments
-#   linked_vpn_tunnels                = each.value.linked_vpn_tunnels
-#   linked_vpc_network                = each.value.linked_vpc_network
-#   linked_producer_vpc_network       = each.value.linked_producer_vpc_network
-#   linked_router_appliance_instances = each.value.linked_router_appliance_instances
-# }
+module "ncc_spoke" {
+
+  depends_on = [module.networks]
+
+  source   = "./modules/ncc_spoke"
+  for_each = var.ncc_spokes
+
+  name                              = each.value.name
+  hub                               = module.ncc_hub[each.value.hub_name].ncc_hub_id
+  location                          = each.value.location
+  labels                            = each.value.labels
+  description                       = each.value.description
+  group                             = each.value.group
+  project                           = each.value.project
+  linked_interconnect_attachments   = each.value.linked_interconnect_attachments
+  linked_vpn_tunnels                = each.value.linked_vpn_tunnels
+  linked_vpc_network                = each.value.linked_vpc_network
+  linked_producer_vpc_network       = each.value.linked_producer_vpc_network
+  linked_router_appliance_instances = each.value.linked_router_appliance_instances
+}
 
 module "dns_zones" {
   depends_on = [module.networks]
