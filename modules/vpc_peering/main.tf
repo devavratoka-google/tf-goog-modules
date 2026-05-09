@@ -9,7 +9,8 @@ resource "google_compute_network_peering" "local_network_peering" {
   export_subnet_routes_with_public_ip = var.export_local_subnet_routes_with_public_ip
   import_subnet_routes_with_public_ip = var.export_peer_subnet_routes_with_public_ip
 
-  stack_type = var.stack_type
+  stack_type      = var.stack_type
+  update_strategy = "INDEPENDENT"
 }
 
 resource "google_compute_network_peering" "peer_network_peering" {

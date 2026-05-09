@@ -45,8 +45,8 @@ variable "stack_type" {
   description = "Which IP version(s) of traffic and routes are allowed to be imported or exported between peer networks. The default value is IPV4_ONLY. Possible values: ['IPV4_ONLY', 'IPV4_IPV6']."
 }
 
-variable "update_strategy" {
-  type        = string
-  description = "The update strategy determines the semantics for updates and deletes to the peering connection configuration. The default value is INDEPENDENT. Possible values: ['INDEPENDENT', 'CONSENSUS']"
-}
+# variable "update_strategy" {
+#   type        = string
+#   description = "The update strategy determines the semantics for updates and deletes to the peering connection configuration. The default value is INDEPENDENT. Possible values: ['INDEPENDENT', 'CONSENSUS']"
+# }
 
