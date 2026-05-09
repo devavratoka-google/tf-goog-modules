@@ -462,3 +462,46 @@ network_attachments = {
   #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
   # }
 }
+
+vpc_firewall_rules = {
+  # "1000" : {
+  #   name        = "allow-ssh-from-10-0-0-1-32"
+  #   network     = "tf-vpc-01"
+  #   project     = "<proj-id>"
+  #   description = "Allow SSH from on-prem"
+  #   direction   = "INGRESS"
+  #   disabled    = false
+  #   priority    = 1000
+  #   ranges      = ["10.0.0.1/32"]
+  #   target_tags = ["allow-ssh"]
+  #   log_config = {
+  #     metadata = "INCLUDE_ALL_METADATA"
+  #   }
+  #   allow = [
+  #     {
+  #       protocol = "tcp"
+  #       ports    = ["22"]
+  #     }
+  #   ]
+  # },
+  # "1001" : {
+  #   name        = "allow-egress-to-8-8-8-8"
+  #   network     = "tf-vpc-01"
+  #   project     = "<proj-id>"
+  #   description = "Allow egress to 8.8.8.8"
+  #   direction   = "EGRESS"
+  #   disabled    = false
+  #   priority    = 1001
+  #   ranges      = ["8.8.8.8/32"]
+  #   target_tags = ["allow-http"]
+  #   log_config = {
+  #     metadata = "INCLUDE_ALL_METADATA"
+  #   }
+  #   allow = [
+  #     {
+  #       protocol = "tcp"
+  #       ports    = ["80"]
+  #     }
+  #   ]
+  # },
+}

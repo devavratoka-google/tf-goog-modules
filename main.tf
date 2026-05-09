@@ -429,3 +429,13 @@ module "network_attachments" {
   region                = module.subnetworks[each.value.subnetwork_name[0]].subnets_region
   project               = module.subnetworks[each.value.subnetwork_name[0]].subnets_project
 }
+
+module "vpc_firewall_rules" {
+
+  depends_on = [module.networks]
+
+  source             = "./modules/vpc_firewall"
+  vpc_firewall_rules = var.vpc_firewall_rules
+
+}
+

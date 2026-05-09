@@ -502,3 +502,31 @@ variable "network_attachments" {
     producer_reject_lists = optional(list(string), [])
   }))
 }
+
+variable "vpc_firewall_rules" {
+  type = map(object({
+    name                    = string
+    network                 = string
+    project                 = string
+    description             = optional(string, null)
+    direction               = string
+    disabled                = bool
+    priority                = number
+    ranges                  = optional(set(string), [])
+    source_tags             = optional(set(string), null)
+    source_service_accounts = optional(set(string), null)
+    target_tags             = optional(set(string), null)
+    target_service_accounts = optional(set(string), null)
+    log_config = object({
+      metadata = optional(string, "INCLUDE_ALL_METADATA")
+    })
+    allow = optional(list(object({
+      protocol = string
+      ports    = list(string)
+    })), [])
+    deny = optional(list(object({
+      protocol = string
+      ports    = list(string)
+    })), [])
+  }))
+}
