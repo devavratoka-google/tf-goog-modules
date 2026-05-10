@@ -329,7 +329,7 @@ hierarchical_fw_policies = {
   # "tf-hfw-pol-001" = {
   #   short_name  = "tf-hfw-pol-001"
   #   description = "Hierarchical Firewall Policy 001"
-  #   parent      = "organizations/340934488751"
+  #   parent      = "organizations/<org-number>"
   #   fw_policy_associations = {
   #     "tf-hfw-pol-001-assoc-cxdemo-02" = {
   #       association_name  = "tf-hfw-pol-001-assoc-cxdemo-02"
@@ -411,11 +411,11 @@ global_nw_fw_policies = {
 
 secure_tags = {
   # "tag-fw-org-global" : { // example of org-level tag for ngfw firewall policies
-  #   parent      = "organizations/340934488751"
+  #   parent      = "organizations/<org-number>"
   #   short_name  = "tag-fw-org-global"
   #   description = "test org tag"
   #   purpose_data = {
-  #     "organization" = "340934488751"
+  #     "organization" = "<org-number>"
   #   }
   #   tag_values = {
   #     "value01" : {
