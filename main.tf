@@ -408,7 +408,7 @@ module "vpc_peering" {
   export_local_subnet_routes_with_public_ip = each.value.export_local_subnet_routes_with_public_ip
   export_peer_subnet_routes_with_public_ip  = each.value.export_peer_subnet_routes_with_public_ip
   stack_type                                = each.value.stack_type
-  update_strategy                           = each.value.update_strategy
+  # update_strategy                           = each.value.update_strategy
 
 }
 

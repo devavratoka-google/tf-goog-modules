@@ -489,7 +489,7 @@ variable "vpc_peerings" {
     export_local_subnet_routes_with_public_ip = optional(bool, true)
     export_peer_subnet_routes_with_public_ip  = optional(bool, false)
     stack_type                                = optional(string, "IPV4_ONLY")
-    update_strategy                           = optional(string, "INDEPENDENT")
+    # update_strategy                           = optional(string, "INDEPENDENT")
   }))
 }
 
