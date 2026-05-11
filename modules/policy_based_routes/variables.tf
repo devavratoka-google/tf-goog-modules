@@ -31,6 +31,7 @@ variable "project" {
 variable "virtual_machine_tags" {
   type        = list(string)
   description = "The list of tags that will be applied to the virtual machines that match this policy based route."
+  default     = [] # Add this line so the module caller doesn't have to pass an empty list
 }
 
 variable "src_range" {

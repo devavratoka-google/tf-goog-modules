@@ -6,8 +6,12 @@ resource "google_network_connectivity_policy_based_route" "this" {
   priority              = var.priority
   project               = var.project
 
-  virtual_machine {
-    tags = var.virtual_machine_tags
+  # Only create this block if tags are actually provided
+  dynamic "virtual_machine" {
+    for_each = var.virtual_machine_tags != null && length(var.virtual_machine_tags) > 0 ? [1] : []
+    content {
+      tags = var.virtual_machine_tags
+    }
   }
 
   filter {
