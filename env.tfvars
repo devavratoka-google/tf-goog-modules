@@ -505,3 +505,66 @@ vpc_firewall_rules = {
   #   ]
   # },
 }
+
+pscendpoints = {
+  "psc-endpoint-01" : { // PSC for regional google apis example
+    network_name      = "tf-vpc-01"
+    subnetwork_name   = "tf-vpc-01-sn01-usc1"
+    region            = "us-central1"
+    address           = "192.168.100.10"
+    target_google_api = "storage.us-central1.rep.googleapis.com"
+    access_type       = "REGIONAL"
+  },
+
+  "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
+    network_name                            = "tf-vpc-01"
+    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
+    region                                  = "us-central1"
+    address                                 = "192.168.100.13"
+    target_google_api                       = "storage.us-central1.rep.googleapis.com"
+    regional_endpoint_subnetwork            = true
+    regional_endpoint_address_use_self_link = true
+    access_type                             = "GLOBAL"
+  },
+
+  "psc-all-apis-global" : { // PSC for all google apis with global address
+    network_name                            = "tf-vpc-01"
+    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
+    region                                  = "us-central1"
+    address                                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
+    target_google_api                       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
+    regional_endpoint_subnetwork            = true
+    regional_endpoint_address_use_self_link = true
+    access_type                             = "GLOBAL"
+    forwarding_rule_name                    = "pscallapis"
+  },
+
+  # Example for consumer forwarding rule:
+  # "psc-consumer-forwarding-rule-01" : {
+  #   network_name              = "tf-vpc-01"
+  #   subnetwork_name           = "tf-vpc-01-sn01-usc1"
+  #   region                    = "us-central1"
+  #   address                   = "192.168.100.12"
+  #   forwarding_rule_name      = "psc-fr-consumer-01"
+  #   target_service_attachment = "projects/producer-project-id/regions/us-central1/serviceAttachments/sa-producer-01"
+  #   allow_psc_global_access   = false
+  #   no_automate_dns_zone      = true
+  # }
+
+  # Example producer service attachment:
+  # "psc-service-attachment-01" : {
+  #   network_name    = "vpc-security"
+  #   subnetwork_name = "vpc-security-sn-usc1"
+  #   region          = "us-central1"
+  #   address         = "172.16.1.30"
+  #
+  #   service_attachment = {
+  #     name                  = "sa-producer-01"
+  #     description           = "Example PSC producer service attachment"
+  #     target_service        = "projects/infra-proj-id/regions/us-central1/forwardingRules/producer-ilb"
+  #     nat_subnets           = ["projects/infra-proj-id/regions/us-central1/subnetworks/psc-nat-sn-usc1"]
+  #     connection_preference = "ACCEPT_AUTOMATIC"
+  #     enable_proxy_protocol = false
+  #   }
+  # }
+}

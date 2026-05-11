@@ -564,4 +564,3 @@ variable "pscendpoints" {
   default     = {}
   description = "Map of PSC Endpoints configurations."
 }
-}

@@ -1,5 +1,5 @@
 locals {
-  is_all_apis = var.target_google_api == "all-apis"
+  is_all_apis       = var.target_google_api == "all-apis"
   address_self_link = local.is_all_apis ? google_compute_global_address.this[0].self_link : google_compute_address.this[0].self_link
 }
 
@@ -45,12 +45,12 @@ resource "google_network_connectivity_regional_endpoint" "this" {
 resource "google_compute_global_forwarding_rule" "google_apis" {
   count = var.target_google_api == "all-apis" ? 1 : 0
 
-  project                 = var.project
-  name                    = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
-  network                 = var.network
-  ip_address              = local.address_self_link
-  target                  = "all-apis"
-  load_balancing_scheme   = ""
+  project               = var.project
+  name                  = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
+  network               = var.network
+  ip_address            = local.address_self_link
+  target                = "all-apis"
+  load_balancing_scheme = ""
 }
 
 resource "google_compute_forwarding_rule" "this" {
