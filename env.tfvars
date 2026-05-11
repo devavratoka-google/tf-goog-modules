@@ -140,7 +140,7 @@ ncc_hubs = {
   #     },
   #     "edge" : {
   #       description          = "Edge group for workload VPCs"
-  #       auto_accept_projects = []
+  #       auto_accept_projects = ["infra-proj-id"]
   #     }
   #   }
   # },

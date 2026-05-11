@@ -14,7 +14,11 @@ resource "google_network_connectivity_group" "this" {
   project     = google_network_connectivity_hub.this.project
   name        = each.key
   description = each.value.description
-  auto_accept {
-    auto_accept_projects = each.value.auto_accept_projects
+
+  dynamic "auto_accept" {
+    for_each = length(each.value.auto_accept_projects) > 0 ? [1] : []
+    content {
+      auto_accept_projects = each.value.auto_accept_projects
+    }
   }
 }
