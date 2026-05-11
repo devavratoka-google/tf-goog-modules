@@ -535,6 +535,7 @@ variable "pscendpoints" {
   type = map(object({
     network_name                            = string
     subnetwork_name                         = string
+    project                                 = string
     region                                  = string
     address                                 = optional(string, null)
     target_google_api                       = optional(string, null)

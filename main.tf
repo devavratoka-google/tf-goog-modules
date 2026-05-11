@@ -443,7 +443,7 @@ module "pscendpoints" {
   source   = "./modules/pscendpoints"
   for_each = var.pscendpoints
 
-  project      = var.env_project_id
+  project      = each.value.project
   network      = "projects/${var.env_project_id}/global/networks/${each.value.network_name}"
   subnetwork   = "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}"
   region       = each.value.region
