@@ -534,7 +534,7 @@ variable "vpc_firewall_rules" {
 variable "pscendpoints" {
   type = map(object({
     network_name                            = string
-    subnetwork_name                         = string
+    subnetwork_name                         = optional(string, "")
     project                                 = string
     region                                  = string
     address                                 = optional(string, null)

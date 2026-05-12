@@ -445,7 +445,7 @@ module "pscendpoints" {
 
   project      = each.value.project
   network      = "projects/${var.env_project_id}/global/networks/${each.value.network_name}"
-  subnetwork   = "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}"
+  subnetwork   = each.value.subnetwork_name != "" ? "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}" : null
   region       = each.value.region
   address_name = each.key
   address      = each.value.address

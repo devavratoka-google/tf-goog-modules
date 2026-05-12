@@ -10,6 +10,7 @@ variable "network" {
 
 variable "subnetwork" {
   type        = string
+  default     = null
   description = "The self-link of the subnetwork."
 }
 

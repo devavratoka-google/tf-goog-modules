@@ -37,9 +37,9 @@ resource "google_network_connectivity_regional_endpoint" "this" {
   target_google_api = var.target_google_api
   access_type       = var.access_type
   network           = var.network
-  subnetwork        = var.access_type == "REGIONAL" || var.regional_endpoint_subnetwork ? var.subnetwork : null
+  subnetwork        = var.regional_endpoint_subnetwork ? var.subnetwork : null
 
-  address = "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
+  address = var.regional_endpoint_address_use_self_link ? "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}" : var.address
 }
 
 resource "google_compute_global_forwarding_rule" "google_apis" {

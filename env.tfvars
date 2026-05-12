@@ -524,14 +524,13 @@ pscendpoints = {
     region                                  = "us-central1"
     address                                 = "192.168.100.13"
     target_google_api                       = "storage.us-central1.rep.googleapis.com"
-    regional_endpoint_subnetwork            = true
-    regional_endpoint_address_use_self_link = true
+    regional_endpoint_subnetwork            = false
+    regional_endpoint_address_use_self_link = false
     access_type                             = "GLOBAL"
   },
 
   "psc-all-apis-global" : { // PSC for all google apis with global address
     network_name                            = "tf-vpc-01"
-    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
     project                                 = "<proj-id>"
     region                                  = "us-central1"
     address                                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
