@@ -532,7 +532,7 @@ pscendpoints = {
   },
 
   "psc-all-apis-global" : { // PSC for all google apis with global address
-<<<<<<< HEAD
+
     network_name            = "tf-vpc-01"
     project                 = "<proj-id>"
     region                  = "us-central1"
@@ -541,18 +541,7 @@ pscendpoints = {
     target_google_api       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
     access_type             = "GLOBAL"
     forwarding_rule_name    = "pscallapis"
-=======
-    network_name                            = "tf-vpc-01"
-    subnetwork_name                         = ""
-    project                                 = "<proj-id>"
-    region                                  = "us-central1"
-    address                                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
-    target_google_api                       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
-    regional_endpoint_subnetwork            = true
-    regional_endpoint_address_use_self_link = true
-    access_type                             = "GLOBAL"
-    forwarding_rule_name                    = "pscallapis"
->>>>>>> main
+
   },
 
   # Example for consumer forwarding rule:
