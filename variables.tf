@@ -541,7 +541,6 @@ variable "pscendpoints" {
     target_google_api                       = optional(string, null)
     access_type                             = optional(string, "REGIONAL")
     regional_endpoint_subnetwork            = optional(bool, false)
-    regional_endpoint_address_use_self_link = optional(bool, false)
     target_service_attachment               = optional(string, null)
     allow_psc_global_access                 = optional(bool, false)
     no_automate_dns_zone                    = optional(bool, false)

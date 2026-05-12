@@ -30,6 +30,7 @@ variable "address" {
   description = "The IP address to reserve. If null, one will be automatically allocated."
 }
 
+
 variable "target_google_api" {
   type        = string
   default     = null
