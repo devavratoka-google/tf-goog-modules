@@ -10,6 +10,7 @@ variable "network" {
 
 variable "subnetwork" {
   type        = string
+  default     = null
   description = "The self-link of the subnetwork."
 }
 
@@ -28,6 +29,7 @@ variable "address" {
   default     = null
   description = "The IP address to reserve. If null, one will be automatically allocated."
 }
+
 
 variable "target_google_api" {
   type        = string
@@ -95,4 +97,16 @@ variable "service_attachment" {
   })
   default     = null
   description = "Configuration for the producer service attachment."
+}
+
+variable "create_regional_address" {
+  type        = bool
+  default     = false
+  description = "Set to true to create regional compute address using the addresses module."
+}
+
+variable "create_global_address" {
+  type        = bool
+  default     = false
+  description = "Set to true to create global compute address using the global_addresses module."
 }

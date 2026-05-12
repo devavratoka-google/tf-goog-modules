@@ -445,15 +445,17 @@ module "pscendpoints" {
 
   project      = each.value.project
   network      = "projects/${var.env_project_id}/global/networks/${each.value.network_name}"
-  subnetwork   = "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}"
+  subnetwork   = each.value.subnetwork_name != "" ? "projects/${var.env_project_id}/regions/${each.value.region}/subnetworks/${each.value.subnetwork_name}" : null
   region       = each.value.region
   address_name = each.key
   address      = each.value.address
 
+  create_regional_address                 = each.value.create_regional_address
+  create_global_address                   = each.value.create_global_address
+
   target_google_api                       = each.value.target_google_api
   access_type                             = each.value.access_type
   regional_endpoint_subnetwork            = each.value.regional_endpoint_subnetwork
-  regional_endpoint_address_use_self_link = each.value.regional_endpoint_address_use_self_link
 
   target_service_attachment = each.value.target_service_attachment
   allow_psc_global_access   = each.value.allow_psc_global_access
