@@ -524,8 +524,6 @@ pscendpoints = {
     region                                  = "us-central1"
     address                                 = "192.168.100.13"
     target_google_api                       = "storage.us-central1.rep.googleapis.com"
-    regional_endpoint_subnetwork            = false
-    regional_endpoint_address_use_self_link = false
     access_type                             = "GLOBAL"
   },
 
