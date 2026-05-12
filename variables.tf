@@ -538,6 +538,8 @@ variable "pscendpoints" {
     project                                 = string
     region                                  = string
     address                                 = optional(string, null)
+    create_regional_address                 = optional(bool, false)
+    create_global_address                   = optional(bool, false)
     target_google_api                       = optional(string, null)
     access_type                             = optional(string, "REGIONAL")
     regional_endpoint_subnetwork            = optional(bool, false)

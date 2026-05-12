@@ -1,3 +1,29 @@
+module "addresses" {
+  count  = var.create_regional_address ? 1 : 0
+  source = "../addresses"
+
+  project      = var.project
+  name         = "${var.address_name}-ip"
+  address      = var.address
+  address_type = "INTERNAL"
+  purpose      = "GCE_ENDPOINT"
+  network      = null
+  subnetwork   = var.subnetwork
+  region       = var.region
+}
+
+resource "google_compute_global_address" "this" {
+  count = var.create_global_address ? 1 : 0
+
+  project      = var.project
+  name         = "${var.address_name}-ip"
+  address      = var.address
+  address_type = "INTERNAL"
+  purpose      = "PRIVATE_SERVICE_CONNECT"
+  network      = var.network
+  description  = "Global PSC IP reserved inside pscendpoints module"
+}
+
 resource "google_network_connectivity_regional_endpoint" "this" {
   count = (var.target_google_api != null && var.target_google_api != "all-apis") ? 1 : 0
 
@@ -9,7 +35,7 @@ resource "google_network_connectivity_regional_endpoint" "this" {
   network           = var.network
   subnetwork        = var.regional_endpoint_subnetwork ? var.subnetwork : null
 
-  address = var.address
+  address = var.create_regional_address ? module.addresses[0].address : var.address
 }
 
 resource "google_compute_global_forwarding_rule" "google_apis" {
@@ -18,7 +44,7 @@ resource "google_compute_global_forwarding_rule" "google_apis" {
   project               = var.project
   name                  = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
   network               = var.network
-  ip_address            = var.address
+  ip_address            = var.create_global_address ? google_compute_global_address.this[0].id : var.address
   target                = "all-apis"
   load_balancing_scheme = ""
 }
@@ -30,7 +56,7 @@ resource "google_compute_forwarding_rule" "this" {
   name                    = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
   region                  = var.region
   network                 = var.network
-  ip_address              = var.address
+  ip_address              = var.create_regional_address ? module.addresses[0].address : var.address
   target                  = var.target_service_attachment
   load_balancing_scheme   = ""
   allow_psc_global_access = var.allow_psc_global_access

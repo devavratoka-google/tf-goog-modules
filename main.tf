@@ -450,6 +450,9 @@ module "pscendpoints" {
   address_name = each.key
   address      = each.value.address
 
+  create_regional_address                 = each.value.create_regional_address
+  create_global_address                   = each.value.create_global_address
+
   target_google_api                       = each.value.target_google_api
   access_type                             = each.value.access_type
   regional_endpoint_subnetwork            = each.value.regional_endpoint_subnetwork

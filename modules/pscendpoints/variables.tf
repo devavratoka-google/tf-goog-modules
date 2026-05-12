@@ -98,3 +98,15 @@ variable "service_attachment" {
   default     = null
   description = "Configuration for the producer service attachment."
 }
+
+variable "create_regional_address" {
+  type        = bool
+  default     = false
+  description = "Set to true to create regional compute address using the addresses module."
+}
+
+variable "create_global_address" {
+  type        = bool
+  default     = false
+  description = "Set to true to create global compute address using the global_addresses module."
+}

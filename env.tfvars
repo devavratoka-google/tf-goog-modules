@@ -1,4 +1,4 @@
-env_project_id = "proj-oka-int-demo"
+env_project_id = "infra-proj-id"
 
 vpcs = {
   # "tf-vpc-01" : {
@@ -508,33 +508,38 @@ vpc_firewall_rules = {
 
 pscendpoints = {
   "psc-endpoint-01" : { // PSC for regional google apis example
-    network_name      = "tf-vpc-01"
-    subnetwork_name   = "tf-vpc-01-sn01-usc1"
-    project           = "proj-oka-int-demo"
-    region            = "us-central1"
-    address           = "192.168.100.11"
-    target_google_api = "storage.us-central1.rep.googleapis.com"
-    access_type       = "REGIONAL"
+    network_name                 = "tf-vpc-01"
+    subnetwork_name              = "tf-vpc-01-sn01-usc1"
+    project                      = "<proj-id>"
+    region                       = "us-central1"
+    address                      = "192.168.100.16"
+    create_regional_address      = false
+    regional_endpoint_subnetwork = true
+    target_google_api            = "storage.us-central1.rep.googleapis.com"
+    access_type                  = "REGIONAL"
   },
 
   "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
-    network_name                            = "tf-vpc-01"
-    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
-    project                                 = "proj-oka-int-demo"
-    region                                  = "us-central1"
-    address                                 = "192.168.100.12"
-    target_google_api                       = "storage.us-central1.rep.googleapis.com"
-    access_type                             = "GLOBAL"
+    network_name                 = "tf-vpc-01"
+    subnetwork_name              = "tf-vpc-01-sn01-usc1"
+    project                      = "<proj-id>"
+    region                       = "us-central1"
+    address                      = "192.168.100.17"
+    create_regional_address      = false
+    regional_endpoint_subnetwork = true
+    target_google_api            = "storage.us-central1.rep.googleapis.com"
+    access_type                  = "GLOBAL"
   },
 
   "psc-all-apis-global" : { // PSC for all google apis with global address
-    network_name                            = "tf-vpc-01"
-    project                                 = "proj-oka-int-demo"
-    region                                  = "us-central1"
-    address                                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
-    target_google_api                       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
-    access_type                             = "GLOBAL"
-    forwarding_rule_name                    = "pscallapis"
+    network_name            = "tf-vpc-01"
+    project                 = "<proj-id>"
+    region                  = "us-central1"
+    address                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
+    create_global_address   = true
+    target_google_api       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
+    access_type             = "GLOBAL"
+    forwarding_rule_name    = "pscallapis"
   },
 
   # Example for consumer forwarding rule:
