@@ -533,14 +533,14 @@ pscendpoints = {
 
   "psc-all-apis-global" : { // PSC for all google apis with global address
 
-    network_name            = "tf-vpc-01"
-    project                 = "<proj-id>"
-    region                  = "us-central1"
-    address                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
-    create_global_address   = true
-    target_google_api       = "all-apis"       // change to vpc-sc if using restricted.googleapis.com
-    access_type             = "GLOBAL"
-    forwarding_rule_name    = "pscallapis"
+    network_name          = "tf-vpc-01"
+    project               = "<proj-id>"
+    region                = "us-central1"
+    address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
+    create_global_address = true
+    target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
+    access_type           = "GLOBAL"
+    forwarding_rule_name  = "pscallapis"
 
   },
 

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# ==========================================
+# 1. Enable OS-Level IP Forwarding
+# ==========================================
+# Apply immediately to the live kernel
+sysctl -w net.ipv4.ip_forward=1
+
+# Make it persistent across reboots
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-custom-routing.conf
+
+# ==========================================
+# 2. Configure iptables (Allow All & NAT)
+# ==========================================
+# Flush any existing rules to start fresh
+iptables -F
+iptables -t nat -F
+
+# Set default policies to explicitly ACCEPT all traffic
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+# Add the Masquerade rule for outbound internet traffic
+iptables -t nat -A POSTROUTING -o ens4 -j MASQUERADE
+
+# Install iptables-persistent non-interactively to save the rules
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y iptables-persistent netfilter-persistent
+
+# Save the live rules to disk so they survive a reboot
+netfilter-persistent save
+
+# ==========================================
+# 3. Install Nginx for Health Checks
+# ==========================================
+# Install Nginx
+apt-get install -y nginx
+
+# Create a simple health check response page
+echo "Router VM is healthy and answering probes!" > /var/www/html/index.html
+
+# Ensure Nginx starts automatically and restart it to catch the new page
+systemctl enable nginx
+systemctl restart nginx
+
+echo "Bootstrap complete! VM is now configured as a NAT Gateway/Router."
