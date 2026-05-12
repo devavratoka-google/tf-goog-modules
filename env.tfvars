@@ -531,7 +531,7 @@ pscendpoints = {
 
   "psc-all-apis-global" : { // PSC for all google apis with global address
     network_name                            = "tf-vpc-01"
-    subnetwork_name                         = "tf-vpc-01-sn01-usc1"
+    subnetwork_name                         = ""
     project                                 = "<proj-id>"
     region                                  = "us-central1"
     address                                 = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
