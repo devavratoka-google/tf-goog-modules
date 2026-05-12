@@ -186,7 +186,7 @@ variable "policy_based_routes" {
     next_hop_other_routes = optional(string, null)
     next_hop_ilb_ip       = optional(string, null)
     priority              = number
-    virtual_machine_tags  = optional(list(string), [])
+    virtual_machine_tags  = optional(list(string), null)
     src_range             = string
     dest_range            = string
     ip_protocol           = optional(string, "ALL")
