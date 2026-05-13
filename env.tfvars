@@ -1,4 +1,4 @@
-env_project_id = "infra-proj-id"
+env_project_id = "proj-oka-int-demo"
 
 vpcs = {
   # "tf-vpc-01" : {
@@ -510,7 +510,7 @@ pscendpoints = {
   "psc-endpoint-01" : { // PSC for regional google apis example
     network_name                 = "tf-vpc-01"
     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "<proj-id>"
+    project                      = "proj-oka-int-demo"
     region                       = "us-central1"
     address                      = "192.168.100.16"
     create_regional_address      = false
@@ -522,7 +522,7 @@ pscendpoints = {
   "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
     network_name                 = "tf-vpc-01"
     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "<proj-id>"
+    project                      = "proj-oka-int-demo"
     region                       = "us-central1"
     address                      = "192.168.100.17"
     create_regional_address      = false
@@ -534,13 +534,26 @@ pscendpoints = {
   "psc-all-apis-global" : { // PSC for all google apis with global address
 
     network_name          = "tf-vpc-01"
-    project               = "<proj-id>"
+    project               = "proj-oka-int-demo"
     region                = "us-central1"
     address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
     create_global_address = true
     target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
     access_type           = "GLOBAL"
     forwarding_rule_name  = "pscallapis"
+
+  },
+
+    "psc-vpc-sc-global" : { // PSC for all google apis with global address
+
+    network_name          = "tf-vpc-01"
+    project               = "proj-oka-int-demo"
+    region                = "us-central1"
+    address               = "192.168.200.20" // has to be part of IP space used in VPC but not belong to an existing subnet
+    create_global_address = true
+    target_google_api     = "vpc-sc" // change to vpc-sc if using restricted.googleapis.com
+    access_type           = "GLOBAL"
+    forwarding_rule_name  = "vpcsc"
 
   },
 
