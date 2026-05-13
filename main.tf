@@ -464,3 +464,33 @@ module "pscendpoints" {
 
   service_attachment = each.value.service_attachment
 }
+
+module "gcs_buckets" {
+
+  source   = "./modules/gcs"
+  for_each = var.gcs_buckets
+
+  name                       = each.key
+  project_id                 = coalesce(each.value.project_id, var.env_project_id)
+  location                   = each.value.location
+  force_destroy              = each.value.force_destroy
+  storage_class              = each.value.storage_class
+  labels                     = each.value.labels
+  bucket_policy_only         = each.value.bucket_policy_only
+  versioning                 = each.value.versioning
+  autoclass                  = each.value.autoclass
+  hierarchical_namespace     = each.value.hierarchical_namespace
+  public_access_prevention   = each.value.public_access_prevention
+  retention_policy           = each.value.retention_policy
+  custom_placement_config    = each.value.custom_placement_config
+  cors                       = each.value.cors
+  encryption                 = each.value.encryption
+  lifecycle_rules            = each.value.lifecycle_rules
+  log_bucket                 = each.value.log_bucket
+  log_object_prefix          = each.value.log_object_prefix
+  website                    = each.value.website
+  soft_delete_policy         = each.value.soft_delete_policy
+  internal_encryption_config = each.value.internal_encryption_config
+  ip_filter                  = each.value.ip_filter
+  iam_members                = each.value.iam_members
+}
