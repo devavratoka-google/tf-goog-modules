@@ -1,4 +1,4 @@
-env_project_id = "proj-oka-int-demo"
+env_project_id = "infra-proj-id"
 
 vpcs = {
   # "tf-vpc-01" : {
@@ -510,7 +510,7 @@ pscendpoints = {
   "psc-endpoint-01" : { // PSC for regional google apis example
     network_name                 = "tf-vpc-01"
     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "proj-oka-int-demo"
+    project                      = "infra-proj-id"
     region                       = "us-central1"
     address                      = "192.168.100.16"
     create_regional_address      = false
@@ -522,7 +522,7 @@ pscendpoints = {
   "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
     network_name                 = "tf-vpc-01"
     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "proj-oka-int-demo"
+    project                      = "infra-proj-id"
     region                       = "us-central1"
     address                      = "192.168.100.17"
     create_regional_address      = false
@@ -534,7 +534,7 @@ pscendpoints = {
   "psc-all-apis-global" : { // PSC for all google apis with global address
 
     network_name          = "tf-vpc-01"
-    project               = "proj-oka-int-demo"
+    project               = "infra-proj-id"
     region                = "us-central1"
     address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
     create_global_address = true
@@ -547,7 +547,7 @@ pscendpoints = {
     "psc-vpc-sc-global" : { // PSC for all google apis with global address
 
     network_name          = "tf-vpc-01"
-    project               = "proj-oka-int-demo"
+    project               = "infra-proj-id"
     region                = "us-central1"
     address               = "192.168.200.20" // has to be part of IP space used in VPC but not belong to an existing subnet
     create_global_address = true
