@@ -566,3 +566,87 @@ variable "pscendpoints" {
   default     = {}
   description = "Map of PSC Endpoints configurations."
 }
+
+variable "gcs_buckets" {
+  type = map(object({
+    project_id               = optional(string, null)
+    location                 = string
+    force_destroy            = optional(bool, false)
+    storage_class            = optional(string, null)
+    labels                   = optional(map(string), null)
+    bucket_policy_only       = optional(bool, true)
+    versioning               = optional(bool, true)
+    autoclass                = optional(bool, false)
+    hierarchical_namespace   = optional(bool, false)
+    public_access_prevention = optional(string, "inherited")
+    retention_policy = optional(object({
+      is_locked        = optional(bool)
+      retention_period = number
+    }), null)
+    custom_placement_config = optional(object({
+      data_locations = list(string)
+    }), null)
+    cors = optional(list(object({
+      origin          = optional(list(string))
+      method          = optional(list(string))
+      response_header = optional(list(string))
+      max_age_seconds = optional(number)
+    })), [])
+    encryption = optional(object({
+      default_kms_key_name = string
+    }), null)
+    lifecycle_rules = optional(list(object({
+      action = object({
+        type          = string
+        storage_class = optional(string)
+      })
+      condition = object({
+        age                        = optional(number)
+        send_age_if_zero           = optional(bool)
+        created_before             = optional(string)
+        with_state                 = optional(string)
+        matches_storage_class      = optional(string)
+        matches_prefix             = optional(string)
+        matches_suffix             = optional(string)
+        num_newer_versions         = optional(number)
+        custom_time_before         = optional(string)
+        days_since_custom_time     = optional(number)
+        days_since_noncurrent_time = optional(number)
+        noncurrent_time_before     = optional(string)
+      })
+    })), [])
+    log_bucket        = optional(string, null)
+    log_object_prefix = optional(string, null)
+    website = optional(object({
+      main_page_suffix = optional(string)
+      not_found_page   = optional(string)
+    }), {})
+    soft_delete_policy = optional(object({
+      retention_duration_seconds = optional(number)
+    }), {})
+    internal_encryption_config = optional(object({
+      create_encryption_key          = optional(bool, false)
+      prevent_destroy                = optional(bool, false)
+      key_destroy_scheduled_duration = optional(string, null)
+      key_rotation_period            = optional(string, "7776000s")
+    }), {})
+    ip_filter = optional(object({
+      mode = string
+      public_network_source = optional(object({
+        allowed_ip_cidr_ranges = list(string)
+      }))
+      vpc_network_sources = optional(list(object({
+        network                = string
+        allowed_ip_cidr_ranges = list(string)
+      })))
+      allow_cross_org_vpcs           = optional(bool)
+      allow_all_service_agent_access = optional(bool)
+    }), null)
+    iam_members = optional(list(object({
+      role   = string
+      member = string
+    })), [])
+  }))
+  default     = {}
+  description = "Map of GCS bucket configurations. Key is used as the bucket name. Interface follows terraform-google-modules/cloud-storage/google//modules/simple_bucket."
+}
