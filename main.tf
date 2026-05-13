@@ -494,3 +494,23 @@ module "gcs_buckets" {
   ip_filter                  = each.value.ip_filter
   iam_members                = each.value.iam_members
 }
+
+module "firestore_databases" {
+
+  source   = "./modules/firestore"
+  for_each = var.firestore_databases
+
+  project_id                        = coalesce(each.value.project_id, var.env_project_id)
+  database_id                       = each.key
+  location                          = each.value.location
+  database_type                     = each.value.database_type
+  database_edition                  = each.value.database_edition
+  concurrency_mode                  = each.value.concurrency_mode
+  delete_protection_state           = each.value.delete_protection_state
+  kms_key_name                      = each.value.kms_key_name
+  point_in_time_recovery_enablement = each.value.point_in_time_recovery_enablement
+  deletion_policy                   = each.value.deletion_policy
+  backup_schedule_configuration     = each.value.backup_schedule_configuration
+  composite_index_configuration     = each.value.composite_index_configuration
+  field_configuration               = each.value.field_configuration
+}

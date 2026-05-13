@@ -650,3 +650,52 @@ variable "gcs_buckets" {
   default     = {}
   description = "Map of GCS bucket configurations. Key is used as the bucket name. Interface follows terraform-google-modules/cloud-storage/google//modules/simple_bucket."
 }
+
+variable "firestore_databases" {
+  type = map(object({
+    project_id                        = optional(string, null)
+    location                          = string
+    database_type                     = optional(string, "FIRESTORE_NATIVE")
+    database_edition                  = optional(string, "STANDARD")
+    concurrency_mode                  = optional(string, "PESSIMISTIC")
+    delete_protection_state           = optional(string, "DELETE_PROTECTION_ENABLED")
+    kms_key_name                      = optional(string, null)
+    point_in_time_recovery_enablement = optional(string, "POINT_IN_TIME_RECOVERY_ENABLED")
+    deletion_policy                   = optional(string, "DELETE")
+    backup_schedule_configuration = optional(object({
+      weekly_recurrence = optional(object({
+        day       = string
+        retention = string
+      }))
+      daily_recurrence = optional(object({
+        retention = string
+      }))
+    }), null)
+    composite_index_configuration = optional(list(object({
+      index_id    = string
+      collection  = string
+      query_scope = optional(string, "COLLECTION")
+      api_scope   = optional(string, "ANY_API")
+      density     = optional(string)
+      multikey    = optional(bool)
+      fields = list(object({
+        field_path   = string
+        order        = optional(string)
+        array_config = optional(string)
+        vector_config = optional(object({
+          dimension = number
+        }))
+      }))
+    })), [])
+    field_configuration = optional(list(object({
+      collection                   = string
+      field                        = string
+      ttl_enabled                  = optional(bool, false)
+      ascending_index_query_scope  = optional(set(string), [])
+      descending_index_query_scope = optional(set(string), [])
+      array_index_query_scope      = optional(set(string), [])
+    })), [])
+  }))
+  default     = {}
+  description = "Map of Firestore database configurations. Key is used as the database_id. Interface follows GoogleCloudPlatform/firestore/google."
+}
