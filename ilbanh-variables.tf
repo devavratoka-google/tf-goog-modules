@@ -5,6 +5,7 @@ variable "env_project_id" {
 
 variable "nva_clusters" {
   description = "Map of NVA clusters to deploy across regions"
+  default     = {}
   type = map(object({
     name                  = string
     region                = string

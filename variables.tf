@@ -1,6 +1,6 @@
-variable "env_project_id" {
-  type = string
-}
+#variable "env_project_id" {
+#  type = string
+#}
 
 variable "vpcs" {
   type = map(object({
@@ -536,7 +536,7 @@ variable "pscendpoints" {
     network_name                 = string
     subnetwork_name              = optional(string, "")
     project                      = string
-    region                       = string
+    region                       = optional(string, "")
     address                      = optional(string, null)
     create_regional_address      = optional(bool, false)
     create_global_address        = optional(bool, false)

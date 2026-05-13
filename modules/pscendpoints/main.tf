@@ -25,7 +25,7 @@ resource "google_compute_global_address" "this" {
 }
 
 resource "google_network_connectivity_regional_endpoint" "this" {
-  count = (var.target_google_api != null && var.target_google_api != "all-apis") ? 1 : 0
+  count = (var.target_google_api != null && var.target_google_api != "all-apis" && var.target_google_api != "vpc-sc") ? 1 : 0
 
   project           = var.project
   name              = var.address_name
@@ -39,13 +39,13 @@ resource "google_network_connectivity_regional_endpoint" "this" {
 }
 
 resource "google_compute_global_forwarding_rule" "google_apis" {
-  count = var.target_google_api == "all-apis" ? 1 : 0
+  count = (var.target_google_api == "all-apis" || var.target_google_api == "vpc-sc") ? 1 : 0
 
   project               = var.project
   name                  = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
   network               = var.network
   ip_address            = var.create_global_address ? google_compute_global_address.this[0].id : var.address
-  target                = "all-apis"
+  target                = var.target_google_api
   load_balancing_scheme = ""
 }
 

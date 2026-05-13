@@ -9,7 +9,7 @@ output "address_name" {
 }
 
 output "address_self_link" {
-  value       = var.target_google_api == "all-apis" ? "projects/${var.project}/global/addresses/${var.address_name}" : "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
+  value       = (var.target_google_api == "all-apis" || var.target_google_api == "vpc-sc") ? "projects/${var.project}/global/addresses/${var.address_name}" : "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
   description = "The self-link of the address."
 }
 
