@@ -3,8 +3,8 @@ nva_clusters = {
   #   name          = "vpc-security-usc1"
   #   region        = "us-central1"
   #   zone          = "us-central1-a"
-  #   network_id    = "projects/proj-oka-int-demo/global/networks/vpc-security"
-  #   subnetwork_id = "projects/proj-oka-int-demo/regions/us-central1/subnetworks/vpc-security-sn-usc1"
+  #   network_id    = "projects/infra-proj-id/global/networks/vpc-security"
+  #   subnetwork_id = "projects/infra-proj-id/regions/us-central1/subnetworks/vpc-security-sn-usc1"
 
   #   resource_manager_tags = {
   #     "tagKeys/281480126525795" = "tagValues/281477869187443"
@@ -23,8 +23,8 @@ nva_clusters = {
   #   name          = "vpc-security-use4"
   #   region        = "us-east4"
   #   zone          = "us-east4-a"
-  #   network_id    = "projects/proj-oka-int-demo/global/networks/vpc-security"
-  #   subnetwork_id = "projects/proj-oka-int-demo/regions/us-east4/subnetworks/vpc-security-sn-use4"
+  #   network_id    = "projects/infra-proj-id/global/networks/vpc-security"
+  #   subnetwork_id = "projects/infra-proj-id/regions/us-east4/subnetworks/vpc-security-sn-use4"
 
   #   resource_manager_tags = {
   #     "tagKeys/281480126525795" = "tagValues/281477869187443"
