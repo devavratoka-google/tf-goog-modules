@@ -514,3 +514,29 @@ module "firestore_databases" {
   composite_index_configuration     = each.value.composite_index_configuration
   field_configuration               = each.value.field_configuration
 }
+
+module "cloud_run_v2" {
+  source   = "./modules/cloud-run-v2"
+  for_each = var.cloud_run_v2
+
+  name                   = coalesce(each.value.name, each.key)
+  project_id             = coalesce(each.value.project_id, var.env_project_id)
+  region                 = each.value.region
+  containers             = each.value.containers
+  context                = each.value.context
+  deletion_protection    = each.value.deletion_protection
+  encryption_key         = each.value.encryption_key
+  iam                    = each.value.iam
+  job_config             = each.value.job_config
+  labels                 = each.value.labels
+  launch_stage           = each.value.launch_stage
+  managed_revision       = each.value.managed_revision
+  revision               = each.value.revision
+  service_config         = each.value.service_config
+  tag_bindings           = each.value.tag_bindings
+  type                   = each.value.type
+  volumes                = each.value.volumes
+  workerpool_config      = each.value.workerpool_config
+  service_account_config = each.value.service_account_config
+  vpc_connector_create   = each.value.vpc_connector_create
+}

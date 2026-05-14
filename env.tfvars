@@ -507,42 +507,42 @@ vpc_firewall_rules = {
 }
 
 pscendpoints = {
-  "psc-endpoint-01" : { // PSC for regional google apis example
-    network_name                 = "tf-vpc-01"
-    subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "<proj-id>"
-    region                       = "us-central1"
-    address                      = "192.168.100.16"
-    create_regional_address      = false
-    regional_endpoint_subnetwork = true
-    target_google_api            = "storage.us-central1.rep.googleapis.com"
-    access_type                  = "REGIONAL"
-  },
+#   "psc-endpoint-01" : { // PSC for regional google apis example
+#     network_name                 = "tf-vpc-01"
+#     subnetwork_name              = "tf-vpc-01-sn01-usc1"
+#     project                      = "<proj-id>"
+#     region                       = "us-central1"
+#     address                      = "192.168.100.16"
+#     create_regional_address      = false
+#     regional_endpoint_subnetwork = true
+#     target_google_api            = "storage.us-central1.rep.googleapis.com"
+#     access_type                  = "REGIONAL"
+#   },
 
-  "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
-    network_name                 = "tf-vpc-01"
-    subnetwork_name              = "tf-vpc-01-sn01-usc1"
-    project                      = "<proj-id>"
-    region                       = "us-central1"
-    address                      = "192.168.100.17"
-    create_regional_address      = false
-    regional_endpoint_subnetwork = true
-    target_google_api            = "storage.us-central1.rep.googleapis.com"
-    access_type                  = "GLOBAL"
-  },
+#   "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
+#     network_name                 = "tf-vpc-01"
+#     subnetwork_name              = "tf-vpc-01-sn01-usc1"
+#     project                      = "<proj-id>"
+#     region                       = "us-central1"
+#     address                      = "192.168.100.17"
+#     create_regional_address      = false
+#     regional_endpoint_subnetwork = true
+#     target_google_api            = "storage.us-central1.rep.googleapis.com"
+#     access_type                  = "GLOBAL"
+#   },
 
-  "psc-all-apis-global" : { // PSC for all google apis with global address
+#   "psc-all-apis-global" : { // PSC for all google apis with global address
 
-    network_name          = "tf-vpc-01"
-    project               = "<proj-id>"
-    region                = "us-central1"
-    address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
-    create_global_address = true
-    target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
-    access_type           = "GLOBAL"
-    forwarding_rule_name  = "pscallapis"
+#     network_name          = "tf-vpc-01"
+#     project               = "<proj-id>"
+#     region                = "us-central1"
+#     address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
+#     create_global_address = true
+#     target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
+#     access_type           = "GLOBAL"
+#     forwarding_rule_name  = "pscallapis"
 
-  },
+#   },
 
   # Example for consumer forwarding rule:
   # "psc-consumer-forwarding-rule-01" : {
@@ -572,4 +572,71 @@ pscendpoints = {
   #     enable_proxy_protocol = false
   #   }
   # }
+}
+
+cloud_run_v2 = {
+#   "service-robin-control-plane" : {
+#     region              = "us-central1"
+#     deletion_protection = "false"
+
+#     service_config = {
+#       ingress = "INGRESS_TRAFFIC_ALL"
+#       # Max request duration. SSE connections to GKE pods can be long-lived.
+#       # When this timeout fires, the browser's EventSource auto-reconnects.
+#       # See docs/robin-migration/07-understanding-sse.md for the full lifecycle.
+#       timeout = "3600s"
+
+#       scaling = {
+#         # Keep one control-plane instance warm because it runs background workspace
+#         # lifecycle loops; this is cheaper than letting session pods linger.
+#         min_instance_count = 1
+#         max_instance_count = 10
+#       }
+#     }
+
+#     revision = {
+#       # Direct VPC egress for Cloud Run -> GKE communication
+#       vpc_access = {
+#         network = "robin"
+#         subnet  = "cloudrun"
+#         egress  = "ALL_TRAFFIC"
+#       }
+#     }
+
+#     service_account_config = {
+#       create = false
+#       email  = "runtime-sa@<proj-id>.iam.gserviceaccount.com" # maps to google_service_account.runtime.email
+#     }
+
+#     containers = {
+#       "default" : {
+#         image = "us-central1-docker.pkg.dev/<proj-id>/<artifact-repo>/robin-control-plane:latest"
+
+#         resources = {
+#           limits = {
+#             cpu    = "1"
+#             memory = "512Mi"
+#           }
+#         }
+
+#         ports = {
+#           "http" = {
+#             container_port = 8080
+#           }
+#         }
+#       }
+#     }
+
+#     # Cloud Run IAM bindings
+#     iam = {
+#       "roles/run.invoker" = [
+#         # Allow the portal runtime SA to invoke the control plane.
+#         "serviceAccount:portal-invoker@<proj-id>.iam.gserviceaccount.com",
+#         # Allow the CI/CD WIF SA to invoke the control plane (health checks).
+#         "serviceAccount:shared-wif@<proj-id>.iam.gserviceaccount.com",
+#         # Allow backend service SAs to invoke the Robin task API (service-to-service)
+#         "serviceAccount:service-invoker@<proj-id>.iam.gserviceaccount.com"
+#       ]
+#     }
+#   }
 }
