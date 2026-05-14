@@ -699,3 +699,197 @@ variable "firestore_databases" {
   default     = {}
   description = "Map of Firestore database configurations. Key is used as the database_id. Interface follows GoogleCloudPlatform/firestore/google."
 }
+
+variable "cloud_run_v2" {
+  type = map(object({
+    name                = optional(string, null)
+    project_id          = optional(string, null)
+    region              = string
+    containers = optional(map(object({
+      image      = string
+      depends_on = optional(list(string))
+      command    = optional(list(string))
+      args       = optional(list(string))
+      env        = optional(map(string))
+      env_from_key = optional(map(object({
+        secret  = string
+        version = string
+      })))
+      liveness_probe = optional(object({
+        grpc = optional(object({
+          port    = optional(number)
+          service = optional(string)
+        }))
+        http_get = optional(object({
+          http_headers = optional(map(string))
+          path         = optional(string)
+          port         = optional(number)
+        }))
+        failure_threshold     = optional(number)
+        initial_delay_seconds = optional(number)
+        period_seconds        = optional(number)
+        timeout_seconds       = optional(number)
+      }))
+      ports = optional(map(object({
+        container_port = optional(number)
+        name           = optional(string)
+      })))
+      resources = optional(object({
+        limits            = optional(map(string))
+        cpu_idle          = optional(bool)
+        startup_cpu_boost = optional(bool)
+      }))
+      startup_probe = optional(object({
+        grpc = optional(object({
+          port    = optional(number)
+          service = optional(string)
+        }))
+        http_get = optional(object({
+          http_headers = optional(map(string))
+          path         = optional(string)
+          port         = optional(number)
+        }))
+        tcp_socket = optional(object({
+          port = optional(number)
+        }))
+        failure_threshold     = optional(number)
+        initial_delay_seconds = optional(number)
+        period_seconds        = optional(number)
+        timeout_seconds       = optional(number)
+      }))
+      volume_mounts = optional(map(string))
+    })), {})
+    context = optional(object({
+      condition_vars = optional(map(map(string)), {})
+      cidr_ranges    = optional(map(string), {})
+      custom_roles   = optional(map(string), {})
+      iam_principals = optional(map(string), {})
+      kms_keys       = optional(map(string), {})
+      locations      = optional(map(string), {})
+      networks       = optional(map(string), {})
+      project_ids    = optional(map(string), {})
+      subnets        = optional(map(string), {})
+      tag_values     = optional(map(string), {})
+    }), {})
+    deletion_protection = optional(string, null)
+    encryption_key      = optional(string, null)
+    iam                 = optional(map(list(string)), {})
+    job_config = optional(object({
+      max_retries = optional(number)
+      task_count  = optional(number)
+      timeout     = optional(string)
+    }), {})
+    labels           = optional(map(string), {})
+    launch_stage     = optional(string, null)
+    managed_revision = optional(bool, true)
+    revision = optional(object({
+      gpu_zonal_redundancy_disabled = optional(bool)
+      labels                        = optional(map(string))
+      name                          = optional(string)
+      node_selector = optional(object({
+        accelerator = string
+      }))
+      vpc_access = optional(object({
+        connector = optional(string)
+        egress    = optional(string)
+        network   = optional(string)
+        subnet    = optional(string)
+        tags      = optional(list(string))
+      }), {})
+      timeout                    = optional(string)
+      gen2_execution_environment = optional(any)
+      job                        = optional(any)
+      max_concurrency            = optional(any)
+      max_instance_count         = optional(any)
+      min_instance_count         = optional(any)
+    }), {})
+    service_config = optional(object({
+      custom_audiences = optional(list(string), null)
+      eventarc_triggers = optional(object({
+        audit_log = optional(map(object({
+          method  = string
+          service = string
+        })))
+        pubsub = optional(map(string))
+        storage = optional(map(object({
+          bucket = string
+          path   = optional(string)
+        })))
+        service_account_email = optional(string)
+      }), {})
+      gen2_execution_environment = optional(bool, false)
+      iap_config = optional(object({
+        iam          = optional(list(string), [])
+        iam_additive = optional(list(string), [])
+      }), null)
+      ingress              = optional(string, null)
+      invoker_iam_disabled = optional(bool, false)
+      max_concurrency      = optional(number)
+      scaling = optional(object({
+        max_instance_count = optional(number)
+        min_instance_count = optional(number)
+      }))
+      timeout = optional(string)
+    }), {})
+    tag_bindings = optional(map(string), {})
+    type         = optional(string, "SERVICE")
+    volumes = optional(map(object({
+      secret = optional(object({
+        name         = string
+        default_mode = optional(string)
+        path         = optional(string)
+        version      = optional(string)
+        mode         = optional(string)
+      }))
+      cloud_sql_instances = optional(list(string))
+      empty_dir_size      = optional(string)
+      gcs = optional(object({
+        bucket       = string
+        is_read_only = optional(bool)
+      }))
+      nfs = optional(object({
+        server       = string
+        path         = optional(string)
+        is_read_only = optional(bool)
+      }))
+    })), {})
+    workerpool_config = optional(object({
+      scaling = optional(object({
+        manual_instance_count = optional(number)
+        max_instance_count    = optional(number)
+        min_instance_count    = optional(number)
+        mode                  = optional(string)
+      }))
+    }), {})
+    service_account_config = optional(object({
+      create       = optional(bool, true)
+      display_name = optional(string)
+      email        = optional(string)
+      name         = optional(string)
+      roles = optional(list(string), [
+        "roles/logging.logWriter",
+        "roles/monitoring.metricWriter"
+      ])
+    }), {})
+    vpc_connector_create = optional(object({
+      ip_cidr_range = optional(string)
+      machine_type  = optional(string)
+      name          = optional(string)
+      network       = optional(string)
+      instances = optional(object({
+        max = optional(number)
+        min = optional(number)
+      }), {})
+      throughput = optional(object({
+        max = optional(number)
+        min = optional(number)
+      }), {})
+      subnet = optional(object({
+        name       = optional(string)
+        project_id = optional(string)
+      }), {})
+    }), null)
+  }))
+  default     = {}
+  description = "Map of Cloud Run v2 resources (services, jobs, or worker pools) configurations. Key is used as the service name if name is not specified."
+}

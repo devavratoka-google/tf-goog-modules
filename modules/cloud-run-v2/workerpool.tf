@@ -1,5 +1,5 @@
 /**
- * Copyright 2026 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-terraform {
-  required_version = ">= 1.12.2"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 7.28.0, < 8.0.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 7.28.0, < 8.0.0"
-    }
-  }
+resource "google_cloud_run_v2_worker_pool_iam_binding" "binding" {
+  for_each = var.type == "WORKERPOOL" ? var.iam : {}
+  project  = local.resource.project
+  location = local.resource.location
+  name     = local.resource.name
+  role     = lookup(local.ctx.custom_roles, each.key, each.key)
+  members  = [for member in each.value : lookup(local.ctx.iam_principals, member, member)]
 }
