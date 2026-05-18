@@ -702,9 +702,9 @@ variable "firestore_databases" {
 
 variable "cloud_run_v2" {
   type = map(object({
-    name                = optional(string, null)
-    project_id          = optional(string, null)
-    region              = string
+    name       = optional(string, null)
+    project_id = optional(string, null)
+    region     = string
     containers = optional(map(object({
       image      = string
       depends_on = optional(list(string))
