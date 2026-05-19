@@ -1,17 +1,8 @@
-data "google_project" "proj-id" {
-  project_id = var.env_project_id
-}
-
-locals {
-  project_id            = "<proj-id>"
-  service_account_email = "${data.google_project.proj-id.number}-compute@developer.gserviceaccount.com"
-}
-
 module "nva_ilb_clusters" {
   source   = "./modules/ilbanh"
   for_each = var.nva_clusters
 
-  project_id            = local.project_id
+  project_id            = var.env_project_id
   name                  = each.value.name
   region                = each.value.region
   zone                  = each.value.zone

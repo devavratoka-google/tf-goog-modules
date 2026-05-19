@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,24 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 3.53, < 8" # Local divergence from upstream (<7): bumped upper bound to <8 for compatibility with the rest of this repo, which requires google provider >= 7.
+      version = ">= 7.22, < 8"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 7.22, < 8"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.4"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.2"
     }
   }
 
-  provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-firestore/v0.2.2"
+  provider_meta "google-beta" {
+    module_name = "blueprints/terraform/terraform-google-sql-db:mssql/v28.1.1"
   }
+
 }

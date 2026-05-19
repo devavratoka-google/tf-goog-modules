@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,15 @@
 terraform {
   required_version = ">= 1.3"
   required_providers {
+
     google = {
       source  = "hashicorp/google"
-      version = ">= 3.53, < 8" # Local divergence from upstream (<7): bumped upper bound to <8 for compatibility with the rest of this repo, which requires google provider >= 7.
+      version = ">= 5.39, < 8"
     }
   }
 
   provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-firestore/v0.2.2"
+    module_name = "blueprints/terraform/terraform-google-bigquery/v10.2.1"
   }
+
 }
