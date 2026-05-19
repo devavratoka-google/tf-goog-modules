@@ -515,6 +515,251 @@ module "firestore_databases" {
   field_configuration               = each.value.field_configuration
 }
 
+module "bigquery_datasets" {
+  source   = "./modules/bigquery"
+  for_each = var.bigquery_datasets
+
+  project_id                      = coalesce(each.value.project_id, var.env_project_id)
+  dataset_id                      = each.key
+  dataset_name                    = each.value.dataset_name
+  description                     = each.value.description
+  location                        = each.value.location
+  delete_contents_on_destroy      = each.value.delete_contents_on_destroy
+  deletion_protection             = each.value.deletion_protection
+  default_table_expiration_ms     = each.value.default_table_expiration_ms
+  default_partition_expiration_ms = each.value.default_partition_expiration_ms
+  max_time_travel_hours           = each.value.max_time_travel_hours
+  storage_billing_model           = each.value.storage_billing_model
+  encryption_key                  = each.value.encryption_key
+  dataset_labels                  = each.value.dataset_labels
+  resource_tags                   = each.value.resource_tags
+  access                          = each.value.access
+  tables                          = each.value.tables
+  views                           = each.value.views
+  materialized_views              = each.value.materialized_views
+  external_tables                 = each.value.external_tables
+  routines                        = each.value.routines
+}
+
+module "cloud_sql_postgresql" {
+  source   = "./modules/cloud-sql-postgresql"
+  for_each = var.cloud_sql_postgresql
+
+  project_id          = coalesce(each.value.project_id, var.env_project_id)
+  name                = each.key
+  region              = each.value.region
+  edition             = each.value.edition
+  database_version    = each.value.database_version
+  maintenance_version = each.value.maintenance_version
+  availability_type   = each.value.availability_type
+
+  enable_default_db        = each.value.enable_default_db
+  db_name                  = each.value.db_name
+  enable_default_user      = each.value.enable_default_user
+  user_name                = each.value.user_name
+  user_password            = each.value.user_password
+  root_password            = each.value.root_password
+  deletion_protection      = each.value.deletion_protection
+  database_deletion_policy = each.value.database_deletion_policy
+  user_deletion_policy     = each.value.user_deletion_policy
+  data_cache_enabled       = each.value.data_cache_enabled
+
+  database_flags       = each.value.database_flags
+  additional_users     = each.value.additional_users
+  additional_databases = each.value.additional_databases
+
+  master_instance_name                     = each.value.master_instance_name
+  failover_dr_replica_name                 = each.value.failover_dr_replica_name
+  instance_type                            = each.value.instance_type
+  random_instance_name                     = each.value.random_instance_name
+  tier                                     = each.value.tier
+  zone                                     = each.value.zone
+  secondary_zone                           = each.value.secondary_zone
+  follow_gae_application                   = each.value.follow_gae_application
+  activation_policy                        = each.value.activation_policy
+  deletion_protection_enabled              = each.value.deletion_protection_enabled
+  read_replica_deletion_protection_enabled = each.value.read_replica_deletion_protection_enabled
+  disk_autoresize                          = each.value.disk_autoresize
+  disk_autoresize_limit                    = each.value.disk_autoresize_limit
+  disk_size                                = each.value.disk_size
+  disk_type                                = each.value.disk_type
+  pricing_plan                             = each.value.pricing_plan
+  maintenance_window_day                   = each.value.maintenance_window_day
+  maintenance_window_hour                  = each.value.maintenance_window_hour
+  maintenance_window_update_track          = each.value.maintenance_window_update_track
+  user_labels                              = each.value.user_labels
+
+  deny_maintenance_period           = each.value.deny_maintenance_period
+  backup_configuration              = each.value.backup_configuration
+  final_backup_config               = each.value.final_backup_config
+  insights_config                   = each.value.insights_config
+  password_validation_policy_config = each.value.password_validation_policy_config
+  ip_configuration                  = each.value.ip_configuration
+
+  read_replicas            = each.value.read_replicas
+  read_replica_name_suffix = each.value.read_replica_name_suffix
+  db_charset               = each.value.db_charset
+  db_collation             = each.value.db_collation
+  iam_users                = each.value.iam_users
+
+  create_timeout                   = each.value.create_timeout
+  update_timeout                   = each.value.update_timeout
+  delete_timeout                   = each.value.delete_timeout
+  encryption_key_name              = each.value.encryption_key_name
+  read_replica_deletion_protection = each.value.read_replica_deletion_protection
+  enable_random_password_special   = each.value.enable_random_password_special
+  connector_enforcement            = each.value.connector_enforcement
+  enable_google_ml_integration     = each.value.enable_google_ml_integration
+  enable_dataplex_integration      = each.value.enable_dataplex_integration
+  database_integration_roles       = each.value.database_integration_roles
+  use_autokey                      = each.value.use_autokey
+  create_kms_key_handle            = each.value.create_kms_key_handle
+  kms_key_handle_name              = each.value.kms_key_handle_name
+  retain_backups_on_delete         = each.value.retain_backups_on_delete
+  connection_pool_config           = each.value.connection_pool_config
+}
+
+module "cloud_sql_mysql" {
+  source   = "./modules/cloud-sql-mysql"
+  for_each = var.cloud_sql_mysql
+
+  project_id          = coalesce(each.value.project_id, var.env_project_id)
+  name                = each.key
+  region              = each.value.region
+  edition             = each.value.edition
+  database_version    = each.value.database_version
+  maintenance_version = each.value.maintenance_version
+  availability_type   = each.value.availability_type
+
+  enable_default_db    = each.value.enable_default_db
+  db_name              = each.value.db_name
+  enable_default_user  = each.value.enable_default_user
+  user_name            = each.value.user_name
+  user_password        = each.value.user_password
+  user_host            = each.value.user_host
+  root_password        = each.value.root_password
+  deletion_protection  = each.value.deletion_protection
+  user_deletion_policy = each.value.user_deletion_policy
+  data_cache_enabled   = each.value.data_cache_enabled
+
+  additional_databases = each.value.additional_databases
+  additional_users     = each.value.additional_users
+  iam_users            = each.value.iam_users
+
+  random_instance_name                     = each.value.random_instance_name
+  replica_database_version                 = each.value.replica_database_version
+  master_instance_name                     = each.value.master_instance_name
+  failover_dr_replica_name                 = each.value.failover_dr_replica_name
+  instance_type                            = each.value.instance_type
+  tier                                     = each.value.tier
+  zone                                     = each.value.zone
+  secondary_zone                           = each.value.secondary_zone
+  follow_gae_application                   = each.value.follow_gae_application
+  activation_policy                        = each.value.activation_policy
+  auto_upgrade_enabled                     = each.value.auto_upgrade_enabled
+  deletion_protection_enabled              = each.value.deletion_protection_enabled
+  read_replica_deletion_protection_enabled = each.value.read_replica_deletion_protection_enabled
+  disk_autoresize                          = each.value.disk_autoresize
+  disk_autoresize_limit                    = each.value.disk_autoresize_limit
+  disk_size                                = each.value.disk_size
+  disk_type                                = each.value.disk_type
+  pricing_plan                             = each.value.pricing_plan
+  maintenance_window_day                   = each.value.maintenance_window_day
+  maintenance_window_hour                  = each.value.maintenance_window_hour
+  maintenance_window_update_track          = each.value.maintenance_window_update_track
+
+  database_flags          = each.value.database_flags
+  user_labels             = each.value.user_labels
+  deny_maintenance_period = each.value.deny_maintenance_period
+
+  backup_configuration              = each.value.backup_configuration
+  retain_backups_on_delete          = each.value.retain_backups_on_delete
+  insights_config                   = each.value.insights_config
+  final_backup_config               = each.value.final_backup_config
+  ip_configuration                  = each.value.ip_configuration
+  password_validation_policy_config = each.value.password_validation_policy_config
+
+  read_replicas            = each.value.read_replicas
+  read_replica_name_suffix = each.value.read_replica_name_suffix
+  db_charset               = each.value.db_charset
+  db_collation             = each.value.db_collation
+
+  create_timeout                   = each.value.create_timeout
+  update_timeout                   = each.value.update_timeout
+  delete_timeout                   = each.value.delete_timeout
+  encryption_key_name              = each.value.encryption_key_name
+  read_replica_deletion_protection = each.value.read_replica_deletion_protection
+  enable_random_password_special   = each.value.enable_random_password_special
+  connector_enforcement            = each.value.connector_enforcement
+  enable_google_ml_integration     = each.value.enable_google_ml_integration
+  enable_dataplex_integration      = each.value.enable_dataplex_integration
+  database_integration_roles       = each.value.database_integration_roles
+  connection_pool_config           = each.value.connection_pool_config
+}
+
+module "cloud_sql_mssql" {
+  source   = "./modules/cloud-sql-mssql"
+  for_each = var.cloud_sql_mssql
+
+  project_id                      = coalesce(each.value.project_id, var.env_project_id)
+  name                            = each.key
+  master_instance_name            = each.value.master_instance_name
+  instance_type                   = each.value.instance_type
+  random_instance_name            = each.value.random_instance_name
+  maintenance_version             = each.value.maintenance_version
+  database_version                = each.value.database_version
+  region                          = each.value.region
+  tier                            = each.value.tier
+  edition                         = each.value.edition
+  zone                            = each.value.zone
+  secondary_zone                  = each.value.secondary_zone
+  follow_gae_application          = each.value.follow_gae_application
+  activation_policy               = each.value.activation_policy
+  availability_type               = each.value.availability_type
+  deletion_protection_enabled     = each.value.deletion_protection_enabled
+  disk_autoresize                 = each.value.disk_autoresize
+  disk_autoresize_limit           = each.value.disk_autoresize_limit
+  disk_size                       = each.value.disk_size
+  disk_type                       = each.value.disk_type
+  pricing_plan                    = each.value.pricing_plan
+  maintenance_window_day          = each.value.maintenance_window_day
+  maintenance_window_hour         = each.value.maintenance_window_hour
+  maintenance_window_update_track = each.value.maintenance_window_update_track
+
+  deny_maintenance_period = each.value.deny_maintenance_period
+  database_flags          = each.value.database_flags
+  data_cache_enabled      = each.value.data_cache_enabled
+  active_directory_config = each.value.active_directory_config
+  sql_server_audit_config = each.value.sql_server_audit_config
+  user_labels             = each.value.user_labels
+
+  ip_configuration         = each.value.ip_configuration
+  backup_configuration     = each.value.backup_configuration
+  retain_backups_on_delete = each.value.retain_backups_on_delete
+
+  db_name              = each.value.db_name
+  db_charset           = each.value.db_charset
+  db_collation         = each.value.db_collation
+  additional_databases = each.value.additional_databases
+  user_name            = each.value.user_name
+  user_password        = each.value.user_password
+  additional_users     = each.value.additional_users
+  root_password        = each.value.root_password
+
+  create_timeout              = each.value.create_timeout
+  update_timeout              = each.value.update_timeout
+  delete_timeout              = each.value.delete_timeout
+  encryption_key_name         = each.value.encryption_key_name
+  deletion_protection         = each.value.deletion_protection
+  connector_enforcement       = each.value.connector_enforcement
+  time_zone                   = each.value.time_zone
+  enable_default_db           = each.value.enable_default_db
+  enable_default_user         = each.value.enable_default_user
+  enable_dataplex_integration = each.value.enable_dataplex_integration
+  insights_config             = each.value.insights_config
+  final_backup_config         = each.value.final_backup_config
+}
+
 module "cloud_run_v2" {
   source   = "./modules/cloud-run-v2"
   for_each = var.cloud_run_v2

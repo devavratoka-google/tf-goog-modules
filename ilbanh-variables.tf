@@ -1,8 +1,3 @@
-variable "env_project_id" {
-  type    = string
-  default = "<proj-id>"
-}
-
 variable "nva_clusters" {
   description = "Map of NVA clusters to deploy across regions"
   type = map(object({
@@ -16,4 +11,5 @@ variable "nva_clusters" {
       address = string
     }))
   }))
+  default = {}
 }

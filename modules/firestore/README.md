@@ -10,7 +10,8 @@
 >    ./modules/firestore/
 > ```
 >
-> There are no local divergences (no transitive registry modules to repoint).
+> **Local divergences from upstream:**
+> - `versions.tf`: `hashicorp/google` upper bound bumped from `< 7` to `< 8`. The rest of this repo requires `google >= 7.0.0`, so keeping the upstream constraint would make `terraform init` on the root impossible. Re-evaluate when upstream bumps the bound.
 
 ## Description
 ### Tagline
