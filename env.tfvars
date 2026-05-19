@@ -575,61 +575,61 @@ pscendpoints = {
 }
 
 cloud_run_v2 = {
-  "service-hello-world" : {
-    region              = "us-central1"
-    deletion_protection = "false"
+#   "service-hello-world" : {
+#     region              = "us-central1"
+#     deletion_protection = "false"
 
-    service_config = {
-      ingress = "INGRESS_TRAFFIC_ALL"
-      # Max request duration. SSE connections to GKE pods can be long-lived.
-      # When this timeout fires, the browser's EventSource auto-reconnects.
-      # See docs/robin-migration/07-understanding-sse.md for the full lifecycle.
-      timeout = "3600s"
+#     service_config = {
+#       ingress = "INGRESS_TRAFFIC_ALL"
+#       # Max request duration. SSE connections to GKE pods can be long-lived.
+#       # When this timeout fires, the browser's EventSource auto-reconnects.
+#       # See docs/robin-migration/07-understanding-sse.md for the full lifecycle.
+#       timeout = "3600s"
 
-      scaling = {
-        # Keep one control-plane instance warm because it runs background workspace
-        # lifecycle loops; this is cheaper than letting session pods linger.
-        min_instance_count = 1
-        max_instance_count = 10
-      }
-    }
+#       scaling = {
+#         # Keep one control-plane instance warm because it runs background workspace
+#         # lifecycle loops; this is cheaper than letting session pods linger.
+#         min_instance_count = 1
+#         max_instance_count = 10
+#       }
+#     }
 
-    revision = {
-      # Direct VPC egress for Cloud Run -> GKE communication
-      vpc_access = {
-        network = "tf-vpc-01"
-        subnet  = "tf-vpc-01-sn01-usc1"
-        egress  = "ALL_TRAFFIC"
-      }
-    }
+#     revision = {
+#       # Direct VPC egress for Cloud Run -> GKE communication
+#       vpc_access = {
+#         network = "tf-vpc-01"
+#         subnet  = "tf-vpc-01-sn01-usc1"
+#         egress  = "ALL_TRAFFIC"
+#       }
+#     }
 
-    service_account_config = {
-      create = false
-      email  = "<project-number>-compute@developer.gserviceaccount.com" # maps to google_service_account.runtime.email
-    }
+#     service_account_config = {
+#       create = false
+#       email  = "<project-number>-compute@developer.gserviceaccount.com" # maps to google_service_account.runtime.email
+#     }
 
-    containers = {
-      "default" : {
-        image = "us-central1-docker.pkg.dev/<project-id>/dockerhub-remote-test/nginxdemos/hello:latest"
+#     containers = {
+#       "default" : {
+#         image = "us-central1-docker.pkg.dev/<project-id>/dockerhub-remote-test/nginxdemos/hello:latest"
 
-        resources = {
-          limits = {
-            cpu    = "1"
-            memory = "512Mi"
-          }
-        }
+#         resources = {
+#           limits = {
+#             cpu    = "1"
+#             memory = "512Mi"
+#           }
+#         }
 
-        ports = {
-          "http" = {
-            container_port = 80
-          }
-        }
-      }
-    }
+#         ports = {
+#           "http" = {
+#             container_port = 80
+#           }
+#         }
+#       }
+#     }
 
-    # Cloud Run IAM bindings
-    iam = {
-      "roles/run.invoker" = ["allUsers"]
-    }
-  }
+#     # Cloud Run IAM bindings
+#     iam = {
+#       "roles/run.invoker" = ["allUsers"]
+#     }
+#   }
 }
