@@ -633,3 +633,140 @@ cloud_run_v2 = {
 #     }
 #   }
 }
+
+ bigquery_datasets = {
+#   "analytics" = {
+#     location            = "us-east4"
+#     deletion_protection = false
+
+#     tables = [
+#       {
+#         table_id = "events"
+#         schema   = <<-EOT
+#           [
+#             {"name": "event_timestamp", "type": "TIMESTAMP", "mode": "REQUIRED"},
+#             {"name": "user_id",         "type": "STRING",    "mode": "REQUIRED"},
+#             {"name": "event_name",      "type": "STRING",    "mode": "REQUIRED"},
+#             {"name": "properties",      "type": "JSON",      "mode": "NULLABLE"}
+#           ]
+#         EOT
+#         time_partitioning = {
+#           type          = "DAY"
+#           field         = "event_timestamp"
+#           expiration_ms = "7776000000"
+#         }
+#         clustering = ["user_id", "event_name"]
+#         labels     = {}
+#       }
+#     ]
+#   }
+}
+
+cloud_sql_mssql = {
+  # "app-mssql" = {
+  #   region           = "us-east4"
+  #   database_version = "SQLSERVER_2019_STANDARD"
+  #   tier             = ""
+  #   availability_type = "REGIONAL"
+
+  #   db_name              = "appdb"
+  #   user_name            = "app"
+  #   root_password        = ""
+  #   deletion_protection  = true
+
+  #   disk_size       = 20
+  #   disk_autoresize = true
+
+  #   backup_configuration = {
+  #     enabled                        = true
+  #     point_in_time_recovery_enabled = true
+  #     start_time                     = "03:00"
+  #     retained_backups               = 7
+  #     retention_unit                 = "COUNT"
+  #     binary_log_enabled             = null
+  #     transaction_log_retention_days = "3"
+  #     location                       = null
+  #   }
+
+  #   ip_configuration = {
+  #     ipv4_enabled    = false
+  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
+  #     ssl_mode        = "ENCRYPTED_ONLY"
+  #   }
+
+  #   user_labels = { env = "dev", app = "core" }
+  # }
+}
+
+cloud_sql_mysql = {
+  # "app-mysql" = {
+  #   region           = "us-east4"
+  #   database_version = "MYSQL_8_0"
+  #   tier             = "db-n1-standard-2"
+  #   availability_type = "REGIONAL"
+
+  #   db_name              = "appdb"
+  #   user_name            = "app"
+  #   deletion_protection  = true
+
+  #   disk_size       = 20
+  #   disk_autoresize = true
+
+  #   backup_configuration = {
+  #     enabled                        = true
+  #     binary_log_enabled             = true # necessario para PITR e read replicas
+  #     start_time                     = "03:00"
+  #     retained_backups               = 7
+  #     transaction_log_retention_days = "3"
+  #   }
+
+  #   ip_configuration = {
+  #     ipv4_enabled    = false
+  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
+  #     ssl_mode        = "ENCRYPTED_ONLY"
+  #   }
+
+  #   database_flags = [
+  #     { name = "slow_query_log", value = "on" },
+  #     { name = "long_query_time", value = "1" }
+  #   ]
+
+  #   user_labels = { env = "dev", app = "core" }
+  # }
+}
+
+cloud_sql_postgresql = {
+  # "app-pg" = {
+  #   region           = "us-east4"
+  #   database_version = "POSTGRES_16"
+  #   tier             = "db-perf-optimized-N-8"
+  #   availability_type = "REGIONAL" 
+
+  #   db_name              = "appdb"
+  #   user_name            = "app"
+  #   deletion_protection  = true # bloqueia destroy acidental
+
+  #   disk_size       = 20
+  #   disk_autoresize = true
+
+  #   backup_configuration = {
+  #     enabled                        = true
+  #     point_in_time_recovery_enabled = true
+  #     start_time                     = "03:00"
+  #     retained_backups               = 7
+  #   }
+
+  #   ip_configuration = {
+  #     ipv4_enabled    = false # so private
+  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
+  #     ssl_mode        = "ENCRYPTED_ONLY"
+  #   }
+
+  #   database_flags = [
+  #     { name = "cloudsql.iam_authentication", value = "on" }, # auth via IAM
+  #     { name = "log_min_duration_statement", value = "1000" } # slow queries > 1s
+  #   ]
+
+  #   user_labels = { env = "dev", app = "core" }
+  # }
+}
