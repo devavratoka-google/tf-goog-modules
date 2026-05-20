@@ -633,3 +633,16 @@ cloud_run_v2 = {
 #     }
 #   }
 }
+
+
+#bigquery_datasets = {
+#  "analytics" = {
+#    location           = "us-east4"
+#    description        = "App analytics warehouse"
+#    dataset_labels     = { env = "dev", owner = "data-team" }
+#    deletion_protection = false
+#
+#    default_partition_expiration_ms = 7776000000 # 90 days
+#    default_table_expiration_ms = null
+#  }
+#}
