@@ -893,3 +893,66 @@ variable "cloud_run_v2" {
   default     = {}
   description = "Map of Cloud Run v2 resources (services, jobs, or worker pools) configurations. Key is used as the service name if name is not specified."
 }
+
+variable "iam_service_accounts" {
+  type = map(object({
+    name           = string
+    project_id     = optional(string)
+    project_number = optional(string)
+    prefix         = optional(string)
+    display_name   = optional(string, "Terraform-managed.")
+    description    = optional(string)
+    service_account_reuse = optional(object({
+      use_data_source = optional(bool, true)
+      attributes = optional(object({
+        project_number = number
+        unique_id      = string
+      }))
+      universe = optional(object({
+        prefix = string
+      }))
+    }))
+    create_ignore_already_exists = optional(bool)
+    iam                          = optional(map(list(string)), {})
+    iam_by_principals            = optional(map(list(string)), {})
+    iam_by_principals_additive   = optional(map(list(string)), {})
+    iam_bindings = optional(map(object({
+      members = list(string)
+      role    = string
+      condition = optional(object({
+        expression  = string
+        title       = string
+        description = optional(string)
+      }))
+    })), {})
+    iam_bindings_additive = optional(map(object({
+      member = string
+      role   = string
+      condition = optional(object({
+        expression  = string
+        title       = string
+        description = optional(string)
+      }))
+    })), {})
+    iam_billing_roles          = optional(map(list(string)), {})
+    iam_folder_roles           = optional(map(list(string)), {})
+    iam_organization_roles     = optional(map(list(string)), {})
+    iam_project_roles          = optional(map(list(string)), {})
+    iam_sa_roles               = optional(map(list(string)), {})
+    iam_storage_roles          = optional(map(list(string)), {})
+    iam_bigquery_dataset_roles = optional(map(list(string)), {})
+    tag_bindings               = optional(map(string), {})
+    context = optional(object({
+      condition_vars      = optional(map(map(string)), {})
+      custom_roles        = optional(map(string), {})
+      folder_ids          = optional(map(string), {})
+      iam_principals      = optional(map(string), {})
+      project_ids         = optional(map(string), {})
+      service_account_ids = optional(map(string), {})
+      storage_buckets     = optional(map(string), {})
+      tag_values          = optional(map(string), {})
+    }), {})
+  }))
+  default     = {}
+  description = "Map of service accounts to manage IAM bindings on. Use service_account_reuse with a fully-qualified email in 'name' to bind roles to an externally-created SA (e.g. one attached to a GCE VM). Interface mirrors fabric/iam-service-account v55.1.0 plus the local iam_bigquery_dataset_roles extension (keys in 'project_id/dataset_id' format)."
+}

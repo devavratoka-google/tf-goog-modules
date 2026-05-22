@@ -9,6 +9,14 @@ terraform {
       source  = "hashicorp/google-beta"
       version = ">=7.0.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.1"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.1"
+    }
   }
   required_version = ">1.5.0"
 }

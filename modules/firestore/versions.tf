@@ -16,12 +16,6 @@
 
 terraform {
   required_version = ">= 1.3"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 3.53, < 8" # Local divergence from upstream (<7): bumped upper bound to <8 for compatibility with the rest of this repo, which requires google provider >= 7.
-    }
-  }
 
   provider_meta "google" {
     module_name = "blueprints/terraform/terraform-google-firestore/v0.2.2"
