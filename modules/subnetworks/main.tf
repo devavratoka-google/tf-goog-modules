@@ -20,7 +20,7 @@ resource "google_compute_subnetwork" "this" {
   private_ipv6_google_access = var.private_ipv6_google_access
   region                     = var.region
   dynamic "log_config" {
-    for_each = var.log_config != null ? [var.log_config] : []
+    for_each = var.purpose == "PRIVATE" && var.log_config != null ? [var.log_config] : []
 
     content {
       aggregation_interval = try(log_config.value.aggregation_interval, null)
@@ -35,6 +35,10 @@ resource "google_compute_subnetwork" "this" {
   external_ipv6_prefix             = var.external_ipv6_prefix
   project                          = var.project
   send_secondary_ip_range_if_empty = var.send_secondary_ip_range_if_empty
+
+  lifecycle {
+    ignore_changes = [secondary_ip_range]
+  }
 }
 
 ################ End Subnetworks ################

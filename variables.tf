@@ -39,14 +39,14 @@ variable "subnetworks" {
     })), {})
     ipv6_access_type     = optional(string, null)
     external_ipv6_prefix = optional(string, null)
-    log_config = object({
+    log_config = optional(object({
       aggregation_interval = optional(string, "INTERVAL_10_MIN")
       flow_sampling        = optional(number, 0.5)
       metadata             = optional(string, "INCLUDE_ALL_METADATA")
       metadata_fields      = optional(list(string), [])
       filter_expr          = optional(string, null)
-      stack_type           = optional(string, "IPV4_ONLY")
-    })
+    }), null)
+
     stack_type                       = optional(string, "IPV4_ONLY")
     send_secondary_ip_range_if_empty = optional(bool, false)
   }))
