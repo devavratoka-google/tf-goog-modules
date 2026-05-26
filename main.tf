@@ -786,6 +786,29 @@ module "cloud_run_v2" {
   vpc_connector_create   = each.value.vpc_connector_create
 }
 
+module "iam_custom_role" {
+  source   = "./modules/iam-custom-role"
+  for_each = var.iam_custom_roles
+
+  role_id     = each.value.role_id
+  title       = each.value.title
+  description = each.value.description
+  permissions = each.value.permissions
+  stage       = each.value.stage
+  project_id  = each.value.project_id
+  org_id      = each.value.org_id
+}
+
+locals {
+  # Auto-injected map for iam_service_account.context.custom_roles:
+  # key = iam_custom_roles map key (e.g. "vmRuntimeReader")
+  # value = fully qualified role name (e.g. "projects/X/roles/vmRuntimeReader")
+  # Referenced from env.tfvars as "$custom_roles:vmRuntimeReader".
+  iam_custom_roles_ctx = {
+    for k, m in module.iam_custom_role : k => m.name
+  }
+}
+
 module "iam_service_account" {
   source   = "./modules/iam-service-account"
   for_each = var.iam_service_accounts
@@ -811,5 +834,14 @@ module "iam_service_account" {
   iam_storage_roles            = each.value.iam_storage_roles
   iam_bigquery_dataset_roles   = each.value.iam_bigquery_dataset_roles
   tag_bindings                 = each.value.tag_bindings
-  context                      = each.value.context
+
+  context = merge(
+    each.value.context,
+    {
+      custom_roles = merge(
+        local.iam_custom_roles_ctx,
+        try(each.value.context.custom_roles, {})
+      )
+    }
+  )
 }

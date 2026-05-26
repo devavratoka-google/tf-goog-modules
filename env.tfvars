@@ -771,6 +771,28 @@ cloud_sql_postgresql = {
   # }
 }
 
+# -----------------------------------------------------------------------------
+# IAM Custom Roles
+# -----------------------------------------------------------------------------
+# Modulo local: ./modules/iam-custom-role
+# Cada entrada cria um custom role (project- ou org-scoped). O output `name`
+# de cada role e auto-injetado em iam_service_accounts[*].context.custom_roles
+# pelo root main.tf, podendo ser referenciado como "$custom_roles:<key>" em
+# qualquer binding de iam_service_accounts (iam_project_roles, iam_bindings,
+# iam_bigquery_dataset_roles, etc.).
+iam_custom_roles = {
+  "vmRuntimeReader" = {
+    project_id  = "infra-proj-id"
+    role_id     = "vmRuntimeReader"
+    title       = "VM Runtime Reader (test)"
+    description = "Throwaway custom role to validate the local iam-custom-role module."
+    permissions = [
+      "logging.logEntries.create",
+      "monitoring.timeSeries.create",
+    ]
+  }
+}
+
 iam_service_accounts = {
   "tf-iam-sa-test" = {
     name         = "tf-iam-sa-test"
@@ -782,6 +804,19 @@ iam_service_accounts = {
       "infra-proj-id" = [
         "roles/logging.logWriter",
         "roles/monitoring.metricWriter",
+      ]
+    }
+  }
+
+  "tf-iam-sa-custom-role-test" = {
+    name         = "tf-iam-sa-custom-role-test"
+    project_id   = "infra-proj-id"
+    display_name = "tf-iam-sa-custom-role-test"
+    description  = "Throwaway SA to validate iam-custom-role + iam-service-account integration."
+
+    iam_project_roles = {
+      "infra-proj-id" = [
+        "$custom_roles:vmRuntimeReader",
       ]
     }
   }

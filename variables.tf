@@ -894,6 +894,20 @@ variable "cloud_run_v2" {
   description = "Map of Cloud Run v2 resources (services, jobs, or worker pools) configurations. Key is used as the service name if name is not specified."
 }
 
+variable "iam_custom_roles" {
+  type = map(object({
+    role_id     = string
+    title       = string
+    description = optional(string)
+    permissions = list(string)
+    stage       = optional(string, "GA")
+    project_id  = optional(string)
+    org_id      = optional(string)
+  }))
+  default     = {}
+  description = "Map of GCP IAM custom roles to manage via modules/iam-custom-role. Each entry creates either a project-level or org-level custom role (exactly one of project_id/org_id must be set). The role's `name` output is auto-injected into the `context.custom_roles` of every iam_service_accounts entry by the root main.tf, so it can be referenced as `$custom_roles:<key>` from any iam_service_accounts binding."
+}
+
 variable "iam_service_accounts" {
   type = map(object({
     name           = string
