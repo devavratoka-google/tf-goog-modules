@@ -816,7 +816,7 @@ iam_service_accounts = {
 
     iam_project_roles = {
       "infra-proj-id" = [
-        "$custom_roles:vmRuntimeReader",
+        "projects/infra-proj-id/roles/vmRuntimeReader",
       ]
     }
   }
