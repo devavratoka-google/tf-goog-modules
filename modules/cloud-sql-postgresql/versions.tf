@@ -16,24 +16,6 @@
 
 terraform {
   required_version = ">= 1.3"
-  required_providers {
-    null = {
-      source  = "hashicorp/null"
-      version = "~> 3.1"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.1"
-    }
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 7.22, < 8"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 7.22, < 8"
-    }
-  }
 
   provider_meta "google" {
     module_name = "blueprints/terraform/terraform-google-sql-db:postgresql/v28.1.1"
@@ -41,5 +23,4 @@ terraform {
   provider_meta "google-beta" {
     module_name = "blueprints/terraform/terraform-google-sql-db:postgresql/v28.1.1"
   }
-
 }

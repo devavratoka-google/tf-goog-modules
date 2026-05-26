@@ -770,3 +770,90 @@ cloud_sql_postgresql = {
   #   user_labels = { env = "dev", app = "core" }
   # }
 }
+
+# -----------------------------------------------------------------------------
+# IAM Custom Roles
+# -----------------------------------------------------------------------------
+# Modulo local: ./modules/iam-custom-role
+# Cada entrada cria um custom role (project- ou org-scoped). O output `name`
+# de cada role e auto-injetado em iam_service_accounts[*].context.custom_roles
+# pelo root main.tf, podendo ser referenciado como "$custom_roles:<key>" em
+# qualquer binding de iam_service_accounts (iam_project_roles, iam_bindings,
+# iam_bigquery_dataset_roles, etc.).
+iam_custom_roles = {
+  "vmRuntimeReader" = {
+    project_id  = "infra-proj-id"
+    role_id     = "vmRuntimeReader"
+    title       = "VM Runtime Reader (test)"
+    description = "Throwaway custom role to validate the local iam-custom-role module."
+    permissions = [
+      "logging.logEntries.create",
+      "monitoring.timeSeries.create",
+    ]
+  }
+}
+
+iam_service_accounts = {
+  "tf-iam-sa-test" = {
+    name         = "tf-iam-sa-test"
+    project_id   = "infra-proj-id"
+    display_name = "tf-iam-sa-test"
+    description  = "Throwaway SA to validate the local iam-service-account module."
+
+    iam_project_roles = {
+      "infra-proj-id" = [
+        "roles/logging.logWriter",
+        "roles/monitoring.metricWriter",
+      ]
+    }
+  }
+
+  "tf-iam-sa-custom-role-test" = {
+    name         = "tf-iam-sa-custom-role-test"
+    project_id   = "infra-proj-id"
+    display_name = "tf-iam-sa-custom-role-test"
+    description  = "Throwaway SA to validate iam-custom-role + iam-service-account integration."
+
+    iam_project_roles = {
+      "infra-proj-id" = [
+        "$custom_roles:vmRuntimeReader",
+      ]
+    }
+  }
+
+  # 1) Existing SA binding
+  # "vm-runtime-iam" = {
+  #   name = "<existing-sa-account-id>@infra-proj-id.iam.gserviceaccount.com"
+  #   service_account_reuse = { use_data_source = false }
+  #   iam_project_roles = {
+  #     "infra-proj-id" = ["roles/storage.objectViewer"]
+  #   }
+  # }
+  #
+  # 2) bigquery dataset role
+  # "tf-iam-sa-test-bq" = {
+  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
+  #   service_account_reuse = { use_data_source = false }
+  #   iam_bigquery_dataset_roles = {
+  #     "infra-proj-id/analytics" = ["roles/bigquery.dataViewer"]
+  #   }
+  # }
+  #
+  # 3) gcs bucket role
+  # "tf-iam-sa-test-gcs" = {
+  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
+  #   service_account_reuse = { use_data_source = false }
+  #   iam_storage_roles = {
+  #     "my-bucket-name" = ["roles/storage.objectViewer"]
+  #   }
+  # }
+  #
+  # 4) Authoritative iam ON the SA
+  # "tf-iam-sa-test-impersonate" = {
+  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
+  #   service_account_reuse = { use_data_source = false }
+  #   iam = {
+  #     "roles/iam.serviceAccountUser" = ["group:devops@example.com"]
+  #   }
+  # }
+}

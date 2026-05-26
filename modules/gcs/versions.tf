@@ -16,16 +16,8 @@
 
 terraform {
   required_version = ">= 1.3"
-  required_providers {
-
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 6.37.0, < 8"
-    }
-  }
 
   provider_meta "google" {
     module_name = "blueprints/terraform/terraform-google-cloud-storage:simple_bucket/v12.3.0"
   }
-
 }

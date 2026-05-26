@@ -785,3 +785,63 @@ module "cloud_run_v2" {
   service_account_config = each.value.service_account_config
   vpc_connector_create   = each.value.vpc_connector_create
 }
+
+module "iam_custom_role" {
+  source   = "./modules/iam-custom-role"
+  for_each = var.iam_custom_roles
+
+  role_id     = each.value.role_id
+  title       = each.value.title
+  description = each.value.description
+  permissions = each.value.permissions
+  stage       = each.value.stage
+  project_id  = each.value.project_id
+  org_id      = each.value.org_id
+}
+
+locals {
+  # Auto-injected map for iam_service_account.context.custom_roles:
+  # key = iam_custom_roles map key (e.g. "vmRuntimeReader")
+  # value = fully qualified role name (e.g. "projects/X/roles/vmRuntimeReader")
+  # Referenced from env.tfvars as "$custom_roles:vmRuntimeReader".
+  iam_custom_roles_ctx = {
+    for k, m in module.iam_custom_role : k => m.name
+  }
+}
+
+module "iam_service_account" {
+  source   = "./modules/iam-service-account"
+  for_each = var.iam_service_accounts
+
+  name                         = each.value.name
+  project_id                   = each.value.project_id
+  project_number               = each.value.project_number
+  prefix                       = each.value.prefix
+  display_name                 = each.value.display_name
+  description                  = each.value.description
+  service_account_reuse        = each.value.service_account_reuse
+  create_ignore_already_exists = each.value.create_ignore_already_exists
+  iam                          = each.value.iam
+  iam_by_principals            = each.value.iam_by_principals
+  iam_by_principals_additive   = each.value.iam_by_principals_additive
+  iam_bindings                 = each.value.iam_bindings
+  iam_bindings_additive        = each.value.iam_bindings_additive
+  iam_billing_roles            = each.value.iam_billing_roles
+  iam_folder_roles             = each.value.iam_folder_roles
+  iam_organization_roles       = each.value.iam_organization_roles
+  iam_project_roles            = each.value.iam_project_roles
+  iam_sa_roles                 = each.value.iam_sa_roles
+  iam_storage_roles            = each.value.iam_storage_roles
+  iam_bigquery_dataset_roles   = each.value.iam_bigquery_dataset_roles
+  tag_bindings                 = each.value.tag_bindings
+
+  context = merge(
+    each.value.context,
+    {
+      custom_roles = merge(
+        local.iam_custom_roles_ctx,
+        try(each.value.context.custom_roles, {})
+      )
+    }
+  )
+}
