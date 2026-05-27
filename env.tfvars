@@ -1,32 +1,42 @@
 env_project_id = "infra-proj-id"
 
 vpcs = {
-  # "tf-vpc-01" : {
-  #   network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
-  # },
-  # "tf-vpc-02" : {
-  # },
+  "tf-vpc-01" : {
+  },
 }
 
 subnetworks = {
-  # "tf-vpc-01-sn01-use4" : {
-  #   network_name             = "tf-vpc-01"
-  #   region                   = "us-east4"
-  #   ip_cidr_range            = "192.168.100.0/24"
-  #   purpose                  = "PRIVATE"
-  #   private_ip_google_access = true
-  #   log_config               = {}
-  #   secondary_ip_range = {
-  #     "pods" : {
-  #       range_name    = "pods"
-  #       ip_cidr_range = "100.100.0.0/23"
-  #     },
-  #     "services" : {
-  #       range_name    = "services"
-  #       ip_cidr_range = "100.100.2.0/23"
-  #     },
-  #   }
-  # }
+  "tf-vpc-01-sn01-usc1" : {
+    network_name             = "tf-vpc-01"
+    region                   = "us-central1"
+    ip_cidr_range            = "192.168.100.0/24"
+    purpose                  = "PRIVATE"
+    private_ip_google_access = true
+    log_config               = {}
+    secondary_ip_range = {
+      "pods" : {
+        range_name    = "pods"
+        ip_cidr_range = "100.100.0.0/23"
+      },
+      "services" : {
+        range_name    = "services"
+        ip_cidr_range = "100.100.2.0/23"
+      },
+    }
+  },
+  "tf-vpc-01-rmproxy" : {
+    network_name  = "tf-vpc-01"
+    region        = "us-east4"
+    ip_cidr_range = "192.168.101.0/24"
+    purpose       = "REGIONAL_MANAGED_PROXY"
+    role          = "ACTIVE"
+  }
+  "tf-vpc-01-pscc" : {
+    network_name  = "tf-vpc-01"
+    region        = "us-east4"
+    ip_cidr_range = "192.168.102.0/24"
+    purpose       = "PRIVATE_SERVICE_CONNECT"
+  }
 }
 
 cloud_routers = {
@@ -575,91 +585,91 @@ pscendpoints = {
 }
 
 cloud_run_v2 = {
-#   "service-hello-world" : {
-#     region              = "us-central1"
-#     deletion_protection = "false"
+  #   "service-hello-world" : {
+  #     region              = "us-central1"
+  #     deletion_protection = "false"
 
-#     service_config = {
-#       ingress = "INGRESS_TRAFFIC_ALL"
-#       # Max request duration. SSE connections to GKE pods can be long-lived.
-#       # When this timeout fires, the browser's EventSource auto-reconnects.
-#       # See docs/robin-migration/07-understanding-sse.md for the full lifecycle.
-#       timeout = "3600s"
+  #     service_config = {
+  #       ingress = "INGRESS_TRAFFIC_ALL"
+  #       # Max request duration. SSE connections to GKE pods can be long-lived.
+  #       # When this timeout fires, the browser's EventSource auto-reconnects.
+  #       # See docs/robin-migration/07-understanding-sse.md for the full lifecycle.
+  #       timeout = "3600s"
 
-#       scaling = {
-#         # Keep one control-plane instance warm because it runs background workspace
-#         # lifecycle loops; this is cheaper than letting session pods linger.
-#         min_instance_count = 1
-#         max_instance_count = 10
-#       }
-#     }
+  #       scaling = {
+  #         # Keep one control-plane instance warm because it runs background workspace
+  #         # lifecycle loops; this is cheaper than letting session pods linger.
+  #         min_instance_count = 1
+  #         max_instance_count = 10
+  #       }
+  #     }
 
-#     revision = {
-#       # Direct VPC egress for Cloud Run -> GKE communication
-#       vpc_access = {
-#         network = "tf-vpc-01"
-#         subnet  = "tf-vpc-01-sn01-usc1"
-#         egress  = "ALL_TRAFFIC"
-#       }
-#     }
+  #     revision = {
+  #       # Direct VPC egress for Cloud Run -> GKE communication
+  #       vpc_access = {
+  #         network = "tf-vpc-01"
+  #         subnet  = "tf-vpc-01-sn01-usc1"
+  #         egress  = "ALL_TRAFFIC"
+  #       }
+  #     }
 
-#     service_account_config = {
-#       create = false
-#       email  = "<project-number>-compute@developer.gserviceaccount.com" # maps to google_service_account.runtime.email
-#     }
+  #     service_account_config = {
+  #       create = false
+  #       email  = "<project-number>-compute@developer.gserviceaccount.com" # maps to google_service_account.runtime.email
+  #     }
 
-#     containers = {
-#       "default" : {
-#         image = "us-central1-docker.pkg.dev/<project-id>/dockerhub-remote-test/nginxdemos/hello:latest"
+  #     containers = {
+  #       "default" : {
+  #         image = "us-central1-docker.pkg.dev/<project-id>/dockerhub-remote-test/nginxdemos/hello:latest"
 
-#         resources = {
-#           limits = {
-#             cpu    = "1"
-#             memory = "512Mi"
-#           }
-#         }
+  #         resources = {
+  #           limits = {
+  #             cpu    = "1"
+  #             memory = "512Mi"
+  #           }
+  #         }
 
-#         ports = {
-#           "http" = {
-#             container_port = 80
-#           }
-#         }
-#       }
-#     }
+  #         ports = {
+  #           "http" = {
+  #             container_port = 80
+  #           }
+  #         }
+  #       }
+  #     }
 
-#     # Cloud Run IAM bindings
-#     iam = {
-#       "roles/run.invoker" = ["allUsers"]
-#     }
-#   }
+  #     # Cloud Run IAM bindings
+  #     iam = {
+  #       "roles/run.invoker" = ["allUsers"]
+  #     }
+  #   }
 }
 
- bigquery_datasets = {
-#   "analytics" = {
-#     location            = "us-east4"
-#     deletion_protection = false
+bigquery_datasets = {
+  #   "analytics" = {
+  #     location            = "us-east4"
+  #     deletion_protection = false
 
-#     tables = [
-#       {
-#         table_id = "events"
-#         schema   = <<-EOT
-#           [
-#             {"name": "event_timestamp", "type": "TIMESTAMP", "mode": "REQUIRED"},
-#             {"name": "user_id",         "type": "STRING",    "mode": "REQUIRED"},
-#             {"name": "event_name",      "type": "STRING",    "mode": "REQUIRED"},
-#             {"name": "properties",      "type": "JSON",      "mode": "NULLABLE"}
-#           ]
-#         EOT
-#         time_partitioning = {
-#           type          = "DAY"
-#           field         = "event_timestamp"
-#           expiration_ms = "7776000000"
-#         }
-#         clustering = ["user_id", "event_name"]
-#         labels     = {}
-#       }
-#     ]
-#   }
+  #     tables = [
+  #       {
+  #         table_id = "events"
+  #         schema   = <<-EOT
+  #           [
+  #             {"name": "event_timestamp", "type": "TIMESTAMP", "mode": "REQUIRED"},
+  #             {"name": "user_id",         "type": "STRING",    "mode": "REQUIRED"},
+  #             {"name": "event_name",      "type": "STRING",    "mode": "REQUIRED"},
+  #             {"name": "properties",      "type": "JSON",      "mode": "NULLABLE"}
+  #           ]
+  #         EOT
+  #         time_partitioning = {
+  #           type          = "DAY"
+  #           field         = "event_timestamp"
+  #           expiration_ms = "7776000000"
+  #         }
+  #         clustering = ["user_id", "event_name"]
+  #         labels     = {}
+  #       }
+  #     ]
+  #   }
 }
 
 cloud_sql_mssql = {
@@ -835,7 +845,7 @@ iam_service_accounts = {
 
     iam_project_roles = {
       "infra-proj-id" = [
-        "$custom_roles:vmRuntimeReader",
+        "projects/infra-proj-id/roles/vmRuntimeReader",
       ]
     }
   }
@@ -950,7 +960,6 @@ iam_service_accounts = {
   #     }
   #   }
   # }
-
   # --- 7) Impersonation Direction 2: this module manages the CALLER SA -------
   # iam_sa_roles grants roles to THIS SA on OTHER service accounts.
   # Format: { "target_sa_email" = [roles] }
