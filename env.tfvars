@@ -784,12 +784,12 @@ cloud_sql_postgresql = {
 # -----------------------------------------------------------------------------
 # IAM Custom Roles
 # -----------------------------------------------------------------------------
-# Modulo local: ./modules/iam-custom-role
-# Cada entrada cria um custom role (project- ou org-scoped). O output `name`
-# de cada role e auto-injetado em iam_service_accounts[*].context.custom_roles
-# pelo root main.tf, podendo ser referenciado como "$custom_roles:<key>" em
-# qualquer binding de iam_service_accounts (iam_project_roles, iam_bindings,
-# iam_bigquery_dataset_roles, etc.).
+# Local module: ./modules/iam-custom-role
+# Each entry creates a custom role (project- or org-scoped). The `name` output
+# of each role is auto-injected into iam_service_accounts[*].context.custom_roles
+# by the root main.tf, so it can be referenced as "$custom_roles:<key>" from any
+# iam_service_accounts binding (iam_project_roles, iam_bindings,
+# iam_bigquery_dataset_roles, iam_folder_roles, iam_organization_roles, etc.).
 iam_custom_roles = {
   "vmRuntimeReader" = {
     project_id  = "infra-proj-id"
@@ -801,6 +801,25 @@ iam_custom_roles = {
       "monitoring.timeSeries.create",
     ]
   }
+
+  # --- Org-scoped custom role -------------------------------------------------
+  # GCP only allows defining custom roles at project or organization scope.
+  # Folder is NOT supported by the API. To use the same role across multiple
+  # projects/folders, define it at the org and bind it at any level via the
+  # iam_service_account module (iam_project_roles, iam_folder_roles, etc.).
+  #
+  # "orgVmAuditor" = {
+  #   org_id      = "1234567890" # Numeric organization ID
+  #   role_id     = "orgVmAuditor"
+  #   title       = "Org VM Auditor"
+  #   description = "Read-only role to audit VMs across any project in the org."
+  #   permissions = [
+  #     "compute.instances.get",
+  #     "compute.instances.list",
+  #     "compute.zones.list",
+  #     "compute.regions.list",
+  #   ]
+  # }
 }
 
 iam_service_accounts = {
@@ -831,39 +850,175 @@ iam_service_accounts = {
     }
   }
 
-  # 1) Existing SA binding
-  # "vm-runtime-iam" = {
-  #   name = "<existing-sa-account-id>@infra-proj-id.iam.gserviceaccount.com"
+
+  # ===========================================================================
+  # COOKBOOK: commented examples covering every binding scope.
+  # Uncomment the block you want to test and adjust IDs/emails for real
+  # resources. Each block creates its own throwaway SA unless it explicitly
+  # sets service_account_reuse to bind onto an existing service account.
+  # ===========================================================================
+
+  # --- 1) Bind on an EXISTING SA (e.g. the SA attached to a GCE VM) ----------
+  # "ex-existing-sa" = {
+  #   name                  = "vm-runtime@infra-proj-id.iam.gserviceaccount.com"
   #   service_account_reuse = { use_data_source = false }
   #   iam_project_roles = {
   #     "infra-proj-id" = ["roles/storage.objectViewer"]
   #   }
   # }
-  #
-  # 2) bigquery dataset role
-  # "tf-iam-sa-test-bq" = {
-  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
-  #   service_account_reuse = { use_data_source = false }
-  #   iam_bigquery_dataset_roles = {
-  #     "infra-proj-id/analytics" = ["roles/bigquery.dataViewer"]
-  #   }
-  # }
-  #
-  # 3) gcs bucket role
-  # "tf-iam-sa-test-gcs" = {
-  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
-  #   service_account_reuse = { use_data_source = false }
+
+  # --- 2) Roles on a GCS BUCKET (granular, per bucket) -----------------------
+  # iam_storage_roles creates one google_storage_bucket_iam_member per
+  # (bucket, role) pair. Accepts multiple buckets and multiple roles per bucket.
+  # "ex-gcs" = {
+  #   name         = "tf-iam-sa-gcs"
+  #   project_id   = "infra-proj-id"
   #   iam_storage_roles = {
-  #     "my-bucket-name" = ["roles/storage.objectViewer"]
+  #     "my-data-bucket" = [
+  #       "roles/storage.objectViewer",
+  #       "roles/storage.legacyBucketReader",
+  #     ]
+  #     "my-staging-bucket" = [
+  #       "roles/storage.objectAdmin",
+  #     ]
+  #   }
+  # }
+
+  # --- 3) Roles on a BigQuery DATASET (local extension) ----------------------
+  # iam_bigquery_dataset_roles creates one google_bigquery_dataset_iam_member
+  # per (dataset, role) pair. Key format: "project_id/dataset_id" (validated).
+  # "ex-bq" = {
+  #   name         = "tf-iam-sa-bq"
+  #   project_id   = "infra-proj-id"
+  #   iam_bigquery_dataset_roles = {
+  #     "infra-proj-id/analytics" = [
+  #       "roles/bigquery.dataViewer",
+  #     ]
+  #     "infra-proj-id/staging" = [
+  #       "roles/bigquery.dataEditor",
+  #     ]
+  #   }
+  # }
+
+  # --- 4) Roles on a FOLDER --------------------------------------------------
+  # iam_folder_roles creates one google_folder_iam_member per (folder, role)
+  # pair. Use together with an ORG-scoped custom role (defined in
+  # iam_custom_roles above as "orgVmAuditor") or with predefined roles.
+  # Reminder: GCP does NOT allow DEFINING a custom role on a folder, but you
+  # CAN GRANT any existing role (predefined or org-scoped custom) on a folder.
+  # "ex-folder" = {
+  #   name         = "tf-iam-sa-folder"
+  #   project_id   = "infra-proj-id"
+  #   iam_folder_roles = {
+  #     "folders/9876543210" = [
+  #       "roles/viewer",
+  #       "$custom_roles:orgVmAuditor", # requires iam_custom_roles.orgVmAuditor to be uncommented
+  #     ]
+  #   }
+  # }
+
+  # --- 5) Roles on the ORGANIZATION ------------------------------------------
+  # iam_organization_roles creates one google_organization_iam_member per
+  # (org, role) pair. Be careful: org-level roles inherit down to EVERYTHING.
+  # Use sparingly and prefer the most restrictive scope possible.
+  # "ex-org" = {
+  #   name         = "tf-iam-sa-org"
+  #   project_id   = "infra-proj-id"
+  #   iam_organization_roles = {
+  #     "1234567890" = [
+  #       "roles/logging.viewer",
+  #     ]
+  #   }
+  # }
+
+  # --- 6) Impersonation Direction 1: this module manages the TARGET SA -------
+  # `iam` = authoritative bindings ON this SA (overwrites any binding for the
+  # listed roles made outside Terraform). Use iam_bindings_additive when you
+  # need to coexist with legacy IAM that you do not want to overwrite.
+  # "ex-sa-target" = {
+  #   name         = "tf-iam-sa-target"
+  #   project_id   = "infra-proj-id"
+  #   iam = {
+  #     "roles/iam.serviceAccountUser" = [
+  #       "serviceAccount:caller@infra-proj-id.iam.gserviceaccount.com",
+  #       "group:platform-eng@example.com",
+  #     ]
+  #     "roles/iam.serviceAccountTokenCreator" = [
+  #       "serviceAccount:caller@infra-proj-id.iam.gserviceaccount.com",
+  #     ]
   #   }
   # }
   #
-  # 4) Authoritative iam ON the SA
-  # "tf-iam-sa-test-impersonate" = {
-  #   name                  = "tf-iam-sa-test@infra-proj-id.iam.gserviceaccount.com"
-  #   service_account_reuse = { use_data_source = false }
-  #   iam = {
-  #     "roles/iam.serviceAccountUser" = ["group:devops@example.com"]
+  # Additive variant (does not overwrite existing bindings):
+  # "ex-sa-target-additive" = {
+  #   name         = "tf-iam-sa-target-additive"
+  #   project_id   = "infra-proj-id"
+  #   iam_bindings_additive = {
+  #     "caller-tokencreator" = {
+  #       role   = "roles/iam.serviceAccountTokenCreator"
+  #       member = "serviceAccount:caller@infra-proj-id.iam.gserviceaccount.com"
+  #     }
   #   }
+  # }
+  # --- 7) Impersonation Direction 2: this module manages the CALLER SA -------
+  # iam_sa_roles grants roles to THIS SA on OTHER service accounts.
+  # Format: { "target_sa_email" = [roles] }
+  # "ex-sa-caller" = {
+  #   name         = "tf-iam-sa-caller"
+  #   project_id   = "infra-proj-id"
+  #   iam_sa_roles = {
+  #     "target1@infra-proj-id.iam.gserviceaccount.com" = [
+  #       "roles/iam.serviceAccountTokenCreator",
+  #     ]
+  #     "target2@other-proj.iam.gserviceaccount.com" = [
+  #       "roles/iam.serviceAccountUser",
+  #     ]
+  #   }
+  # }
+
+  # --- 8) Cloud SQL: NO per-database / per-instance IAM in GCP ---------------
+  # Per GCP docs (Cloud SQL > IAM > Roles and permissions), Cloud SQL IAM is
+  # project-scoped only. There is no google_sql_database_iam_*, no
+  # google_sql_instance_iam_*. The closest you can get to "database-level"
+  # access control is one of:
+  #   a) SQL-native GRANTs (CONNECT, USAGE, SELECT on schema/table) issued
+  #      via psql/mysql against the instance after the user is created.
+  #      Out of scope for IAM modules.
+  #   b) IAM Conditions on the project-level binding to restrict the role to
+  #      a specific instance (e.g. resource.name ==
+  #      "projects/X/instances/Y"). The fabric iam-service-account v55.1.0
+  #      module's iam_project_roles variable is map(list(string)) and does
+  #      NOT expose `condition` blocks, so conditional project bindings would
+  #      require a separate raw google_project_iam_member resource or a
+  #      local module extension. Not implemented here.
+  #   c) IAM Group authentication: members of an IAM group are mapped to a
+  #      SQL user; SQL-native GRANTs then control per-database access.
+  #      Configured via google_sql_user (type = "CLOUD_IAM_GROUP" or
+  #      "CLOUD_IAM_SERVICE_ACCOUNT"), not by this module.
+  #
+  # Recommended pattern for a service account that needs to talk to Cloud SQL:
+  #   1) Project-level roles on the SA:
+  #        - roles/cloudsql.client       (REQUIRED to connect via Auth Proxy)
+  #        - roles/cloudsql.instanceUser (only if using IAM DB authentication)
+  #   2) Create the matching SQL user with type = "CLOUD_IAM_SERVICE_ACCOUNT"
+  #      via the google_sql_user resource (separate module).
+  #   3) Issue SQL-native GRANTs (CONNECT, USAGE, SELECT, ...) directly on the
+  #      database/schema/tables for fine-grained access.
+  #   4) If the SA needs to import/export to GCS, also grant
+  #      roles/storage.objectAdmin on the relevant bucket (see block 2).
+  #
+  # "ex-cloudsql" = {
+  #   name         = "tf-iam-sa-cloudsql"
+  #   project_id   = "infra-proj-id"
+  #   iam_project_roles = {
+  #     "infra-proj-id" = [
+  #       "roles/cloudsql.client",       # required to connect via Cloud SQL Auth Proxy
+  #       "roles/cloudsql.instanceUser", # only when using IAM DB authentication
+  #     ]
+  #   }
+  #   # If this SA imports/exports from/to GCS:
+  #   # iam_storage_roles = {
+  #   #   "my-sql-import-bucket" = ["roles/storage.objectAdmin"]
+  #   # }
   # }
 }
