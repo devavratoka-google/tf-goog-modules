@@ -1,8 +1,10 @@
 variable "env_project_id" {
-  type = string
+  type        = string
+  description = "The ID of the Google Cloud project where the resources will be deployed."
 }
 
 variable "vpcs" {
+  description = "A map of Virtual Private Cloud (VPC) networks to create, configured as nested objects."
   type = map(object({
     # project_id = string
     # network_name = string
@@ -22,6 +24,7 @@ variable "vpcs" {
 }
 
 variable "subnetworks" {
+  description = "A map of subnetworks to create within the specified VPCs."
   type = map(object({
     network_name               = string
     description                = optional(string, null)
