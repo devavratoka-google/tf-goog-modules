@@ -199,3 +199,32 @@ variable "forwarding_rules" {
   }))
   default = {}
 }
+
+variable "lb_traffic_extensions" {
+  description = "A map of regional or global load balancer traffic extensions to create."
+  type = map(object({
+    description           = optional(string)
+    location              = string
+    project               = optional(string)
+    load_balancing_scheme = string
+    forwarding_rules      = list(string)
+    labels                = optional(map(string), {})
+    extension_chains = list(object({
+      name = string
+      match_condition = object({
+        cel_expression = string
+      })
+      extensions = list(object({
+        name             = string
+        authority        = optional(string)
+        service          = string
+        timeout          = optional(string)
+        fail_open        = optional(bool)
+        forward_headers  = optional(list(string))
+        supported_events = optional(list(string))
+        metadata         = optional(map(string))
+      }))
+    }))
+  }))
+  default = {}
+}

@@ -149,3 +149,21 @@ resource "google_compute_region_ssl_certificate" "default" {
     create_before_destroy = true
   }
 }
+
+module "lb_traffic_extensions" {
+  source   = "./modules/lb/lb_traffic_extension"
+  for_each = var.lb_traffic_extensions
+  depends_on = [
+    module.forwarding_rules,
+    module.region_backend_services
+  ]
+
+  name                  = each.key
+  description           = each.value.description
+  location              = each.value.location
+  project               = each.value.project
+  load_balancing_scheme = each.value.load_balancing_scheme
+  forwarding_rules      = each.value.forwarding_rules
+  labels                = each.value.labels
+  extension_chains      = each.value.extension_chains
+}

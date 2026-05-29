@@ -1,0 +1,34 @@
+resource "google_network_services_lb_traffic_extension" "this" {
+  name                  = var.name
+  description           = var.description
+  location              = var.location
+  project               = var.project
+  load_balancing_scheme = var.load_balancing_scheme
+  forwarding_rules      = var.forwarding_rules
+  labels                = var.labels
+
+  dynamic "extension_chains" {
+    for_each = var.extension_chains
+    content {
+      name = extension_chains.value.name
+
+      match_condition {
+        cel_expression = extension_chains.value.match_condition.cel_expression
+      }
+
+      dynamic "extensions" {
+        for_each = extension_chains.value.extensions
+        content {
+          name             = extensions.value.name
+          authority        = extensions.value.authority
+          service          = extensions.value.service
+          timeout          = extensions.value.timeout
+          fail_open        = extensions.value.fail_open
+          forward_headers  = extensions.value.forward_headers
+          supported_events = extensions.value.supported_events
+          metadata         = extensions.value.metadata
+        }
+      }
+    }
+  }
+}
