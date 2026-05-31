@@ -375,3 +375,5 @@ forwarding_rules = {
     //target = "projects/<proj-id>/regions/us-central1/targetHttpProxies/my-regional-http-routing-proxy"
   }
 }
+
+lb_traffic_extensions = {}
