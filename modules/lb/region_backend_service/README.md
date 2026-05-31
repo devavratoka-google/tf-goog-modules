@@ -23,36 +23,52 @@ module "region_backend_service" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | > 1.5.0 |
-| google | >= 7.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.0.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| google | >= 7.0.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 7.0.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_compute_region_backend_service.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_backend_service) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| name | Name of the backend service | `string` | n/a | yes |
-| region | The GCP region for the backend service | `string` | n/a | yes |
-| description | An optional description of the resource | `string` | `null` | no |
-| load_balancing_scheme | The load balancing scheme. e.g., INTERNAL, INTERNAL_MANAGED, EXTERNAL, EXTERNAL_MANAGED. | `string` | `"INTERNAL_MANAGED"` | no |
-| protocol | The protocol of the backend service. e.g., HTTP, HTTPS, HTTP2, TCP, SSL, GRPC. | `string` | `"HTTP"` | no |
-| port_name | A user-defined name of the port on the backend group | `string` | `"http"` | no |
-| timeout_sec | How many seconds to wait for the backend before considering it a failed request | `number` | `30` | no |
-| connection_draining_timeout_sec | Time period (in seconds) during which TCP connections are drained | `number` | `0` | no |
-| health_checks | List of self_links of health checks | `list(string)` | `[]` | no |
-| enable_cdn | If true, enable Cloud CDN for this backend service | `bool` | `false` | no |
-| log_config | Logging configuration | <pre>object({<br>  enable      = optional(bool, false)<br>  sample_rate = optional(number, 1.0)<br>})</pre> | `null` | no |
-| backends | A list of backends (Instance Groups or NEGs) attached to this service. | <pre>list(object({<br>  group                        = string<br>  balancing_mode               = optional(string)<br>  capacity_scaler              = optional(number)<br>  description                  = optional(string)<br>  failover                     = optional(bool)<br>  max_connections              = optional(number)<br>  max_connections_per_endpoint = optional(number)<br>  max_connections_per_instance = optional(number)<br>  max_rate                     = optional(number)<br>  max_rate_per_endpoint        = optional(number)<br>  max_rate_per_instance        = optional(number)<br>  max_utilization              = optional(number)<br>}))</pre> | `[]` | no |
+| <a name="input_backends"></a> [backends](#input\_backends) | A list of backends (Instance Groups or NEGs) attached to this service. | <pre>list(object({<br/>    group                        = string<br/>    balancing_mode               = optional(string)<br/>    capacity_scaler              = optional(number)<br/>    description                  = optional(string)<br/>    failover                     = optional(bool)<br/>    max_connections              = optional(number)<br/>    max_connections_per_endpoint = optional(number)<br/>    max_connections_per_instance = optional(number)<br/>    max_rate                     = optional(number)<br/>    max_rate_per_endpoint        = optional(number)<br/>    max_rate_per_instance        = optional(number)<br/>    max_utilization              = optional(number)<br/>  }))</pre> | `[]` | no |
+| <a name="input_connection_draining_timeout_sec"></a> [connection\_draining\_timeout\_sec](#input\_connection\_draining\_timeout\_sec) | n/a | `number` | `0` | no |
+| <a name="input_description"></a> [description](#input\_description) | n/a | `string` | `null` | no |
+| <a name="input_enable_cdn"></a> [enable\_cdn](#input\_enable\_cdn) | n/a | `bool` | `false` | no |
+| <a name="input_health_checks"></a> [health\_checks](#input\_health\_checks) | n/a | `list(string)` | `[]` | no |
+| <a name="input_load_balancing_scheme"></a> [load\_balancing\_scheme](#input\_load\_balancing\_scheme) | n/a | `string` | `"INTERNAL_MANAGED"` | no |
+| <a name="input_log_config"></a> [log\_config](#input\_log\_config) | n/a | <pre>object({<br/>    enable      = optional(bool, false)<br/>    sample_rate = optional(number, 1.0)<br/>  })</pre> | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_port_name"></a> [port\_name](#input\_port\_name) | n/a | `string` | `"http"` | no |
+| <a name="input_protocol"></a> [protocol](#input\_protocol) | n/a | `string` | `"HTTP"` | no |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_timeout_sec"></a> [timeout\_sec](#input\_timeout\_sec) | n/a | `number` | `30` | no |
 
 ## Outputs
 
-This submodule does not define any outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_id"></a> [id](#output\_id) | The ID of the region backend service. |
+| <a name="output_self_link"></a> [self\_link](#output\_self\_link) | The URI of the region backend service. |
+<!-- END_TF_DOCS -->

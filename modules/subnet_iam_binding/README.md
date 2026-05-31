@@ -15,29 +15,41 @@ module "subnet_iam_binding" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.5.0 |
-| google | >= 7.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| google | >= 7.0.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 7.0.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_compute_subnetwork_iam_binding.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork_iam_binding) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| project | The ID of the project in which the resource belongs | `string` | n/a | yes |
-| region | The GCP region for this subnetwork | `string` | n/a | yes |
-| subnetwork | Used to find the parent resource to bind the IAM policy to | `string` | n/a | yes |
-| role | The role that should be applied | `string` | n/a | yes |
-| members | Identities that will be granted the privilege in role | `set(string)` | n/a | yes |
+| <a name="input_members"></a> [members](#input\_members) | Identities that will be granted the privilege in role. | `set(string)` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | The ID of the project in which the resource belongs. If it is not provided, the project will be parsed from the identifier of the parent resource. If no project is provided in the parent identifier and no project is specified, the provider project is used. | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | The GCP region for this subnetwork. Used to find the parent resource to bind the IAM policy to. If not specified, the value will be parsed from the identifier of the parent resource. If no region is provided in the parent identifier and no region is specified, it is taken from the provider configuration. | `string` | n/a | yes |
+| <a name="input_role"></a> [role](#input\_role) | The role that should be applied. Only one google\_compute\_subnetwork\_iam\_binding can be used per role. Note that custom roles must be of the format [projects\|organizations]/{parent-name}/roles/{role-name}. | `string` | n/a | yes |
+| <a name="input_subnetwork"></a> [subnetwork](#input\_subnetwork) | Used to find the parent resource to bind the IAM policy to | `string` | n/a | yes |
 
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->

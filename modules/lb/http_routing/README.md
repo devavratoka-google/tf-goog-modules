@@ -15,30 +15,48 @@ module "http_routing" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | > 1.5.0 |
-| google | >= 7.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.0.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| google | >= 7.0.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 7.0.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_compute_region_target_http_proxy.http](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_target_http_proxy) | resource |
+| [google_compute_region_target_https_proxy.https](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_target_https_proxy) | resource |
+| [google_compute_region_url_map.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_url_map) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| name | The name of the URL map and target proxy | `string` | n/a | yes |
-| region | The region of the routing resources | `string` | n/a | yes |
-| description | An optional description of the URL map | `string` | `null` | no |
-| default_service | The self_link of the default region backend service | `string` | n/a | yes |
-| ssl_certificates | List of SSL certificate self_links. If provided, an HTTPS target proxy is created; otherwise, an HTTP target proxy is created. | `list(string)` | `[]` | no |
-| hosts | List of host headers to match (e.g., `["internal-lb.example.com"]`) | `list(string)` | `[]` | no |
+| <a name="input_default_service"></a> [default\_service](#input\_default\_service) | The self\_link of the default region backend service. | `string` | n/a | yes |
+| <a name="input_description"></a> [description](#input\_description) | n/a | `string` | `null` | no |
+| <a name="input_hosts"></a> [hosts](#input\_hosts) | List of host headers to match (e.g., ['internal-lb.example.com']) | `list(string)` | `[]` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_ssl_certificates"></a> [ssl\_certificates](#input\_ssl\_certificates) | n/a | `list(string)` | `[]` | no |
 
 ## Outputs
 
-This module does not define any outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_id"></a> [id](#output\_id) | The ID of the target HTTP proxy. |
+| <a name="output_url_map_id"></a> [url\_map\_id](#output\_url\_map\_id) | The ID of the URL map. |
+<!-- END_TF_DOCS -->

@@ -94,12 +94,49 @@ awkward. For production roles, consider adding a `lifecycle { prevent_destroy
 | `project_id` | string | one of | null |
 | `org_id` | string | one of | null |
 
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_organization_iam_custom_role.role](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_custom_role) | resource |
+| [google_project_iam_custom_role.role](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_custom_role) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_description"></a> [description](#input\_description) | Optional human-readable description. | `string` | `null` | no |
+| <a name="input_org_id"></a> [org\_id](#input\_org\_id) | Organization id where this custom role lives. Mutually exclusive with project\_id. | `string` | `null` | no |
+| <a name="input_permissions"></a> [permissions](#input\_permissions) | List of GCP permissions (e.g. 'bigquery.datasets.get') granted by this custom role. | `list(string)` | n/a | yes |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Project id where this custom role lives. Mutually exclusive with org\_id. | `string` | `null` | no |
+| <a name="input_role_id"></a> [role\_id](#input\_role\_id) | The role id to use for this role. Must be camelCase, 3-64 chars, alphanumeric+underscores. Final role name is 'projects/{project}/roles/{role\_id}' or 'organizations/{org}/roles/{role\_id}'. | `string` | n/a | yes |
+| <a name="input_stage"></a> [stage](#input\_stage) | Launch stage of the custom role. One of ALPHA, BETA, GA, DEPRECATED, DISABLED, EAP. | `string` | `"GA"` | no |
+| <a name="input_title"></a> [title](#input\_title) | Human-readable title shown in the GCP IAM console. | `string` | n/a | yes |
+
 ## Outputs
 
-| name | description |
-|---|---|
-| `id` | Fully qualified role id (usable in `role` of any IAM binding). |
-| `name` | Same as `id` (fabric naming compatibility). |
-| `role_id` | Short id (last path segment). |
-| `permissions` | Permissions list. |
-| `scope` | `"project"` or `"organization"`. |
+| Name | Description |
+|------|-------------|
+| <a name="output_id"></a> [id](#output\_id) | Fully qualified custom role id, usable directly in IAM bindings (e.g. 'projects/X/roles/myRole' or 'organizations/Y/roles/myRole'). |
+| <a name="output_name"></a> [name](#output\_name) | Fully qualified custom role name. Same value as id; provided for naming compatibility with fabric modules. |
+| <a name="output_permissions"></a> [permissions](#output\_permissions) | Permissions granted by this custom role. |
+| <a name="output_role_id"></a> [role\_id](#output\_role\_id) | Short role id (last path segment, e.g. 'myRole'). |
+| <a name="output_scope"></a> [scope](#output\_scope) | Scope of the custom role: 'project' or 'organization'. |
+<!-- END_TF_DOCS -->

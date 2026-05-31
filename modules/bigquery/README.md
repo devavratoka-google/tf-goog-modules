@@ -194,93 +194,90 @@ A detailed example with authorized views can be found [here](./examples/basic_vi
 This module provisions a dataset and a list of tables with associated JSON schemas and views from queries.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+<!-- BEGIN_TF_DOCS -->
+Copyright 2023 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_bigquery_dataset.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset) | resource |
+| [google_bigquery_routine.routine](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_routine) | resource |
+| [google_bigquery_table.external_table](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_table) | resource |
+| [google_bigquery_table.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_table) | resource |
+| [google_bigquery_table.materialized_view](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_table) | resource |
+| [google_bigquery_table.view](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_table) | resource |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| access | An array of objects that define dataset access for one or more entities. | `any` | <pre>[<br>  {<br>    "role": "roles/bigquery.dataOwner",<br>    "special_group": "projectOwners"<br>  }<br>]</pre> | no |
-| dataset\_id | Unique ID for the dataset being provisioned. | `string` | n/a | yes |
-| dataset\_labels | Key value pairs in a map for dataset labels | `map(string)` | `{}` | no |
-| dataset\_name | Friendly name for the dataset being provisioned. | `string` | `null` | no |
-| default\_partition\_expiration\_ms | The default partition expiration for all partitioned tables in the dataset, in MS | `number` | `null` | no |
-| default\_table\_expiration\_ms | TTL of tables using the dataset in MS | `number` | `null` | no |
-| delete\_contents\_on\_destroy | (Optional) If set to true, delete all the tables in the dataset when destroying the resource; otherwise, destroying the resource will fail if tables are present. | `bool` | `null` | no |
-| deletion\_protection | Whether or not to allow deletion of tables and external tables defined by this module. Can be overriden by table-level deletion\_protection configuration. | `bool` | `false` | no |
-| description | Dataset description. | `string` | `null` | no |
-| encryption\_key | Default encryption key to apply to the dataset. Defaults to null (Google-managed). | `string` | `null` | no |
-| external\_tables | A list of objects which include table\_id, expiration\_time, external\_data\_configuration, and labels. | <pre>list(object({<br>    table_id              = string,<br>    description           = optional(string),<br>    autodetect            = bool,<br>    compression           = string,<br>    ignore_unknown_values = bool,<br>    max_bad_records       = number,<br>    schema                = string,<br>    source_format         = string,<br>    source_uris           = list(string),<br>    csv_options = object({<br>      quote                 = string,<br>      allow_jagged_rows     = bool,<br>      allow_quoted_newlines = bool,<br>      encoding              = string,<br>      field_delimiter       = string,<br>      skip_leading_rows     = number,<br>    }),<br>    google_sheets_options = object({<br>      range             = string,<br>      skip_leading_rows = number,<br>    }),<br>    hive_partitioning_options = object({<br>      mode              = string,<br>      source_uri_prefix = string,<br>    }),<br>    expiration_time     = optional(string, null),<br>    max_staleness       = optional(string),<br>    deletion_protection = optional(bool),<br>    labels              = optional(map(string), {}),<br>  }))</pre> | `[]` | no |
-| location | The location of the dataset. For multi-region, US or EU can be provided. | `string` | `"US"` | no |
-| materialized\_views | A list of objects which includes view\_id, view\_query, clustering, time\_partitioning, range\_partitioning, expiration\_time and labels | <pre>list(object({<br>    view_id             = string,<br>    description         = optional(string),<br>    query               = string,<br>    enable_refresh      = bool,<br>    refresh_interval_ms = string,<br>    clustering          = optional(list(string), []),<br>    time_partitioning = optional(object({<br>      expiration_ms            = string,<br>      field                    = string,<br>      type                     = string,<br>      require_partition_filter = bool,<br>    }), null),<br>    range_partitioning = optional(object({<br>      field = string,<br>      range = object({<br>        start    = string,<br>        end      = string,<br>        interval = string,<br>      }),<br>    }), null),<br>    expiration_time = optional(string, null),<br>    max_staleness   = optional(string),<br>    labels          = optional(map(string), {}),<br>  }))</pre> | `[]` | no |
-| max\_time\_travel\_hours | Defines the time travel window in hours | `number` | `null` | no |
-| project\_id | Project where the dataset and table are created | `string` | n/a | yes |
-| resource\_tags | A map of resource tags to add to the dataset | `map(string)` | `{}` | no |
-| routines | A list of objects which include routine\_id, routine\_type, routine\_language, definition\_body, return\_type, routine\_description and arguments. | <pre>list(object({<br>    routine_id      = string,<br>    routine_type    = string,<br>    language        = string,<br>    definition_body = string,<br>    return_type     = string,<br>    description     = string,<br>    arguments = optional(list(object({<br>      name          = string,<br>      data_type     = string,<br>      argument_kind = string,<br>      mode          = string,<br>    })), []),<br>  }))</pre> | `[]` | no |
-| storage\_billing\_model | Specifies the storage billing model for the dataset. Set this flag value to LOGICAL to use logical bytes for storage billing, or to PHYSICAL to use physical bytes instead. LOGICAL is the default if this flag isn't specified. | `string` | `null` | no |
-| tables | A list of objects which include table\_id, table\_name, schema, clustering, time\_partitioning, range\_partitioning, expiration\_time and labels. | <pre>list(object({<br>    table_id                 = string,<br>    description              = optional(string),<br>    table_name               = optional(string),<br>    schema                   = string,<br>    clustering               = optional(list(string), []),<br>    require_partition_filter = optional(bool),<br>    time_partitioning = optional(object({<br>      expiration_ms = string,<br>      field         = string,<br>      type          = string,<br>    }), null),<br>    range_partitioning = optional(object({<br>      field = string,<br>      range = object({<br>        start    = string,<br>        end      = string,<br>        interval = string,<br>      }),<br>    }), null),<br>    expiration_time     = optional(string, null),<br>    deletion_protection = optional(bool),<br>    labels              = optional(map(string), {}),<br>  }))</pre> | `[]` | no |
-| views | A list of objects which include view\_id and view query | <pre>list(object({<br>    view_id        = string,<br>    description    = optional(string),<br>    query          = string,<br>    use_legacy_sql = bool,<br>    labels         = optional(map(string), {}),<br>  }))</pre> | `[]` | no |
+| <a name="input_access"></a> [access](#input\_access) | An array of objects that define dataset access for one or more entities. | `any` | <pre>[<br/>  {<br/>    "role": "roles/bigquery.dataOwner",<br/>    "special_group": "projectOwners"<br/>  }<br/>]</pre> | no |
+| <a name="input_dataset_id"></a> [dataset\_id](#input\_dataset\_id) | Unique ID for the dataset being provisioned. | `string` | n/a | yes |
+| <a name="input_dataset_labels"></a> [dataset\_labels](#input\_dataset\_labels) | Key value pairs in a map for dataset labels | `map(string)` | `{}` | no |
+| <a name="input_dataset_name"></a> [dataset\_name](#input\_dataset\_name) | Friendly name for the dataset being provisioned. | `string` | `null` | no |
+| <a name="input_default_partition_expiration_ms"></a> [default\_partition\_expiration\_ms](#input\_default\_partition\_expiration\_ms) | The default partition expiration for all partitioned tables in the dataset, in MS | `number` | `null` | no |
+| <a name="input_default_table_expiration_ms"></a> [default\_table\_expiration\_ms](#input\_default\_table\_expiration\_ms) | TTL of tables using the dataset in MS | `number` | `null` | no |
+| <a name="input_delete_contents_on_destroy"></a> [delete\_contents\_on\_destroy](#input\_delete\_contents\_on\_destroy) | (Optional) If set to true, delete all the tables in the dataset when destroying the resource; otherwise, destroying the resource will fail if tables are present. | `bool` | `null` | no |
+| <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether or not to allow deletion of tables and external tables defined by this module. Can be overriden by table-level deletion\_protection configuration. | `bool` | `false` | no |
+| <a name="input_description"></a> [description](#input\_description) | Dataset description. | `string` | `null` | no |
+| <a name="input_encryption_key"></a> [encryption\_key](#input\_encryption\_key) | Default encryption key to apply to the dataset. Defaults to null (Google-managed). | `string` | `null` | no |
+| <a name="input_external_tables"></a> [external\_tables](#input\_external\_tables) | A list of objects which include table\_id, expiration\_time, external\_data\_configuration, and labels. | <pre>list(object({<br/>    table_id              = string,<br/>    description           = optional(string),<br/>    autodetect            = bool,<br/>    compression           = string,<br/>    ignore_unknown_values = bool,<br/>    max_bad_records       = number,<br/>    schema                = string,<br/>    source_format         = string,<br/>    source_uris           = list(string),<br/>    csv_options = object({<br/>      quote                 = string,<br/>      allow_jagged_rows     = bool,<br/>      allow_quoted_newlines = bool,<br/>      encoding              = string,<br/>      field_delimiter       = string,<br/>      skip_leading_rows     = number,<br/>    }),<br/>    google_sheets_options = object({<br/>      range             = string,<br/>      skip_leading_rows = number,<br/>    }),<br/>    hive_partitioning_options = object({<br/>      mode              = string,<br/>      source_uri_prefix = string,<br/>    }),<br/>    expiration_time     = optional(string, null),<br/>    max_staleness       = optional(string),<br/>    deletion_protection = optional(bool),<br/>    labels              = optional(map(string), {}),<br/>  }))</pre> | `[]` | no |
+| <a name="input_location"></a> [location](#input\_location) | The location of the dataset. For multi-region, US or EU can be provided. | `string` | `"US"` | no |
+| <a name="input_materialized_views"></a> [materialized\_views](#input\_materialized\_views) | A list of objects which includes view\_id, view\_query, clustering, time\_partitioning, range\_partitioning, expiration\_time and labels | <pre>list(object({<br/>    view_id             = string,<br/>    description         = optional(string),<br/>    query               = string,<br/>    enable_refresh      = bool,<br/>    refresh_interval_ms = string,<br/>    clustering          = optional(list(string), []),<br/>    time_partitioning = optional(object({<br/>      expiration_ms            = string,<br/>      field                    = string,<br/>      type                     = string,<br/>      require_partition_filter = bool,<br/>    }), null),<br/>    range_partitioning = optional(object({<br/>      field = string,<br/>      range = object({<br/>        start    = string,<br/>        end      = string,<br/>        interval = string,<br/>      }),<br/>    }), null),<br/>    expiration_time = optional(string, null),<br/>    max_staleness   = optional(string),<br/>    labels          = optional(map(string), {}),<br/>  }))</pre> | `[]` | no |
+| <a name="input_max_time_travel_hours"></a> [max\_time\_travel\_hours](#input\_max\_time\_travel\_hours) | Defines the time travel window in hours | `number` | `null` | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Project where the dataset and table are created | `string` | n/a | yes |
+| <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of resource tags to add to the dataset | `map(string)` | `{}` | no |
+| <a name="input_routines"></a> [routines](#input\_routines) | A list of objects which include routine\_id, routine\_type, routine\_language, definition\_body, return\_type, routine\_description and arguments. | <pre>list(object({<br/>    routine_id      = string,<br/>    routine_type    = string,<br/>    language        = string,<br/>    definition_body = string,<br/>    return_type     = string,<br/>    description     = string,<br/>    arguments = optional(list(object({<br/>      name          = string,<br/>      data_type     = string,<br/>      argument_kind = string,<br/>      mode          = string,<br/>    })), []),<br/>  }))</pre> | `[]` | no |
+| <a name="input_storage_billing_model"></a> [storage\_billing\_model](#input\_storage\_billing\_model) | Specifies the storage billing model for the dataset. Set this flag value to LOGICAL to use logical bytes for storage billing, or to PHYSICAL to use physical bytes instead. LOGICAL is the default if this flag isn't specified. | `string` | `null` | no |
+| <a name="input_tables"></a> [tables](#input\_tables) | A list of objects which include table\_id, table\_name, schema, clustering, time\_partitioning, range\_partitioning, expiration\_time and labels. | <pre>list(object({<br/>    table_id                 = string,<br/>    description              = optional(string),<br/>    table_name               = optional(string),<br/>    schema                   = string,<br/>    clustering               = optional(list(string), []),<br/>    require_partition_filter = optional(bool),<br/>    time_partitioning = optional(object({<br/>      expiration_ms = string,<br/>      field         = string,<br/>      type          = string,<br/>    }), null),<br/>    range_partitioning = optional(object({<br/>      field = string,<br/>      range = object({<br/>        start    = string,<br/>        end      = string,<br/>        interval = string,<br/>      }),<br/>    }), null),<br/>    expiration_time     = optional(string, null),<br/>    deletion_protection = optional(bool),<br/>    labels              = optional(map(string), {}),<br/>  }))</pre> | `[]` | no |
+| <a name="input_views"></a> [views](#input\_views) | A list of objects which include view\_id and view query | <pre>list(object({<br/>    view_id        = string,<br/>    description    = optional(string),<br/>    query          = string,<br/>    use_legacy_sql = bool,<br/>    labels         = optional(map(string), {}),<br/>  }))</pre> | `[]` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| bigquery\_dataset | Bigquery dataset resource. |
-| bigquery\_external\_tables | Map of BigQuery external table resources being provisioned. |
-| bigquery\_tables | Map of bigquery table resources being provisioned. |
-| bigquery\_views | Map of bigquery view resources being provisioned. |
-| env\_vars | Exported environment variables |
-| external\_table\_ids | Unique IDs for any external tables being provisioned |
-| external\_table\_names | Friendly names for any external tables being provisioned |
-| project | Project where the dataset and tables are created |
-| routine\_ids | Unique IDs for any routine being provisioned |
-| table\_fqns | Fully qualified names for the table with format projects/{{project}}/datasets/{{dataset}}/tables/{{name}} |
-| table\_ids | Unique id for the table being provisioned |
-| table\_names | Friendly name for the table being provisioned |
-| view\_ids | Unique id for the view being provisioned |
-| view\_names | friendlyname for the view being provisioned |
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-## Requirements
-
-These sections describe requirements for using this module.
-
-### Software
-
-The following dependencies must be available:
-
-- [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
-- [Terraform Provider for GCP][terraform-provider-gcp] plugin v3
-
-### Service Account
-
-A service account with the following roles must be used to provision
-the resources of this module:
-
-- BigQuery Data Owner: `roles/bigquery.dataOwner`
-
-The [Project Factory module][project-factory-module] and the
-[IAM module][iam-module] may be used in combination to provision a
-service account with the necessary roles applied.
-
-#### Script Helper
-A helper script for configuring a Service Account is located at (./helpers/setup-sa.sh).
-
-### APIs
-
-A project with the following APIs enabled must be used to host the
-resources of this module:
-
-- BigQuery JSON API: `bigquery-json.googleapis.com`
-
-The [Project Factory module][project-factory-module] can be used to
-provision a project with the necessary APIs enabled.
-
-## Contributing
-
-Refer to the [contribution guidelines](./CONTRIBUTING.md) for
-information on contributing to this module.
-
-[iam-module]: https://registry.terraform.io/modules/terraform-google-modules/iam/google
-[project-factory-module]: https://registry.terraform.io/modules/terraform-google-modules/project-factory/google
-[terraform-provider-gcp]: https://www.terraform.io/docs/providers/google/index.html
-[terraform]: https://www.terraform.io/downloads.html
+| <a name="output_bigquery_dataset"></a> [bigquery\_dataset](#output\_bigquery\_dataset) | Bigquery dataset resource. |
+| <a name="output_bigquery_external_tables"></a> [bigquery\_external\_tables](#output\_bigquery\_external\_tables) | Map of BigQuery external table resources being provisioned. |
+| <a name="output_bigquery_tables"></a> [bigquery\_tables](#output\_bigquery\_tables) | Map of bigquery table resources being provisioned. |
+| <a name="output_bigquery_views"></a> [bigquery\_views](#output\_bigquery\_views) | Map of bigquery view resources being provisioned. |
+| <a name="output_env_vars"></a> [env\_vars](#output\_env\_vars) | Exported environment variables |
+| <a name="output_external_table_ids"></a> [external\_table\_ids](#output\_external\_table\_ids) | Unique IDs for any external tables being provisioned |
+| <a name="output_external_table_names"></a> [external\_table\_names](#output\_external\_table\_names) | Friendly names for any external tables being provisioned |
+| <a name="output_project"></a> [project](#output\_project) | Project where the dataset and tables are created |
+| <a name="output_routine_ids"></a> [routine\_ids](#output\_routine\_ids) | Unique IDs for any routine being provisioned |
+| <a name="output_table_fqns"></a> [table\_fqns](#output\_table\_fqns) | Fully qualified names for the table with format projects/{{project}}/datasets/{{dataset}}/tables/{{name}} |
+| <a name="output_table_ids"></a> [table\_ids](#output\_table\_ids) | Unique id for the table being provisioned |
+| <a name="output_table_names"></a> [table\_names](#output\_table\_names) | Friendly name for the table being provisioned |
+| <a name="output_view_ids"></a> [view\_ids](#output\_view\_ids) | Unique id for the view being provisioned |
+| <a name="output_view_names"></a> [view\_names](#output\_view\_names) | friendlyname for the view being provisioned |
+<!-- END_TF_DOCS -->

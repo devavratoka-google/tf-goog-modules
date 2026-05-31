@@ -26,42 +26,65 @@ module "ilbanh" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | > 1.5.0 |
-| google | >= 7.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.0.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| google | >= 7.0.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 7.0.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_compute_address.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
+| [google_compute_forwarding_rule.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_forwarding_rule) | resource |
+| [google_compute_instance_from_template.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_from_template) | resource |
+| [google_compute_instance_group.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_group) | resource |
+| [google_compute_region_backend_service.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_backend_service) | resource |
+| [google_compute_region_health_check.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_health_check) | resource |
+| [google_compute_region_instance_template.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_instance_template) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| project_id | The GCP Project ID where resources will be created | `string` | n/a | yes |
-| name | Name prefix for the resources | `string` | n/a | yes |
-| region | Region where resources will be deployed | `string` | n/a | yes |
-| zone | Zone where the VM instances will be deployed | `string` | n/a | yes |
-| network_id | The URL/Self Link of the VPC network | `string` | n/a | yes |
-| subnetwork_id | The URL/Self Link of the subnetwork | `string` | n/a | yes |
-| vms | Map of VMs to create in this zone, where the key is the VM suffix (e.g., 'vm01') and value contains the static IP. | <pre>map(object({<br>  address = string<br>}))</pre> | n/a | yes |
-| machine_type | The machine type for the instances | `string` | `"e2-micro"` | no |
-| source_image | The image from which to initialize the boot disk of the instances | `string` | `"projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2510-questing-amd64-v20251024"` | no |
-| disk_size_gb | Size of the boot disk in GB | `number` | `10` | no |
-| disk_type | The GCE disk type of the boot disk | `string` | `"pd-balanced"` | no |
-| vm_tags | List of network tags to apply to the instances | `list(string)` | `["nva"]` | no |
-| resource_manager_tags | Resource Manager tag keys and values to attach to the instances | `map(string)` | `{}` | no |
-| service_account_email | Email address of the service account to attach to the instances | `string` | n/a | yes |
-| service_account_scopes | List of service scopes for the attached service account | `list(string)` | <pre>[<br>  "https://www.googleapis.com/auth/devstorage.read_only",<br>  "https://www.googleapis.com/auth/logging.write",<br>  "https://www.googleapis.com/auth/monitoring.write",<br>  "https://www.googleapis.com/auth/service.management.readonly",<br>  "https://www.googleapis.com/auth/servicecontrol",<br>  "https://www.googleapis.com/auth/trace.append",<br>  "https://www.googleapis.com/auth/cloud-platform"<br>]</pre> | no |
-| can_ip_forward | Whether the instances can send and receive packets with non-matching destination or source IPs | `bool` | `true` | no |
-| desired_status | The status of the VM instance. Must be either RUNNING or TERMINATED | `string` | `"RUNNING"` | no |
-| health_check_port | HTTP health check port to verify backend health | `number` | `80` | no |
+| <a name="input_can_ip_forward"></a> [can\_ip\_forward](#input\_can\_ip\_forward) | n/a | `bool` | `true` | no |
+| <a name="input_desired_status"></a> [desired\_status](#input\_desired\_status) | n/a | `string` | `"RUNNING"` | no |
+| <a name="input_disk_size_gb"></a> [disk\_size\_gb](#input\_disk\_size\_gb) | n/a | `number` | `10` | no |
+| <a name="input_disk_type"></a> [disk\_type](#input\_disk\_type) | n/a | `string` | `"pd-balanced"` | no |
+| <a name="input_health_check_port"></a> [health\_check\_port](#input\_health\_check\_port) | n/a | `number` | `80` | no |
+| <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | n/a | `string` | `"e2-micro"` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_network_id"></a> [network\_id](#input\_network\_id) | n/a | `string` | n/a | yes |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_resource_manager_tags"></a> [resource\_manager\_tags](#input\_resource\_manager\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_service_account_email"></a> [service\_account\_email](#input\_service\_account\_email) | n/a | `string` | n/a | yes |
+| <a name="input_service_account_scopes"></a> [service\_account\_scopes](#input\_service\_account\_scopes) | n/a | `list(string)` | <pre>[<br/>  "https://www.googleapis.com/auth/devstorage.read_only",<br/>  "https://www.googleapis.com/auth/logging.write",<br/>  "https://www.googleapis.com/auth/monitoring.write",<br/>  "https://www.googleapis.com/auth/service.management.readonly",<br/>  "https://www.googleapis.com/auth/servicecontrol",<br/>  "https://www.googleapis.com/auth/trace.append",<br/>  "https://www.googleapis.com/auth/cloud-platform"<br/>]</pre> | no |
+| <a name="input_source_image"></a> [source\_image](#input\_source\_image) | n/a | `string` | `"projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2510-questing-amd64-v20251024"` | no |
+| <a name="input_subnetwork_id"></a> [subnetwork\_id](#input\_subnetwork\_id) | n/a | `string` | n/a | yes |
+| <a name="input_vm_tags"></a> [vm\_tags](#input\_vm\_tags) | n/a | `list(string)` | <pre>[<br/>  "nva"<br/>]</pre> | no |
+| <a name="input_vms"></a> [vms](#input\_vms) | Map of VMs to create in this zone, where the key is the VM suffix (e.g., 'vm01') and value contains the static IP. | <pre>map(object({<br/>    address = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_zone"></a> [zone](#input\_zone) | n/a | `string` | n/a | yes |
 
 ## Outputs
 
-This module does not define any outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_forwarding_rule_id"></a> [forwarding\_rule\_id](#output\_forwarding\_rule\_id) | The ID of the internal load balancer forwarding rule. |
+| <a name="output_forwarding_rule_ip"></a> [forwarding\_rule\_ip](#output\_forwarding\_rule\_ip) | The IP address of the internal load balancer forwarding rule. |
+| <a name="output_instances"></a> [instances](#output\_instances) | The created VM instances for the NVA clusters. |
+<!-- END_TF_DOCS -->
