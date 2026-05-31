@@ -13,3 +13,8 @@ output "router_project" {
 output "router_region" {
   value = google_compute_router.this.region
 }
+
+output "router_id" {
+  value       = google_compute_router.this.id
+  description = "The ID of the router."
+}

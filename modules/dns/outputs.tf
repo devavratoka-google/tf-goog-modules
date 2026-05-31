@@ -7,3 +7,9 @@ output "managed_zone_id" {
   description = "The ID of the managed zone"
   value       = google_dns_managed_zone.this.id
 }
+
+output "name_servers" {
+  description = "The name servers of the managed zone."
+  value       = google_dns_managed_zone.this.name_servers
+}
+

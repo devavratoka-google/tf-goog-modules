@@ -15,3 +15,8 @@ output "subnets_project" {
 output "subnets_region" {
   value = google_compute_subnetwork.this.region
 }
+
+output "subnets_id" {
+  value       = google_compute_subnetwork.this.id
+  description = "The ID of subnetworks"
+}
