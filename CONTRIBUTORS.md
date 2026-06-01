@@ -11,4 +11,4 @@ A huge thank you to everyone who has helped build, refactor, and maintain this r
 | **Luiz Vinhas** | Core module contributions and reviews | [@luizvinhas](https://github.com/luizvinhas) |
 | **Ezio** | Core module contributions and reviews | [@ezio-google](https://github.com/ezio-google) |
 
-
+---
