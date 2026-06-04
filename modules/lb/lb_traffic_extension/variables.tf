@@ -39,7 +39,7 @@ variable "extension_chains" {
     })
     extensions = list(object({
       name             = string
-      authority        = optional(string)
+      authority        = string
       service          = string
       timeout          = optional(string)
       fail_open        = optional(bool)
