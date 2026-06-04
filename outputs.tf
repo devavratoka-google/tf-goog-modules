@@ -38,6 +38,6 @@ output "cloud_run_v2_id" {
 }
 
 output "vertex_ai_endpoint_id" {
-  value       = { for k, v in module.vertex_ai : k => v.endpoint_id }
-  description = "Vertex AI Endpoint resource IDs"
+  value       = { for k, v in module.vertex_ai_model_garden : k => v.endpoint_id }
+  description = "Vertex AI Endpoint resource IDs via Model Garden submodule"
 }

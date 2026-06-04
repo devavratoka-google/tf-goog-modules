@@ -846,8 +846,8 @@ module "iam_service_account" {
   )
 }
 
-module "vertex_ai" {
-  source     = "./modules/vertex_ai"
+module "vertex_ai_model_garden" {
+  source     = "./modules/vertex_ai/model_garden"
   depends_on = [module.networks]
   for_each   = var.vertex_ai_endpoints
 
