@@ -36,3 +36,8 @@ output "cloud_run_v2_id" {
   value       = { for k, v in module.cloud_run_v2 : k => v.id }
   description = "Cloud Run v2 fully qualified resource IDs"
 }
+
+output "vertex_ai_endpoint_id" {
+  value       = { for k, v in module.vertex_ai : k => v.endpoint_id }
+  description = "Vertex AI Endpoint resource IDs"
+}
