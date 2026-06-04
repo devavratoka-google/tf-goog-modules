@@ -973,3 +973,32 @@ variable "iam_service_accounts" {
   default     = {}
   description = "Map of service accounts to manage IAM bindings on. Use service_account_reuse with a fully-qualified email in 'name' to bind roles to an externally-created SA (e.g. one attached to a GCE VM). Interface mirrors fabric/iam-service-account v55.1.0 plus the local iam_bigquery_dataset_roles extension (keys in 'project_id/dataset_id' format)."
 }
+
+variable "vertex_ai_endpoints" {
+  type = map(object({
+    project_id            = optional(string)
+    region                = optional(string, "us-east4")
+    endpoint_name         = optional(string)
+    endpoint_display_name = string
+    endpoint_description  = optional(string)
+    labels                = optional(map(string), {})
+    network               = optional(string)
+    kms_key_name          = optional(string)
+
+    create_model          = optional(bool, true)
+    model_display_name    = optional(string)
+    model_description     = optional(string)
+    artifact_uri          = optional(string)
+    container_spec = optional(object({
+      image_uri = string
+      command   = optional(list(string))
+      args      = optional(list(string))
+      env = optional(list(object({
+        name  = string
+        value = string
+      })), [])
+    }))
+  }))
+  default     = {}
+  description = "Map of Vertex AI Endpoint and Model Garden foundation model configurations."
+}

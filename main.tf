@@ -845,3 +845,18 @@ module "iam_service_account" {
     }
   )
 }
+
+module "vertex_ai_model_garden" {
+  source     = "./modules/vertex_ai/model_garden"
+  depends_on = [module.networks]
+  for_each   = var.vertex_ai_endpoints
+
+  project_id            = coalesce(each.value.project_id, var.env_project_id)
+  region                = each.value.region
+  endpoint_name         = each.value.endpoint_name
+  endpoint_display_name = each.value.endpoint_display_name
+  endpoint_description  = each.value.endpoint_description
+  labels                = each.value.labels
+  network               = each.value.network != null ? try(module.networks[each.value.network].network_self_link, each.value.network) : null
+  kms_key_name          = each.value.kms_key_name
+}
