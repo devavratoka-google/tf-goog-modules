@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../schemas/folder.schema.json
+
+name: "Comprehensive Sample Folder"
+id: "folders/1234567890"
+parent: "organizations/123456789012"
+deletion_protection: true
+
+asset_search:
+  search-instances:
+    asset_types:
+      - "compute.googleapis.com/Instance"
+    query: "state=RUNNING"
+
+asset_feeds:
+  folder-feed:
+    billing_project: "sample-project-all"
+    content_type: "RESOURCE"
+    asset_types:
+      - "compute.googleapis.com/Instance"
+    feed_output_config:
+      pubsub_destination:
+        topic: "projects/nyl-sample-all/topics/folder-feed-topic"
+    condition:
+      expression: "resource.type == 'compute.googleapis.com/Instance'"
+      title: "Folder level compute monitoring"
+
+automation:
+  prefix: "aut"
+  project: "projects/nyl-automation-01"
+  bucket:
+    name: "nyl-folder-state-bucket"
+    description: "Folder state store"
+    force_destroy: false
+    storage_class: "STANDARD"
+    uniform_bucket_level_access: true
+    versioning: true
+
+autokey_config:
+  project: "projects/nyl-kms-autokey-01"
+
+billing_budgets:
+  - "folder-budget-01"
+
+contacts:
+  SECURITY:
+    - "security@nyl.com"
+
+data_access_logs:
+  allServices:
+    ADMIN_READ:
+      exempted_members:
+        - "group:gcp-security-admins@nyl.com"
+
+firewall_policy:
+  name: "folder-hierarchical-fw-policy"
+  policy: "locations/global/firewallPolicies/1122334455"
+
+logging:
+  kms_key_name: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+  storage_location: "us-east4"
+  sinks:
+    folder-audit-sink:
+      description: "Folder hierarchical log export"
+      destination: "bigquery.googleapis.com/projects/nyl-sam/datasets/audit_logs"
+      filter: "severity >= NOTICE"
+      type: "bigquery"
+
+factories_config:
+  org_policies: "org-policies"
+  pam_entitlements: "pam-entitlements"
+  scc_sha_custom_modules: "scc-sha-custom-modules"
+
+iam:
+  roles/viewer:
+    - "group:gcp-devops@nyl.com"
+
+iam_bindings:
+  folder_admin_binding:
+    role: "roles/resourcemanager.folderViewer"
+    members:
+      - "group:gcp-security-admins@nyl.com"
+
+iam_bindings_additive:
+  additive_folder_viewer:
+    role: "roles/resourcemanager.folderViewer"
+    member: "serviceAccount:folder-scanner@nyl.iam.gserviceaccount.com"
+
+iam_by_principals:
+  "group:gcp-security-admins@nyl.com":
+    - "roles/resourcemanager.folderAdmin"
+
+iam_by_principals_conditional:
+  "group:gcp-devops@nyl.com":
+    condition:
+      expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
+      title: "Temporary Folder Admin"
+    roles:
+      - "roles/resourcemanager.folderEditor"
+
+org_policies:
+  iam.disableServiceAccountKeyCreation:
+    enforce: true
+    rules:
+      - enforce: true
+
+pam_entitlements:
+  folder-pam-entitlement:
+    max_request_duration: "3600s"
+    eligible_users:
+      - "group:gcp-devops@nyl.com"
+    privileged_access:
+      - role: "roles/resourcemanager.folderAdmin"
+    manual_approvals:
+      require_approver_justification: true
+      steps:
+        - approvers:
+            - "group:gcp-security-admins@nyl.com"
+          approvals_needed: 1
+
+assured_workload_config:
+  compliance_regime: "HIPAA"
+  display_name: "HIPAA Regulated Folder Workload"
+  location: "us-east4"
+  organization: "organizations/123456789012"
+
+tag_bindings:
+  folder-env: "tagValues/1122334455"

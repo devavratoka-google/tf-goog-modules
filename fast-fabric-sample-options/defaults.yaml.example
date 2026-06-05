@@ -1,0 +1,110 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# yaml-language-server: $schema=../../schemas/defaults.schema.json
+
+global:
+  billing_account: "01C826-9D9E9E-3AA235"
+  organization:
+    customer_id: "C01vz3fvq"
+    domain: "nyl.com"
+    id: 123456789012
+
+observability:
+  project_id: "nyl-obs-sample-01"
+  number: "112233445566"
+
+projects:
+  defaults:
+    billing_account: "01C826-9D9E9E-3AA235"
+    bucket:
+      force_destroy: false
+    contacts:
+      SECURITY:
+        - "security@nyl.com"
+    deletion_policy: "PREVENT"
+    labels:
+      environment:
+        - "production"
+    locations:
+      bigquery: "US"
+      logging: "us-east4"
+      storage: "us-east4"
+    metric_scopes:
+      - "projects/nyl-obs-sample-01"
+    parent: "organizations/123456789012"
+    prefix: "nyl-sam"
+    project_reuse:
+      use_data_source: false
+      attributes:
+        name: "nyl-reused-project"
+        number: 998877665544
+        services_enabled:
+          - "compute.googleapis.com"
+    service_encryption_key_ids:
+      compute.googleapis.com:
+        - "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    services:
+      - "compute.googleapis.com"
+      - "storage.googleapis.com"
+    shared_vpc_service_config:
+      host_project: "nyl-vpc-host-01"
+      service_iam_grants:
+        - "networkUser"
+    tag_bindings:
+      "123456789012/environment": "production"
+    universe:
+      domain: "googleapis.com"
+      prefix: "uni"
+    vpc_sc:
+      perimeter_name: "accessPolicies/12345678/servicePerimeters/sp_prod"
+      is_dry_run: false
+  overrides:
+    deletion_policy: "ABANDON"
+
+vpcs:
+  defaults:
+    project_id: "nyl-vpc-host-01"
+    description: "Default VPC configuration"
+    auto_create_subnetworks: false
+    delete_default_routes_on_create: true
+    mtu: 1460
+    routing_mode: "GLOBAL"
+    firewall_policy_enforcement_order: "AFTER_CLASSIC_FIREWALL"
+    create_googleapis_routes:
+      directpath: false
+      private: true
+      restricted: true
+    dns_policy:
+      inbound: true
+      logging: true
+  overrides:
+    routing_mode: "REGIONAL"
+
+context:
+  email_addresses:
+    gcp-organization-admins: "gcp-organization-admins@nyl.com"
+  iam_principals:
+    gcp-organization-admins: "group:gcp-organization-admins@nyl.com"
+  locations:
+    primary: "us-east4"
+    secondary: "us-west1"
+
+output_files:
+  local_path: "~/fast-config/fast-sample"
+  storage_bucket: "nyl-tf-outputs-bucket"
+  providers:
+    google:
+      bucket: "nyl-tf-providers"
+      service_account: "tf-runner@nyl-sam.iam.gserviceaccount.com"

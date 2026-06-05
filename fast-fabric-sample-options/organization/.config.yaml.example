@@ -1,0 +1,125 @@
+# yaml-language-server: $schema=../../../schemas/organization.schema.json
+
+id: 123456789012
+
+contacts:
+  SECURITY:
+    - "security@nyl.com"
+  BILLING:
+    - "billing@nyl.com"
+
+asset_feeds:
+  org-asset-feed:
+    billing_project: "sample-project-all"
+    content_type: "RESOURCE"
+    asset_types:
+      - "compute.googleapis.com/Instance"
+    feed_output_config:
+      pubsub_destination:
+        topic: "projects/nyl-sample-all/topics/org-feed-topic"
+    condition:
+      expression: "resource.type == 'compute.googleapis.com/Instance'"
+      title: "Organization level compute feed"
+
+data_access_logs:
+  allServices:
+    ADMIN_READ:
+      exempted_members:
+        - "group:gcp-security-admins@nyl.com"
+    DATA_READ:
+      exempted_members: []
+    DATA_WRITE:
+      exempted_members: []
+
+iam:
+  roles/billing.viewer:
+    - "group:gcp-billing-admins@nyl.com"
+
+iam_bindings:
+  org_policy_admin_binding:
+    role: "roles/orgpolicy.policyAdmin"
+    members:
+      - "group:gcp-organization-admins@nyl.com"
+    condition:
+      expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
+      title: "Temporary Org Policy Admin"
+
+iam_bindings_additive:
+  additive_org_viewer:
+    role: "roles/resourcemanager.organizationViewer"
+    member: "serviceAccount:org-scanner@nyl.iam.gserviceaccount.com"
+
+iam_by_principals:
+  "group:gcp-organization-admins@nyl.com":
+    - "roles/resourcemanager.organizationAdmin"
+    - "roles/resourcemanager.folderAdmin"
+
+iam_by_principals_conditional:
+  "group:gcp-devops@nyl.com":
+    condition:
+      expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
+      title: "Temporary DevOps Admin"
+    roles:
+      - "roles/resourcemanager.projectCreator"
+
+iam_by_principals_additive:
+  "serviceAccount:audit-sa@nyl.iam.gserviceaccount.com":
+    - "roles/logging.viewer"
+
+logging:
+  kms_key_name: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+  storage_location: "us-east4"
+  sinks:
+    org-central-audit-sink:
+      description: "Organization-wide centralized logging export"
+      destination: "bigquery.googleapis.com/projects/nyl-sam/datasets/org_audit_logs"
+      filter: "severity >= NOTICE"
+      type: "bigquery"
+
+org_policies:
+  iam.disableServiceAccountKeyCreation:
+    enforce: true
+    rules:
+      - enforce: true
+
+pam_entitlements:
+  org-pam-entitlement:
+    max_request_duration: "3600s"
+    eligible_users:
+      - "group:gcp-organization-admins@nyl.com"
+    privileged_access:
+      - role: "roles/resourcemanager.organizationAdmin"
+    manual_approvals:
+      require_approver_justification: true
+      steps:
+        - approvers:
+            - "group:gcp-security-admins@nyl.com"
+          approvals_needed: 1
+
+tags:
+  context:
+    description: "Resource contextual categorization"
+
+workforce_identity_pools:
+  wip-okta:
+    display_name: "Okta Workforce Pool"
+    description: "Okta Identity Federation for Enterprise Workforce"
+    disabled: false
+    session_duration: "43200s"
+    access_restrictions:
+      allowed_services:
+        - domain: "storage.googleapis.com"
+      disable_programmatic_signin: false
+    providers:
+      okta-oidc-provider:
+        display_name: "Okta OIDC Provider"
+        description: "Okta Workforce IDP"
+        attribute_condition: "assertion.groups.contains('gcp-admins')"
+        attribute_mapping:
+          "google.subject": "assertion.sub"
+          "google.groups": "assertion.groups"
+        attribute_mapping_template: "okta"
+        disabled: false
+        identity_provider:
+          issuer_uri: "https://nyl.okta.com/oauth2/default"
+          client_id: "okta-client-id"

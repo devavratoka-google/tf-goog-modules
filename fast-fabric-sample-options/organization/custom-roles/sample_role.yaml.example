@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=../../../../schemas/custom-role.schema.json
+
+name: "enterprise_security_auditor"
+includedPermissions:
+  - "cloudasset.assets.exportResource"
+  - "cloudasset.assets.searchAllResources"
+  - "logging.logEntries.list"
+  - "resourcemanager.projects.get"

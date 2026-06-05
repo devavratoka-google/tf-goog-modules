@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../../../../schemas/scc-sha-custom-modules.schema.json
+
+publicBucketPreventionModule:
+  description: "Detects Cloud Storage buckets missing Public Access Prevention setting."
+  predicate:
+    expression: "resource.iamConfiguration.publicAccessPrevention != 'ENFORCED'"
+  recommendation: "Enforce Public Access Prevention on the storage bucket."
+  resource_selector:
+    resource_types:
+      - "storage.googleapis.com/Bucket"
+  severity: "CRITICAL"

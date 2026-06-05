@@ -1,0 +1,243 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+parent: "$folder_ids:sample-folder"
+name: "sample-project-all"
+descriptive_name: "Comprehensive Sample Project Demonstrating All Available Options"
+prefix: "nyl-sam"
+billing_account: "01C826-9D9E9E-3AA235"
+deletion_policy: "PREVENT"
+
+project_reuse:
+  use_data_source: false
+  attributes:
+    name: "nyl-existing-project"
+    number: 123456789012
+    services_enabled:
+      - "compute.googleapis.com"
+
+project_template: "templates/standard-project.yaml"
+
+automation:
+  prefix: "aut"
+  project: "projects/nyl-automation-01"
+  bucket:
+    name: "nyl-automation-state-bucket"
+    create: true
+    description: "Automation state storage"
+    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    force_destroy: false
+    labels:
+      purpose: "automation"
+    storage_class: "STANDARD"
+    uniform_bucket_level_access: true
+    versioning: true
+    retention_policy:
+      retention_period: "86400s"
+      is_locked: false
+  service_accounts:
+    sa-deployer:
+      description: "Service account for automated project deployments"
+      prefix: "dep"
+      iam:
+        roles/storage.objectAdmin:
+          - "group:gcp-devops@nyl.com"
+
+asset_feeds:
+  feed-pubsub:
+    billing_project: "sample-project-all"
+    content_type: "RESOURCE"
+    asset_types:
+      - "compute.googleapis.com/Instance"
+    feed_output_config:
+      pubsub_destination:
+        topic: "projects/nyl-sample-all/topics/feed-topic"
+    condition:
+      expression: "resource.type == 'compute.googleapis.com/Instance'"
+      title: "Monitor compute instances"
+      description: "Real-time feed of GCE instance creation/deletion"
+
+billing_budgets:
+  - "budget-standard-project"
+
+buckets:
+  data-bucket:
+    name: "nyl-sam-data-bucket"
+    create: true
+    description: "Primary project data storage"
+    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    force_destroy: false
+    labels:
+      environment: "production"
+    storage_class: "STANDARD"
+    uniform_bucket_level_access: true
+    versioning: true
+    retention_policy:
+      retention_period: "2592000s"
+      is_locked: false
+    soft_delete_retention: 604800
+    enable_object_retention: true
+
+contacts:
+  SECURITY:
+    - "security@nyl.com"
+  TECHNICAL:
+    - "devops@nyl.com"
+
+data_access_logs:
+  allServices:
+    ADMIN_READ:
+      exempted_members:
+        - "group:gcp-security-admins@nyl.com"
+    DATA_READ:
+      exempted_members: []
+    DATA_WRITE:
+      exempted_members: []
+
+datasets:
+  sample_dataset:
+    friendly_name: "Comprehensive Analytical Dataset"
+    location: "US"
+    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    options:
+      default_table_expiration_ms: 31536000000
+      default_partition_expiration_ms: 2592000000
+      delete_contents_on_destroy: false
+      max_time_travel_hours: 168
+
+factories_config:
+  custom_roles: "custom-roles"
+  observability: "observability"
+  org_policies: "org-policies"
+  quotas: "quotas"
+  scc_sha_custom_modules: "scc-sha-custom-modules"
+  tags: "tags"
+
+iam:
+  roles/viewer:
+    - "group:gcp-devops@nyl.com"
+
+iam_bindings:
+  custom_viewer_binding:
+    role: "roles/browser"
+    members:
+      - "group:gcp-security-admins@nyl.com"
+
+iam_bindings_additive:
+  additive_storage_viewer:
+    role: "roles/storage.objectViewer"
+    member: "serviceAccount:app-sa@nyl-sam.iam.gserviceaccount.com"
+
+iam_by_principals:
+  "group:gcp-security-admins@nyl.com":
+    - "roles/cloudasset.viewer"
+    - "roles/securityreview.viewer"
+
+iam_by_principals_conditional:
+  "group:gcp-devops@nyl.com":
+    condition:
+      expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
+      title: "Temporary DevOps Access"
+    roles:
+      - "roles/compute.admin"
+
+kms:
+  autokeys:
+    key-config-01:
+      location: "us-east4"
+      resource_type_selector: "compute.googleapis.com/Disk"
+  keyrings:
+    kr-sample:
+      location: "us-east4"
+      keys:
+        crypto-key-01:
+          purpose: "ENCRYPT_DECRYPT"
+          rotation_period: "7776000s"
+          version_template:
+            algorithm: "GOOGLE_SYMMETRIC_ENCRYPTION"
+            protection_level: "SOFTWARE"
+
+labels:
+  environment: "production"
+  owner: "data-team"
+
+log_buckets:
+  project-log-bucket:
+    description: "Centralized regional audit logs"
+    location: "us-east4"
+    retention: 30
+    log_analytics:
+      enable: true
+
+metric_scopes:
+  - "projects/nyl-monitoring-central-01"
+
+org_policies:
+  iam.disableServiceAccountKeyCreation:
+    enforce: true
+    rules:
+      - enforce: true
+
+quotas:
+  compute-cpus:
+    service: "compute.googleapis.com"
+    quota_id: "CPUS-per-project-region"
+    preferred_value: 100
+    dimensions:
+      region: "us-east4"
+
+pubsub_topics:
+  app-events:
+    message_retention_duration: "86400s"
+    regions:
+      - "us-east4"
+
+service_accounts:
+  app-workload-sa:
+    display_name: "Application Runtime Service Account"
+    iam_self_roles:
+      - "roles/iam.serviceAccountTokenCreator"
+
+service_encryption_key_ids:
+  storage.googleapis.com:
+    - "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+
+services:
+  - "compute.googleapis.com"
+  - "storage.googleapis.com"
+  - "bigquery.googleapis.com"
+
+shared_vpc_host_config:
+  enabled: false
+  service_projects: []
+
+shared_vpc_service_config:
+  host_project: "projects/nyl-vpc-host-01"
+  service_iam_grants:
+    - "networkUser"
+
+tags:
+  "123456789012/environment": "production"
+
+tag_bindings:
+  bind-env: "tagValues/1122334455"
+
+universe:
+  prefix: "uni"
+  unavailable_services:
+    - "unsupported.googleapis.com"
+
+vpc_sc:
+  perimeter_name: "accessPolicies/12345678/servicePerimeters/sp_prod"
+  is_dry_run: false
+
+workload_identity_pools:
+  wip-github:
+    description: "GitHub Actions Federation"
+    display_name: "GitHub Actions Pool"
+    disabled: false
+    providers:
+      wip-github-provider:
+        display_name: "GitHub Provider"
+        attribute_condition: "assertion.repository_owner == 'nyl'"
+        attribute_mapping:
+          "google.subject": "assertion.sub"
