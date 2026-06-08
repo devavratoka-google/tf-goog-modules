@@ -909,13 +909,3 @@ resource "google_project_iam_member" "cloud_sql_psc_project_network_user" {
   role    = "roles/compute.networkUser"
   member  = "serviceAccount:service-${data.google_project.infra-project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
 }
-
-# Grant the Compute Network User role to the database's specific instance service account.
-# This ensures the database instance itself has permission to attach the network interface.
-resource "google_project_iam_member" "cloud_sql_instance_network_user" {
-  for_each = { for k, v in var.cloud_sql_postgresql : k => v if lookup(v, "create_network_attachment", false) }
-
-  project = "proj-oka-int-demo"
-  role    = "roles/compute.networkUser"
-  member  = "serviceAccount:${module.cloud_sql_postgresql[each.key].instance_service_account_email_address}"
-}
