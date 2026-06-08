@@ -985,10 +985,10 @@ variable "vertex_ai_endpoints" {
     network               = optional(string)
     kms_key_name          = optional(string)
 
-    create_model          = optional(bool, true)
-    model_display_name    = optional(string)
-    model_description     = optional(string)
-    artifact_uri          = optional(string)
+    create_model       = optional(bool, true)
+    model_display_name = optional(string)
+    model_description  = optional(string)
+    artifact_uri       = optional(string)
     container_spec = optional(object({
       image_uri = string
       command   = optional(list(string))

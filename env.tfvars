@@ -1,4 +1,4 @@
-env_project_id = "infra-proj-id"
+env_project_id = "proj-oka-int-demo" //"infra-proj-id"
 
 vpcs = {
   "tf-vpc-01" : {
@@ -24,19 +24,19 @@ subnetworks = {
       },
     }
   },
-  "tf-vpc-01-rmproxy" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.101.0/24"
-    purpose       = "REGIONAL_MANAGED_PROXY"
-    role          = "ACTIVE"
-  }
-  "tf-vpc-01-pscc" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.102.0/24"
-    purpose       = "PRIVATE_SERVICE_CONNECT"
-  }
+  # "tf-vpc-01-rmproxy" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.101.0/24"
+  #   purpose       = "REGIONAL_MANAGED_PROXY"
+  #   role          = "ACTIVE"
+  # }
+  # "tf-vpc-01-pscc" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.102.0/24"
+  #   purpose       = "PRIVATE_SERVICE_CONNECT"
+  # }
 }
 
 cloud_routers = {
@@ -746,40 +746,40 @@ cloud_sql_mysql = {
 }
 
 cloud_sql_postgresql = {
-  # "app-pg" = {
-  #   region           = "us-east4"
-  #   database_version = "POSTGRES_16"
-  #   tier             = "db-perf-optimized-N-8"
-  #   availability_type = "REGIONAL" 
+  "pg-instance" = {
+    project_id          = "proj-oka-int-demo"
+    region              = "us-central1"
+    database_version    = "POSTGRES_15"
+    tier                = "db-custom-2-7680"
+    edition             = "ENTERPRISE"
+    availability_type   = "ZONAL"
+    deletion_protection = false
 
-  #   db_name              = "appdb"
-  #   user_name            = "app"
-  #   deletion_protection  = true # bloqueia destroy acidental
+    # --- Comment these out for Phase 1 ---
+    # create_network_attachment = true
+    # network_attachment_subnetworks = [
+    #   "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
+    # ]
+    # --------------------------------------
 
-  #   disk_size       = 20
-  #   disk_autoresize = true
+    # --- Uncomment for Phase 2 ---
+    create_network_attachment = true
+    network_attachment_subnetworks = [
+      "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
+    ]
+    # --------------------------------------
 
-  #   backup_configuration = {
-  #     enabled                        = true
-  #     point_in_time_recovery_enabled = true
-  #     start_time                     = "03:00"
-  #     retained_backups               = 7
-  #   }
 
-  #   ip_configuration = {
-  #     ipv4_enabled    = false # so private
-  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
-  #     ssl_mode        = "ENCRYPTED_ONLY"
-  #   }
-
-  #   database_flags = [
-  #     { name = "cloudsql.iam_authentication", value = "on" }, # auth via IAM
-  #     { name = "log_min_duration_statement", value = "1000" } # slow queries > 1s
-  #   ]
-
-  #   user_labels = { env = "dev", app = "core" }
-  # }
+    ip_configuration = {
+      ipv4_enabled = false
+      psc_enabled  = true
+      psc_allowed_consumer_projects = [
+        "proj-oka-int-demo"
+      ]
+    }
+  }
 }
+
 
 # -----------------------------------------------------------------------------
 # IAM Custom Roles
@@ -791,16 +791,16 @@ cloud_sql_postgresql = {
 # iam_service_accounts binding (iam_project_roles, iam_bindings,
 # iam_bigquery_dataset_roles, iam_folder_roles, iam_organization_roles, etc.).
 iam_custom_roles = {
-  "vmRuntimeReader" = {
-    project_id  = "infra-proj-id"
-    role_id     = "vmRuntimeReader"
-    title       = "VM Runtime Reader (test)"
-    description = "Throwaway custom role to validate the local iam-custom-role module."
-    permissions = [
-      "logging.logEntries.create",
-      "monitoring.timeSeries.create",
-    ]
-  }
+  # "vmRuntimeReader" = {
+  #   project_id  = "infra-proj-id"
+  #   role_id     = "vmRuntimeReader"
+  #   title       = "VM Runtime Reader (test)"
+  #   description = "Throwaway custom role to validate the local iam-custom-role module."
+  #   permissions = [
+  #     "logging.logEntries.create",
+  #     "monitoring.timeSeries.create",
+  #   ]
+  # }
 
   # --- Org-scoped custom role -------------------------------------------------
   # GCP only allows defining custom roles at project or organization scope.
@@ -823,32 +823,32 @@ iam_custom_roles = {
 }
 
 iam_service_accounts = {
-  "tf-iam-sa-test" = {
-    name         = "tf-iam-sa-test"
-    project_id   = "infra-proj-id"
-    display_name = "tf-iam-sa-test"
-    description  = "Throwaway SA to validate the local iam-service-account module."
+  # "tf-iam-sa-test" = {
+  #   name         = "tf-iam-sa-test"
+  #   project_id   = "infra-proj-id"
+  #   display_name = "tf-iam-sa-test"
+  #   description  = "Throwaway SA to validate the local iam-service-account module."
 
-    iam_project_roles = {
-      "infra-proj-id" = [
-        "roles/logging.logWriter",
-        "roles/monitoring.metricWriter",
-      ]
-    }
-  }
+  #   iam_project_roles = {
+  #     "infra-proj-id" = [
+  #       "roles/logging.logWriter",
+  #       "roles/monitoring.metricWriter",
+  #     ]
+  #   }
+  # }
 
-  "tf-iam-sa-custom-role-test" = {
-    name         = "tf-iam-sa-custom-role-test"
-    project_id   = "infra-proj-id"
-    display_name = "tf-iam-sa-custom-role-test"
-    description  = "Throwaway SA to validate iam-custom-role + iam-service-account integration."
+  # "tf-iam-sa-custom-role-test" = {
+  #   name         = "tf-iam-sa-custom-role-test"
+  #   project_id   = "infra-proj-id"
+  #   display_name = "tf-iam-sa-custom-role-test"
+  #   description  = "Throwaway SA to validate iam-custom-role + iam-service-account integration."
 
-    iam_project_roles = {
-      "infra-proj-id" = [
-        "projects/infra-proj-id/roles/vmRuntimeReader",
-      ]
-    }
-  }
+  #   iam_project_roles = {
+  #     "infra-proj-id" = [
+  #       "projects/infra-proj-id/roles/vmRuntimeReader",
+  #     ]
+  #   }
+  # }
 
 
   # ===========================================================================

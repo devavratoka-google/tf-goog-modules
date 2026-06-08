@@ -1,14 +1,14 @@
 data "google_organization" "org" {
-  organization = "organizations/<org_id>"
+  organization = "organizations/340934488751" //<org_id>"
 }
 
 # output "org_id" {
 #   value = data.google_organization.org.id
 # }
 
-data "google_billing_account" "argolis" {
-  display_name = "<billing_account_name>"
-}
+# data "google_billing_account" "argolis" {
+#   display_name = "<billing_account_name>"
+# }
 
 // data.google_billing_account.argolis.id
 

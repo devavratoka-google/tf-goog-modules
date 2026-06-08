@@ -172,3 +172,8 @@ output "apphub_service_uri" {
   }
   description = "Service URI in CAIS style to be used by Apphub."
 }
+
+output "network_attachment_self_link" {
+  value       = var.create_network_attachment ? google_compute_network_attachment.psc[0].self_link : null
+  description = "The self-link of the created network attachment, if create_network_attachment is true."
+}

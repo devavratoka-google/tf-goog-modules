@@ -1,7 +1,7 @@
 output "address" {
   value = (
     var.create_regional_address ? module.addresses[0].address :
-    var.create_global_address   ? google_compute_global_address.this[0].address :
+    var.create_global_address ? google_compute_global_address.this[0].address :
     var.address
   )
   description = "The reserved IP address — from the addresses submodule when create_regional_address is true, from the global address resource when create_global_address is true, otherwise echoes var.address."

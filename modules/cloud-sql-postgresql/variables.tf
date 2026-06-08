@@ -394,6 +394,10 @@ variable "read_replicas" {
       psc_enabled                                   = optional(bool, false)
       psc_allowed_consumer_projects                 = optional(list(string), [])
     })
+    psc_interface_config = optional(object({
+      network_attachment_link = string
+      consumer_address        = optional(string)
+    }), null)
     encryption_key_name = optional(string)
     data_cache_enabled  = optional(bool)
   }))
@@ -528,4 +532,37 @@ variable "connection_pool_config" {
     })), [])
   })
   default = null
+}
+
+variable "psc_interface_config" {
+  type = object({
+    network_attachment_link = string
+    consumer_address        = optional(string)
+  })
+  default     = null
+  description = "The Private Service Connect interface configuration for outbound connections. If specified, the instance will be configured with a PSC interface using the provided network attachment."
+}
+
+variable "create_network_attachment" {
+  type        = bool
+  default     = false
+  description = "Whether to create a google_compute_network_attachment resource in this module for the Cloud SQL outbound PSC interface."
+}
+
+variable "network_attachment_name" {
+  type        = string
+  default     = null
+  description = "The name of the network attachment resource. If null, defaults to \"<instance_name>-attachment\"."
+}
+
+variable "network_attachment_subnetworks" {
+  type        = list(string)
+  default     = []
+  description = "The subnetworks associated with the network attachment. Required if create_network_attachment is true."
+}
+
+variable "network_attachment_connection_preference" {
+  type        = string
+  default     = "ACCEPT_AUTOMATIC"
+  description = "The connection preference for the network attachment. Can be ACCEPT_AUTOMATIC or ACCEPT_MANUAL."
 }

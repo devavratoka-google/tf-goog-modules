@@ -141,10 +141,11 @@ resource "google_sql_database_instance" "default" {
         }
 
         dynamic "psc_config" {
-          for_each = ip_configuration.value.psc_enabled ? ["psc_enabled"] : []
+          for_each = ip_configuration.value.psc_enabled || var.create_network_attachment || var.psc_interface_config != null ? ["psc_enabled"] : []
           content {
-            psc_enabled               = ip_configuration.value.psc_enabled
+            psc_enabled               = ip_configuration.value.psc_enabled || var.create_network_attachment || var.psc_interface_config != null
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
+            network_attachment_uri    = var.create_network_attachment ? google_compute_network_attachment.psc[0].id : (var.psc_interface_config != null ? var.psc_interface_config.network_attachment_link : null)
           }
         }
 
@@ -383,4 +384,13 @@ resource "null_resource" "module_depends_on" {
   triggers = {
     value = length(var.module_depends_on)
   }
+}
+
+resource "google_compute_network_attachment" "psc" {
+  count                 = var.create_network_attachment ? 1 : 0
+  name                  = var.network_attachment_name != null ? var.network_attachment_name : "${local.instance_name}-attachment"
+  project               = var.project_id
+  region                = var.region
+  connection_preference = var.network_attachment_connection_preference
+  subnetworks           = var.network_attachment_subnetworks
 }
