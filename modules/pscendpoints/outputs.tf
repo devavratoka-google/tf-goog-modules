@@ -9,8 +9,16 @@ output "address_name" {
 }
 
 output "address_self_link" {
-  value       = var.target_google_api == "all-apis" ? "projects/${var.project}/global/addresses/${var.address_name}" : "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
-  description = "The self-link of the address."
+  value = (
+    var.target_google_api == "all-apis"
+    ? (var.create_global_address ? google_compute_global_address.this[0].self_link : null)
+    : (
+      var.create_regional_address
+      ? module.addresses[0].self_link
+      : (length(data.google_compute_address.external) > 0 ? data.google_compute_address.external[0].self_link : null)
+    )
+  )
+  description = "The self_link (full URL form) of the address. Returns null if no address is managed or looked up for the current configuration."
 }
 
 output "regional_endpoint_name" {

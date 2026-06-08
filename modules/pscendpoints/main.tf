@@ -12,6 +12,18 @@ module "addresses" {
   region       = var.region
 }
 
+# Look up an externally-managed regional address by name so the consumer
+# forwarding rule receives a proper self_link (URL form). The PSC consumer
+# forwarding rule's ip_address field rejects raw IP literals with
+# "Invalid value for field 'resource.IPAddress': <ip>. The URL is malformed."
+data "google_compute_address" "external" {
+  count = (!var.create_regional_address && var.target_service_attachment != null) ? 1 : 0
+
+  project = var.project
+  region  = var.region
+  name    = var.address_name
+}
+
 resource "google_compute_global_address" "this" {
   count = var.create_global_address ? 1 : 0
 
@@ -56,7 +68,7 @@ resource "google_compute_forwarding_rule" "this" {
   name                    = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
   region                  = var.region
   network                 = var.network
-  ip_address              = var.create_regional_address ? module.addresses[0].address : var.address
+  ip_address              = var.create_regional_address ? module.addresses[0].address : data.google_compute_address.external[0].self_link
   target                  = var.target_service_attachment
   load_balancing_scheme   = ""
   allow_psc_global_access = var.allow_psc_global_access
