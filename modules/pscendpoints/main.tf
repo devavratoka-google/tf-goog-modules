@@ -56,7 +56,7 @@ resource "google_compute_forwarding_rule" "this" {
   name                    = var.forwarding_rule_name != null ? var.forwarding_rule_name : "${var.address_name}-fr"
   region                  = var.region
   network                 = var.network
-  ip_address              = var.create_regional_address ? module.addresses[0].address : var.address
+  ip_address              = var.create_regional_address ? module.addresses[0].self_link : var.address
   target                  = var.target_service_attachment
   load_balancing_scheme   = ""
   allow_psc_global_access = var.allow_psc_global_access
