@@ -618,12 +618,8 @@ module "cloud_sql_postgresql" {
   retain_backups_on_delete         = each.value.retain_backups_on_delete
   connection_pool_config           = each.value.connection_pool_config
 
-  psc_interface_config                     = each.value.psc_interface_config
-  create_network_attachment                = each.value.create_network_attachment
-  network_attachment_name                  = each.value.network_attachment_name
-  network_attachment_subnetworks           = each.value.network_attachment_subnetworks
-  network_attachment_connection_preference = each.value.network_attachment_connection_preference
-  network_attachment_producer_accept_lists = each.value.network_attachment_producer_accept_lists
+  psc_network_link    = each.value.psc_network_link != null ? try(module.networks[each.value.psc_network_link].network_self_link, each.value.psc_network_link) : null
+  psc_subnetwork_link = each.value.psc_subnetwork_link != null ? try(module.subnetworks[each.value.psc_subnetwork_link].subnets_self_link, each.value.psc_subnetwork_link) : null
 }
 
 module "cloud_sql_mysql" {
@@ -868,58 +864,4 @@ module "vertex_ai_model_garden" {
   kms_key_name          = each.value.kms_key_name
 }
 
-# Automatically create Private Service Connect (PSC) consumer endpoints (forwarding rules)
-# for any PSC-enabled Cloud SQL PostgreSQL instances.
-resource "google_compute_address" "cloud_sql_psc" {
-  for_each = { for k, v in var.cloud_sql_postgresql : k => v if lookup(lookup(v, "ip_configuration", {}), "psc_enabled", false) }
 
-  project      = coalesce(each.value.project_id, var.env_project_id)
-  name         = "${each.key}-psc-ip"
-  region       = each.value.region
-  address_type = "INTERNAL"
-  subnetwork   = module.subnetworks["tf-vpc-01-sn01-usc1"].subnets_self_link
-}
-
-resource "google_compute_forwarding_rule" "cloud_sql_psc" {
-  for_each = { for k, v in var.cloud_sql_postgresql : k => v if lookup(lookup(v, "ip_configuration", {}), "psc_enabled", false) }
-
-  project               = coalesce(each.value.project_id, var.env_project_id)
-  name                  = "${each.key}-psc-fr"
-  region                = each.value.region
-  network               = module.networks["tf-vpc-01"].network_self_link
-  ip_address            = google_compute_address.cloud_sql_psc[each.key].self_link
-  target                = module.cloud_sql_postgresql[each.key].instance_psc_attachment
-  load_balancing_scheme = ""
-}
-
-# Grant the Compute Network User role on the subnet to the Cloud SQL Service Agent
-# so that GCP has permission to attach the outbound PSC interface to the subnet.
-resource "google_compute_subnetwork_iam_member" "cloud_sql_psc_network_user" {
-  project    = "proj-oka-int-demo"
-  region     = "us-central1"
-  subnetwork = module.subnetworks["tf-vpc-01-sn01-usc1"].subnets_name
-  role       = "roles/compute.networkUser"
-  member     = "serviceAccount:service-${data.google_project.infra-project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
-}
-
-# Grant the Compute Network User role on the Project level to the Cloud SQL Service Agent.
-# This ensures it has permissions for both the subnet and the network attachment.
-resource "google_project_iam_member" "cloud_sql_psc_project_network_user" {
-  project = "proj-oka-int-demo"
-  role    = "roles/compute.networkUser"
-  member  = "serviceAccount:service-${data.google_project.infra-project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
-}
-
-# Grant Compute Network User to the Google APIs Service Agent
-resource "google_project_iam_member" "google_apis_network_user" {
-  project = "proj-oka-int-demo"
-  role    = "roles/compute.networkUser"
-  member  = "serviceAccount:${data.google_project.infra-project.number}@cloudservices.gserviceaccount.com"
-}
-
-# Grant Compute Network User to the Compute Engine Service Agent
-resource "google_project_iam_member" "compute_agent_network_user" {
-  project = "proj-oka-int-demo"
-  role    = "roles/compute.networkUser"
-  member  = "serviceAccount:service-${data.google_project.infra-project.number}@compute-system.iam.gserviceaccount.com"
-}

@@ -210,14 +210,7 @@ variable "cloud_sql_postgresql" {
       })), [])
     }), null)
 
-    psc_interface_config = optional(object({
-      network_attachment_link = string
-      consumer_address        = optional(string)
-    }), null)
-    create_network_attachment                = optional(bool, false)
-    network_attachment_name                  = optional(string, null)
-    network_attachment_subnetworks           = optional(list(string), [])
-    network_attachment_connection_preference = optional(string, "ACCEPT_AUTOMATIC")
-    network_attachment_producer_accept_lists = optional(list(string), [])
+    psc_network_link    = optional(string, null)
+    psc_subnetwork_link = optional(string, null)
   }))
 }

@@ -534,41 +534,14 @@ variable "connection_pool_config" {
   default = null
 }
 
-variable "psc_interface_config" {
-  type = object({
-    network_attachment_link = string
-    consumer_address        = optional(string)
-  })
-  default     = null
-  description = "The Private Service Connect interface configuration for outbound connections. If specified, the instance will be configured with a PSC interface using the provided network attachment."
-}
-
-variable "create_network_attachment" {
-  type        = bool
-  default     = false
-  description = "Whether to create a google_compute_network_attachment resource in this module for the Cloud SQL outbound PSC interface."
-}
-
-variable "network_attachment_name" {
+variable "psc_network_link" {
   type        = string
   default     = null
-  description = "The name of the network attachment resource. If null, defaults to \"<instance_name>-attachment\"."
+  description = "The self_link of the VPC network where the inbound PSC forwarding rule will be created."
 }
 
-variable "network_attachment_subnetworks" {
-  type        = list(string)
-  default     = []
-  description = "The subnetworks associated with the network attachment. Required if create_network_attachment is true."
-}
-
-variable "network_attachment_connection_preference" {
+variable "psc_subnetwork_link" {
   type        = string
-  default     = "ACCEPT_AUTOMATIC"
-  description = "The connection preference for the network attachment. Can be ACCEPT_AUTOMATIC or ACCEPT_MANUAL."
-}
-
-variable "network_attachment_producer_accept_lists" {
-  type        = list(string)
-  default     = []
-  description = "A list of producer projects allowed to connect to the network attachment when connection_preference is ACCEPT_MANUAL. The project can be specified using its ID or number."
+  default     = null
+  description = "The self_link of the subnetwork where the inbound PSC IP address will be allocated."
 }
