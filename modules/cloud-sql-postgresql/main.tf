@@ -145,7 +145,7 @@ resource "google_sql_database_instance" "default" {
           content {
             psc_enabled               = ip_configuration.value.psc_enabled || var.create_network_attachment || var.psc_interface_config != null
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
-            network_attachment_uri    = var.create_network_attachment ? (google_project_iam_member.cloud_sql_instance_network_user[0].id != "" ? google_compute_network_attachment.psc[0].id : null) : (var.psc_interface_config != null ? var.psc_interface_config.network_attachment_link : null)
+            network_attachment_uri    = var.create_network_attachment ? google_compute_network_attachment.psc[0].id : (var.psc_interface_config != null ? var.psc_interface_config.network_attachment_link : null)
           }
         }
 
@@ -395,13 +395,4 @@ resource "google_compute_network_attachment" "psc" {
   subnetworks           = var.network_attachment_subnetworks
 
   producer_accept_lists = var.network_attachment_producer_accept_lists
-}
-
-# Grant the Compute Network User role to the database's specific instance service account
-# inside the child module to prevent dependency cycles and enforce correct ordering.
-resource "google_project_iam_member" "cloud_sql_instance_network_user" {
-  count   = var.create_network_attachment ? 1 : 0
-  project = var.project_id
-  role    = "roles/compute.networkUser"
-  member  = "serviceAccount:${google_sql_database_instance.default.service_account_email_address}"
 }
