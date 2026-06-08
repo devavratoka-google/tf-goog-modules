@@ -909,3 +909,17 @@ resource "google_project_iam_member" "cloud_sql_psc_project_network_user" {
   role    = "roles/compute.networkUser"
   member  = "serviceAccount:service-${data.google_project.infra-project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
 }
+
+# Grant Compute Network User to the Google APIs Service Agent
+resource "google_project_iam_member" "google_apis_network_user" {
+  project = "proj-oka-int-demo"
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:${data.google_project.infra-project.number}@cloudservices.gserviceaccount.com"
+}
+
+# Grant Compute Network User to the Compute Engine Service Agent
+resource "google_project_iam_member" "compute_agent_network_user" {
+  project = "proj-oka-int-demo"
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:service-${data.google_project.infra-project.number}@compute-system.iam.gserviceaccount.com"
+}

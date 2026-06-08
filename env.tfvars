@@ -755,10 +755,11 @@ cloud_sql_postgresql = {
     availability_type   = "ZONAL"
     deletion_protection = false
 
-    create_network_attachment      = true
-    network_attachment_subnetworks = [
-      "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
-    ]
+    # --- Commented out for Phase 1 ---
+    # create_network_attachment      = true
+    # network_attachment_subnetworks = [
+    #   "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
+    # ]
 
     ip_configuration = {
       ipv4_enabled = false
