@@ -746,7 +746,7 @@ cloud_sql_mysql = {
 }
 
 cloud_sql_postgresql = {
-  "pg-instance" = {
+  "pg-instance-new" = {
     project_id          = "proj-oka-int-demo"
     region              = "us-central1"
     database_version    = "POSTGRES_15"
@@ -755,20 +755,14 @@ cloud_sql_postgresql = {
     availability_type   = "ZONAL"
     deletion_protection = false
 
-    # --- Comment these out for Phase 1 ---
-    # create_network_attachment = true
-    # network_attachment_subnetworks = [
-    #   "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
-    # ]
-    # --------------------------------------
-
-    # --- Uncomment for Phase 2 ---
-    create_network_attachment = true
-    network_attachment_subnetworks = [
+    create_network_attachment                = true
+    network_attachment_subnetworks           = [
       "projects/proj-oka-int-demo/regions/us-central1/subnetworks/tf-vpc-01-sn01-usc1"
     ]
-    # --------------------------------------
-
+    network_attachment_connection_preference = "ACCEPT_MANUAL"
+    network_attachment_producer_accept_lists = [
+      "ec59b0d09edd2507dp-tp"
+    ]
 
     ip_configuration = {
       ipv4_enabled = false

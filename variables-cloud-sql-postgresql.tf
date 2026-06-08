@@ -218,5 +218,6 @@ variable "cloud_sql_postgresql" {
     network_attachment_name                  = optional(string, null)
     network_attachment_subnetworks           = optional(list(string), [])
     network_attachment_connection_preference = optional(string, "ACCEPT_AUTOMATIC")
+    network_attachment_producer_accept_lists = optional(list(string), [])
   }))
 }

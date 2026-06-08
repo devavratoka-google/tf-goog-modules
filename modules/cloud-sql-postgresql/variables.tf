@@ -566,3 +566,9 @@ variable "network_attachment_connection_preference" {
   default     = "ACCEPT_AUTOMATIC"
   description = "The connection preference for the network attachment. Can be ACCEPT_AUTOMATIC or ACCEPT_MANUAL."
 }
+
+variable "network_attachment_producer_accept_lists" {
+  type        = list(string)
+  default     = []
+  description = "A list of producer projects allowed to connect to the network attachment when connection_preference is ACCEPT_MANUAL. The project can be specified using its ID or number."
+}

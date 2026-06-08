@@ -393,4 +393,6 @@ resource "google_compute_network_attachment" "psc" {
   region                = var.region
   connection_preference = var.network_attachment_connection_preference
   subnetworks           = var.network_attachment_subnetworks
+
+  producer_accept_lists = var.network_attachment_producer_accept_lists
 }

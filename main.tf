@@ -623,6 +623,7 @@ module "cloud_sql_postgresql" {
   network_attachment_name                  = each.value.network_attachment_name
   network_attachment_subnetworks           = each.value.network_attachment_subnetworks
   network_attachment_connection_preference = each.value.network_attachment_connection_preference
+  network_attachment_producer_accept_lists = each.value.network_attachment_producer_accept_lists
 }
 
 module "cloud_sql_mysql" {
