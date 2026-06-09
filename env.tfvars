@@ -24,6 +24,22 @@ subnetworks = {
       },
     }
   },
+    "tf-vpc-01-sn02-usc1" : {
+    network_name             = "tf-vpc-01"
+    region                   = "us-central1"
+    ip_cidr_range            = "192.168.50.0/24"
+    purpose                  = "PRIVATE"
+    private_ip_google_access = true
+    log_config               = {}
+  },
+      "tf-vpc-01-sn03-usc1" : {
+    network_name             = "tf-vpc-01"
+    region                   = "us-central1"
+    ip_cidr_range            = "10.123.21.0/24"
+    purpose                  = "PRIVATE"
+    private_ip_google_access = true
+    log_config               = {}
+  },
   # "tf-vpc-01-rmproxy" : {
   #   network_name  = "tf-vpc-01"
   #   region        = "us-east4"
@@ -467,10 +483,15 @@ vpc_peerings = {
 
 network_attachments = {
   "nw-att-1" : {
-    subnetwork_name = ["tf-vpc-01-sn01-usc1"]
+    subnetwork_name       = ["tf-vpc-01-sn01-usc1"]
     connection_preference = "ACCEPT_AUTOMATIC"
     # producer_accept_lists = ["proj-oka-int-demo", "ec59b0d09edd2507dp-tp"]
-  }
+  },
+    "nw-att-2" : {
+    subnetwork_name       = ["tf-vpc-01-sn03-usc1"]
+    connection_preference = "ACCEPT_AUTOMATIC"
+    # producer_accept_lists = ["proj-oka-int-demo", "ec59b0d09edd2507dp-tp"]
+  },
 }
 
 vpc_firewall_rules = {
@@ -755,8 +776,8 @@ cloud_sql_postgresql = {
     availability_type   = "ZONAL"
     deletion_protection = false
 
-    psc_network_link        = "tf-vpc-01"
-    psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+    psc_network_link    = "tf-vpc-01"
+    psc_subnetwork_link = "tf-vpc-01-sn01-usc1"
     # network_attachment_link = "nw-att-1"
 
     ip_configuration = {
@@ -767,7 +788,7 @@ cloud_sql_postgresql = {
       ]
     }
   },
-    "pg-instance2" = {
+  "pg-instance2" = {
     project_id          = "proj-oka-int-demo"
     region              = "us-central1"
     database_version    = "POSTGRES_17"
@@ -778,7 +799,7 @@ cloud_sql_postgresql = {
 
     psc_network_link        = "tf-vpc-01"
     psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
-    network_attachment_link = "nw-att-1"
+    network_attachment_link = "nw-att-2"
 
     ip_configuration = {
       ipv4_enabled = false
@@ -787,7 +808,49 @@ cloud_sql_postgresql = {
         "proj-oka-int-demo"
       ]
     }
-  }
+  },
+  "pg-instance3" = {
+    project_id          = "proj-oka-int-demo"
+    region              = "us-central1"
+    database_version    = "POSTGRES_17"
+    tier                = "db-f1-micro"
+    edition             = "ENTERPRISE"
+    availability_type   = "ZONAL"
+    deletion_protection = false
+
+    psc_network_link        = "tf-vpc-01"
+    psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+    network_attachment_link = "nw-att-2"
+
+    ip_configuration = {
+      ipv4_enabled = false
+      psc_enabled  = true
+      psc_allowed_consumer_projects = [
+        "proj-oka-int-demo"
+      ]
+    }
+  },
+  #   "pg-instance4" = {
+  #   project_id          = "proj-oka-int-demo"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
+
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
+
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "proj-oka-int-demo"
+  #     ]
+  #   }
+  # },
 }
 
 
