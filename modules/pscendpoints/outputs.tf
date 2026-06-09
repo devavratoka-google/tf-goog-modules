@@ -32,7 +32,7 @@ output "regional_endpoint_id" {
 }
 
 output "psc_forwarding_rule" {
-  value       = try(google_compute_forwarding_rule.this[0], google_compute_global_forwarding_rule.google_apis[0], null)
+  value       = try(google_compute_forwarding_rule.this[0], google_compute_global_forwarding_rule.google_apis[0], google_compute_global_forwarding_rule.vpc_sc[0], null)
   description = "The full forwarding rule resource for consumer PSC."
 }
 
@@ -42,12 +42,12 @@ output "target_google_api" {
 }
 
 output "consumer_forwarding_rule_name" {
-  value       = try(google_compute_forwarding_rule.this[0].name, google_compute_global_forwarding_rule.google_apis[0].name, null)
+  value       = try(google_compute_forwarding_rule.this[0].name, google_compute_global_forwarding_rule.google_apis[0].name, google_compute_global_forwarding_rule.vpc_sc[0].name, null)
   description = "The name of the consumer forwarding rule."
 }
 
 output "consumer_forwarding_rule_self_link" {
-  value       = try(google_compute_forwarding_rule.this[0].self_link, google_compute_global_forwarding_rule.google_apis[0].self_link, null)
+  value       = try(google_compute_forwarding_rule.this[0].self_link, google_compute_global_forwarding_rule.google_apis[0].self_link, google_compute_global_forwarding_rule.vpc_sc[0].self_link, null)
   description = "The self-link of the consumer forwarding rule."
 }
 
