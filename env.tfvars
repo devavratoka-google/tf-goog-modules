@@ -468,8 +468,8 @@ vpc_peerings = {
 network_attachments = {
   # "nw-att-1" : {
   #   subnetwork_name = ["tf-vpc-01-sn01-usc1"]
-  #   connection_preference = "ACCEPT_MANUAL"
-  #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
+  #   connection_preference = "ACCEPT_AUTOMATIC"
+  #  # producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"] // not needed for ACCEPT_AUTOMATIC
   # }
 }
 
@@ -765,39 +765,90 @@ cloud_sql_mysql = {
 }
 
 cloud_sql_postgresql = {
-  # "app-pg" = {
-  #   region           = "us-east4"
-  #   database_version = "POSTGRES_16"
-  #   tier             = "db-perf-optimized-N-8"
-  #   availability_type = "REGIONAL" 
+  # "pg-instance" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_15"
+  #   tier                = "db-custom-2-7680"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
 
-  #   db_name              = "appdb"
-  #   user_name            = "app"
-  #   deletion_protection  = true # bloqueia destroy acidental
-
-  #   disk_size       = 20
-  #   disk_autoresize = true
-
-  #   backup_configuration = {
-  #     enabled                        = true
-  #     point_in_time_recovery_enabled = true
-  #     start_time                     = "03:00"
-  #     retained_backups               = 7
-  #   }
+  #   psc_network_link    = "tf-vpc-01"
+  #   psc_subnetwork_link = "tf-vpc-01-sn01-usc1"
+  #   # network_attachment_link = "nw-att-1"
 
   #   ip_configuration = {
-  #     ipv4_enabled    = false # so private
-  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
-  #     ssl_mode        = "ENCRYPTED_ONLY"
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
   #   }
+  # },
+  # "pg-instance2" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
 
-  #   database_flags = [
-  #     { name = "cloudsql.iam_authentication", value = "on" }, # auth via IAM
-  #     { name = "log_min_duration_statement", value = "1000" } # slow queries > 1s
-  #   ]
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
 
-  #   user_labels = { env = "dev", app = "core" }
-  # }
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
+  # "pg-instance3" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
+
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
+
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
+  #   "pg-instance4" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
+
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
+
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
 }
 
 # -----------------------------------------------------------------------------

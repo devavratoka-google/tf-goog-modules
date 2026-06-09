@@ -194,9 +194,9 @@ module "vlan-attachments" {
   metadata                 = each.value.metadata
 }
 
-resource "google_compute_shared_vpc_host_project" "this" {
-  project = var.env_project_id
-}
+# resource "google_compute_shared_vpc_host_project" "this" {
+#   project = var.env_project_id
+# }
 
 module "shared_vpc" {
 
@@ -205,7 +205,7 @@ module "shared_vpc" {
   source   = "./modules/shared_vpc"
   for_each = var.shared_vpcs
 
-  host_project    = google_compute_shared_vpc_host_project.this.project
+  host_project    = "proj-oka-int-demo" // google_compute_shared_vpc_host_project.this.project
   service_project = each.key
 }
 
@@ -463,8 +463,6 @@ module "pscendpoints" {
   forwarding_rule_name      = each.value.forwarding_rule_name
 
   service_attachment = each.value.service_attachment
-
-  service_directory_registrations = each.value.service_directory_registrations
 }
 
 module "gcs_buckets" {
@@ -619,6 +617,10 @@ module "cloud_sql_postgresql" {
   kms_key_handle_name              = each.value.kms_key_handle_name
   retain_backups_on_delete         = each.value.retain_backups_on_delete
   connection_pool_config           = each.value.connection_pool_config
+
+  psc_network_link       = each.value.psc_network_link != null ? try(module.networks[each.value.psc_network_link].network_self_link, each.value.psc_network_link) : null
+  psc_subnetwork_link    = each.value.psc_subnetwork_link != null ? try(module.subnetworks[each.value.psc_subnetwork_link].subnets_self_link, each.value.psc_subnetwork_link) : null
+  network_attachment_uri = each.value.network_attachment_link != null ? try(module.network_attachments[each.value.network_attachment_link].id, each.value.network_attachment_link) : null
 }
 
 module "cloud_sql_mysql" {
@@ -862,3 +864,4 @@ module "vertex_ai_model_garden" {
   network               = each.value.network != null ? try(module.networks[each.value.network].network_self_link, each.value.network) : null
   kms_key_name          = each.value.kms_key_name
 }
+
