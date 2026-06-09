@@ -539,7 +539,7 @@ variable "pscendpoints" {
     network_name                 = string
     subnetwork_name              = optional(string, "")
     project                      = string
-    region                       = string
+    region                       = optional(string, null)
     address                      = optional(string, null)
     create_regional_address      = optional(bool, false)
     create_global_address        = optional(bool, false)
@@ -564,6 +564,11 @@ variable "pscendpoints" {
         project_id_or_num = string
         connection_limit  = number
       })), [])
+    }), null)
+    service_directory_registrations = optional(object({
+      namespace                = string
+      service                  = optional(string, null)
+      service_directory_region = optional(string, null)
     }), null)
   }))
   default     = {}
@@ -985,10 +990,10 @@ variable "vertex_ai_endpoints" {
     network               = optional(string)
     kms_key_name          = optional(string)
 
-    create_model          = optional(bool, true)
-    model_display_name    = optional(string)
-    model_description     = optional(string)
-    artifact_uri          = optional(string)
+    create_model       = optional(bool, true)
+    model_display_name = optional(string)
+    model_description  = optional(string)
+    artifact_uri       = optional(string)
     container_spec = optional(object({
       image_uri = string
       command   = optional(list(string))

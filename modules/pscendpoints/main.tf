@@ -47,6 +47,14 @@ resource "google_compute_global_forwarding_rule" "google_apis" {
   ip_address            = var.create_global_address ? google_compute_global_address.this[0].id : var.address
   target                = "all-apis"
   load_balancing_scheme = ""
+
+  dynamic "service_directory_registrations" {
+    for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []
+    content {
+      namespace                = service_directory_registrations.value.namespace
+      service_directory_region = service_directory_registrations.value.service_directory_region
+    }
+  }
 }
 
 resource "google_compute_forwarding_rule" "this" {
@@ -61,6 +69,14 @@ resource "google_compute_forwarding_rule" "this" {
   load_balancing_scheme   = ""
   allow_psc_global_access = var.allow_psc_global_access
   no_automate_dns_zone    = var.no_automate_dns_zone
+
+  dynamic "service_directory_registrations" {
+    for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []
+    content {
+      namespace = service_directory_registrations.value.namespace
+      service   = service_directory_registrations.value.service
+    }
+  }
 }
 
 resource "google_compute_service_attachment" "this" {

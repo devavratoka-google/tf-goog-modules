@@ -1,7 +1,7 @@
 output "address" {
   value = (
     var.create_regional_address ? module.addresses[0].address :
-    var.create_global_address   ? google_compute_global_address.this[0].address :
+    var.create_global_address ? google_compute_global_address.this[0].address :
     var.address
   )
   description = "The reserved IP address — from the addresses submodule when create_regional_address is true, from the global address resource when create_global_address is true, otherwise echoes var.address."
@@ -13,7 +13,11 @@ output "address_name" {
 }
 
 output "address_self_link" {
-  value       = var.target_google_api == "all-apis" ? "projects/${var.project}/global/addresses/${var.address_name}" : "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
+  value = (
+    var.create_regional_address ? module.addresses[0].self_link :
+    var.create_global_address ? google_compute_global_address.this[0].self_link :
+    null
+  )
   description = "The self-link of the address."
 }
 
