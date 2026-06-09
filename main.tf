@@ -618,8 +618,9 @@ module "cloud_sql_postgresql" {
   retain_backups_on_delete         = each.value.retain_backups_on_delete
   connection_pool_config           = each.value.connection_pool_config
 
-  psc_network_link    = each.value.psc_network_link != null ? try(module.networks[each.value.psc_network_link].network_self_link, each.value.psc_network_link) : null
-  psc_subnetwork_link = each.value.psc_subnetwork_link != null ? try(module.subnetworks[each.value.psc_subnetwork_link].subnets_self_link, each.value.psc_subnetwork_link) : null
+  psc_network_link       = each.value.psc_network_link != null ? try(module.networks[each.value.psc_network_link].network_self_link, each.value.psc_network_link) : null
+  psc_subnetwork_link    = each.value.psc_subnetwork_link != null ? try(module.subnetworks[each.value.psc_subnetwork_link].subnets_self_link, each.value.psc_subnetwork_link) : null
+  network_attachment_uri = each.value.network_attachment_link != null ? try(module.network_attachments[each.value.network_attachment_link].id, each.value.network_attachment_link) : null
 }
 
 module "cloud_sql_mysql" {

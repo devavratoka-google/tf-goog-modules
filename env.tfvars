@@ -466,11 +466,11 @@ vpc_peerings = {
 }
 
 network_attachments = {
-  # "nw-att-1" : {
-  #   subnetwork_name = ["tf-vpc-01-sn01-usc1"]
-  #   connection_preference = "ACCEPT_MANUAL"
-  #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
-  # }
+  "nw-att-1" : {
+    subnetwork_name = ["tf-vpc-01-sn01-usc1"]
+    connection_preference = "ACCEPT_AUTOMATIC"
+    # producer_accept_lists = ["proj-oka-int-demo", "ec59b0d09edd2507dp-tp"]
+  }
 }
 
 vpc_firewall_rules = {
@@ -755,8 +755,9 @@ cloud_sql_postgresql = {
     availability_type   = "ZONAL"
     deletion_protection = false
 
-    psc_network_link    = "tf-vpc-01"
-    psc_subnetwork_link = "tf-vpc-01-sn01-usc1"
+    psc_network_link        = "tf-vpc-01"
+    psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+    network_attachment_link = "nw-att-1"
 
     ip_configuration = {
       ipv4_enabled = false

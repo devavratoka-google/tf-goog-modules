@@ -145,6 +145,7 @@ resource "google_sql_database_instance" "default" {
           content {
             psc_enabled               = true
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
+            network_attachment_uri    = var.network_attachment_uri
           }
         }
 
@@ -386,7 +387,8 @@ resource "null_resource" "module_depends_on" {
 }
 
 resource "google_compute_address" "cloud_sql_psc" {
-  count        = try(var.ip_configuration.psc_enabled, false) && var.psc_subnetwork_link != null ? 1 : 0
+  depends_on = [google_sql_database_instance.default]
+  count        = try(var.ip_configuration.psc_enabled, false) ? 1 : 0
   project      = var.project_id
   name         = "${local.instance_name}-psc-ip"
   region       = var.region
@@ -395,7 +397,7 @@ resource "google_compute_address" "cloud_sql_psc" {
 }
 
 resource "google_compute_forwarding_rule" "cloud_sql_psc" {
-  count                 = try(var.ip_configuration.psc_enabled, false) && var.psc_network_link != null ? 1 : 0
+  count                 = try(var.ip_configuration.psc_enabled, false) ? 1 : 0
   project               = var.project_id
   name                  = "${local.instance_name}-psc-fr"
   region                = var.region

@@ -545,3 +545,9 @@ variable "psc_subnetwork_link" {
   default     = null
   description = "The self_link of the subnetwork where the inbound PSC IP address will be allocated."
 }
+
+variable "network_attachment_uri" {
+  type        = string
+  default     = null
+  description = "The self_link of the network attachment for outbound PSC connections."
+}

@@ -182,3 +182,8 @@ output "psc_forwarding_rule_id" {
   value       = try(google_compute_forwarding_rule.cloud_sql_psc[0].id, null)
   description = "The ID of the inbound PSC forwarding rule."
 }
+
+output "instance_tenant_project_id" {
+  value       = google_sql_database_instance.default.psc_service_attachment_link != null && google_sql_database_instance.default.psc_service_attachment_link != "" ? element(split("/", google_sql_database_instance.default.psc_service_attachment_link), 1) : null
+  description = "The tenant project ID of the Cloud SQL instance, extracted from the PSC service attachment link."
+}
