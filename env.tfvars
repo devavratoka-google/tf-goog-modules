@@ -757,6 +757,27 @@ cloud_sql_postgresql = {
 
     psc_network_link        = "tf-vpc-01"
     psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+    # network_attachment_link = "nw-att-1"
+
+    ip_configuration = {
+      ipv4_enabled = false
+      psc_enabled  = true
+      psc_allowed_consumer_projects = [
+        "proj-oka-int-demo"
+      ]
+    }
+  },
+    "pg-instance2" = {
+    project_id          = "proj-oka-int-demo"
+    region              = "us-central1"
+    database_version    = "POSTGRES_17"
+    tier                = "db-f1-micro"
+    edition             = "ENTERPRISE"
+    availability_type   = "ZONAL"
+    deletion_protection = false
+
+    psc_network_link        = "tf-vpc-01"
+    psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
     network_attachment_link = "nw-att-1"
 
     ip_configuration = {
