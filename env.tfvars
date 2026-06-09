@@ -465,12 +465,25 @@ vpc_peerings = {
   # }
 }
 
+# Network attachments live in YOUR (consumer) VPC. They are the primitive that
+# lets a producer create a PSC *interface* into your network. Main use case here:
+# Cloud SQL OUTBOUND PSC -- a PSC-enabled instance attaches an interface to this
+# network attachment so it can initiate outbound connections into your VPC
+# (e.g. Database Migration Service reaching a source DB).
+# subnetwork_name references entries of var.subnetworks; region/project are derived.
 network_attachments = {
   # "nw-att-1" : {
   #   subnetwork_name = ["tf-vpc-01-sn01-usc1"]
   #   connection_preference = "ACCEPT_MANUAL"
   #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
   # }
+
+  # --- ACTIVE TEST: outbound PSC target for the psc-test-pg instance below -----
+  # region/project are derived from the subnetwork (tf-vpc-01-sn01-usc1 -> us-central1).
+  "sql-outbound-na" : {
+    subnetwork_name       = ["tf-vpc-01-sn01-usc1"]
+    connection_preference = "ACCEPT_AUTOMATIC"
+  }
 }
 
 vpc_firewall_rules = {
@@ -517,6 +530,17 @@ vpc_firewall_rules = {
 }
 
 pscendpoints = {
+  # --- ACTIVE TEST: inbound endpoint consuming the psc-test-pg instance -------
+  # Single apply: cloud_sql_psc_source resolves the instance service attachment
+  # link automatically. Allocates an internal IP in tf-vpc-01-sn01-usc1.
+  "psc-test-pg-ep" : {
+    network_name            = "tf-vpc-01"
+    subnetwork_name         = "tf-vpc-01-sn01-usc1"
+    region                  = "us-central1"
+    create_regional_address = true
+    cloud_sql_psc_source    = "psc-test-pg"
+  }
+
   #   "psc-endpoint-01" : { // PSC for regional google apis example
   #     network_name                 = "tf-vpc-01"
   #     subnetwork_name              = "tf-vpc-01-sn01-usc1"
@@ -564,6 +588,18 @@ pscendpoints = {
   #   target_service_attachment = "projects/producer-project-id/regions/us-central1/serviceAttachments/sa-producer-01"
   #   allow_psc_global_access   = false
   #   no_automate_dns_zone      = true
+  # }
+
+  # Inbound endpoint to a Cloud SQL instance managed in THIS config (single apply):
+  # use cloud_sql_psc_source (key of var.cloud_sql_postgresql) instead of pasting a
+  # literal target_service_attachment. The root resolves the instance's service
+  # attachment link automatically. Do NOT set both fields.
+  # "my-pg-endpoint" : {
+  #   network_name            = "tf-vpc-01"
+  #   subnetwork_name         = "tf-vpc-01-sn01-usc1"
+  #   region                  = "us-east4"
+  #   create_regional_address = true
+  #   cloud_sql_psc_source    = "app-pg" # key in var.cloud_sql_postgresql
   # }
 
   # Example producer service attachment:
@@ -746,6 +782,32 @@ cloud_sql_mysql = {
 }
 
 cloud_sql_postgresql = {
+  # --- ACTIVE TEST: PSC inbound + outbound -----------------------------------
+  # Creates a REAL, billable Cloud SQL instance (~10-15 min to provision).
+  # Teardown: comment this block (and the pscendpoints/network_attachments
+  # entries) and run terraform apply, or terraform destroy.
+  "psc-test-pg" = {
+    region              = "us-central1"
+    database_version    = "POSTGRES_16"
+    tier                = "db-custom-1-3840"
+    availability_type   = "ZONAL"
+    deletion_protection = false
+
+    database_deletion_policy = "ABANDON"
+    user_deletion_policy     = "ABANDON"
+
+    ip_configuration = {
+      ipv4_enabled                  = false
+      psc_enabled                   = true # required for PSC (inbound + outbound)
+      psc_allowed_consumer_projects = ["infra-proj-id"]
+    }
+
+    # OUTBOUND: attach a PSC interface to the network attachment created above.
+    psc_network_attachment_key = "sql-outbound-na"
+
+    user_labels = { env = "dev", purpose = "psc-test" }
+  }
+
   # "app-pg" = {
   #   region           = "us-east4"
   #   database_version = "POSTGRES_16"
@@ -778,6 +840,38 @@ cloud_sql_postgresql = {
   #   ]
 
   #   user_labels = { env = "dev", app = "core" }
+  # }
+
+  # ---------------------------------------------------------------------------
+  # OUTBOUND PSC (PSC interface) -- the instance initiates connections INTO your
+  # VPC, via a network attachment (see var.network_attachments above).
+  # This is DIFFERENT from inbound PSC (psc_enabled + pscendpoints module).
+  #
+  # Limitations:
+  #   - Enabling/disabling causes ~3 min downtime.
+  #   - NOT supported on read replicas, nor on instances with a DR replica.
+  #   - Incompatible with instances using BOTH private service access (PSA) and PSC.
+  #   - If outbound is enabled you cannot create a replica of the instance.
+  #   - DNS/hostname targets must resolve to RFC-1918 addresses.
+  # ---------------------------------------------------------------------------
+  # "migration-target-pg" = {
+  #   region            = "us-east4"
+  #   database_version  = "POSTGRES_16"
+  #   tier              = "db-custom-2-8192"
+  #   availability_type = "ZONAL"
+  #
+  #   ip_configuration = {
+  #     ipv4_enabled                  = false
+  #     psc_enabled                   = true                   # PSC must be on
+  #     psc_allowed_consumer_projects = ["<consumer-project>"] # inbound side
+  #     # OPTION B (literal / pre-existing attachment): set the URI directly here:
+  #     # psc_network_attachment_uri = "projects/<proj>/regions/us-east4/networkAttachments/sql-outbound-na"
+  #   }
+  #
+  #   # OPTION A (single apply): key of a var.network_attachments entry created in
+  #   # this same apply. The root resolves its self_link into
+  #   # ip_configuration.psc_network_attachment_uri automatically.
+  #   psc_network_attachment_key = "sql-outbound-na"
   # }
 }
 

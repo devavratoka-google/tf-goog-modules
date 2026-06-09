@@ -547,9 +547,14 @@ variable "pscendpoints" {
     access_type                  = optional(string, "REGIONAL")
     regional_endpoint_subnetwork = optional(bool, false)
     target_service_attachment    = optional(string, null)
-    allow_psc_global_access      = optional(bool, false)
-    no_automate_dns_zone         = optional(bool, false)
-    forwarding_rule_name         = optional(string, null)
+    # Convenience for inbound PSC to a Cloud SQL instance managed in this config:
+    # key of a var.cloud_sql_postgresql entry. When set, the root resolves that
+    # instance's service attachment link into target_service_attachment (single
+    # apply). Mutually exclusive with target_service_attachment.
+    cloud_sql_psc_source    = optional(string, null)
+    allow_psc_global_access = optional(bool, false)
+    no_automate_dns_zone    = optional(bool, false)
+    forwarding_rule_name    = optional(string, null)
     service_attachment = optional(object({
       name                  = string
       description           = optional(string, null)
@@ -568,6 +573,11 @@ variable "pscendpoints" {
   }))
   default     = {}
   description = "Map of PSC Endpoints configurations."
+
+  validation {
+    condition     = alltrue([for k, v in var.pscendpoints : !(v.cloud_sql_psc_source != null && v.target_service_attachment != null)])
+    error_message = "pscendpoints: set either cloud_sql_psc_source or target_service_attachment, not both."
+  }
 }
 
 variable "gcs_buckets" {
@@ -985,10 +995,10 @@ variable "vertex_ai_endpoints" {
     network               = optional(string)
     kms_key_name          = optional(string)
 
-    create_model          = optional(bool, true)
-    model_display_name    = optional(string)
-    model_description     = optional(string)
-    artifact_uri          = optional(string)
+    create_model       = optional(bool, true)
+    model_display_name = optional(string)
+    model_description  = optional(string)
+    artifact_uri       = optional(string)
     container_spec = optional(object({
       image_uri = string
       command   = optional(list(string))

@@ -120,6 +120,7 @@ variable "cloud_sql_postgresql" {
       enable_private_path_for_google_cloud_services = optional(bool, false)
       psc_enabled                                   = optional(bool, false)
       psc_allowed_consumer_projects                 = optional(list(string), [])
+      psc_network_attachment_uri                    = optional(string)
       server_ca_mode                                = optional(string)
       server_ca_pool                                = optional(string)
       custom_subject_alternative_names              = optional(list(string), [])
@@ -205,5 +206,11 @@ variable "cloud_sql_postgresql" {
         value = string
       })), [])
     }), null)
+
+    # Outbound PSC convenience: key of a var.network_attachments entry. When set,
+    # the root resolves its self_link and injects it as
+    # ip_configuration.psc_network_attachment_uri (single apply). Alternatively,
+    # set ip_configuration.psc_network_attachment_uri directly with a literal URI.
+    psc_network_attachment_key = optional(string, null)
   }))
 }

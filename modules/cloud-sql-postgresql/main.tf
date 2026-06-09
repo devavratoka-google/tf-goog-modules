@@ -145,6 +145,9 @@ resource "google_sql_database_instance" "default" {
           content {
             psc_enabled               = ip_configuration.value.psc_enabled
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
+            # Outbound PSC: attaches a PSC interface to the network attachment in your VPC, letting this instance initiate outbound connections.
+            # Not supported on read replicas; see modules/network_attachments/README.md.
+            network_attachment_uri = lookup(ip_configuration.value, "psc_network_attachment_uri", null)
           }
         }
 

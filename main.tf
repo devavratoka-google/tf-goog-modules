@@ -457,7 +457,10 @@ module "pscendpoints" {
   access_type                  = each.value.access_type
   regional_endpoint_subnetwork = each.value.regional_endpoint_subnetwork
 
-  target_service_attachment = each.value.target_service_attachment
+  # When cloud_sql_psc_source is set, resolve that Cloud SQL instance's service
+  # attachment link (computed) so the endpoint is created in the same apply.
+  # Otherwise use the literal target_service_attachment from tfvars.
+  target_service_attachment = each.value.cloud_sql_psc_source != null ? module.cloud_sql_postgresql[each.value.cloud_sql_psc_source].instance_psc_attachment : each.value.target_service_attachment
   allow_psc_global_access   = each.value.allow_psc_global_access
   no_automate_dns_zone      = each.value.no_automate_dns_zone
   forwarding_rule_name      = each.value.forwarding_rule_name
@@ -594,7 +597,14 @@ module "cloud_sql_postgresql" {
   final_backup_config               = each.value.final_backup_config
   insights_config                   = each.value.insights_config
   password_validation_policy_config = each.value.password_validation_policy_config
-  ip_configuration                  = each.value.ip_configuration
+  # When psc_network_attachment_key is set, resolve the network attachment's
+  # self_link and inject it as ip_configuration.psc_network_attachment_uri so the
+  # instance gets outbound PSC in a single apply. Otherwise pass ip_configuration
+  # as-is (the user may set psc_network_attachment_uri to a literal URI).
+  ip_configuration = each.value.psc_network_attachment_key != null ? merge(
+    each.value.ip_configuration,
+    { psc_network_attachment_uri = module.network_attachments[each.value.psc_network_attachment_key].self_link }
+  ) : each.value.ip_configuration
 
   read_replicas            = each.value.read_replicas
   read_replica_name_suffix = each.value.read_replica_name_suffix

@@ -1,13 +1,7 @@
 terraform {
-  required_version = ">= 1.5.0"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 7.0.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 7.0.0"
-    }
+  required_version = ">= 1.3"
+
+  provider_meta "google" {
+    module_name = "tf-goog-modules/network_attachments/v1.0.0"
   }
 }
