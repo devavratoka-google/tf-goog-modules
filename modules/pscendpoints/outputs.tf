@@ -1,7 +1,7 @@
 output "address" {
   value = (
     var.create_regional_address ? module.addresses[0].address :
-    var.create_global_address   ? google_compute_global_address.this[0].address :
+    var.create_global_address ? google_compute_global_address.this[0].address :
     var.address
   )
   description = "The reserved IP address — from the addresses submodule when create_regional_address is true, from the global address resource when create_global_address is true, otherwise echoes var.address."
@@ -13,7 +13,11 @@ output "address_name" {
 }
 
 output "address_self_link" {
-  value       = var.target_google_api == "all-apis" ? "projects/${var.project}/global/addresses/${var.address_name}" : "projects/${var.project}/regions/${var.region}/addresses/${var.address_name}"
+  value = (
+    var.create_regional_address ? module.addresses[0].self_link :
+    var.create_global_address ? google_compute_global_address.this[0].self_link :
+    null
+  )
   description = "The self-link of the address."
 }
 
@@ -28,7 +32,7 @@ output "regional_endpoint_id" {
 }
 
 output "psc_forwarding_rule" {
-  value       = try(google_compute_forwarding_rule.this[0], google_compute_global_forwarding_rule.google_apis[0], null)
+  value       = try(google_compute_forwarding_rule.this[0], google_compute_global_forwarding_rule.google_apis[0], google_compute_global_forwarding_rule.vpc_sc[0], null)
   description = "The full forwarding rule resource for consumer PSC."
 }
 
@@ -38,12 +42,12 @@ output "target_google_api" {
 }
 
 output "consumer_forwarding_rule_name" {
-  value       = try(google_compute_forwarding_rule.this[0].name, google_compute_global_forwarding_rule.google_apis[0].name, null)
+  value       = try(google_compute_forwarding_rule.this[0].name, google_compute_global_forwarding_rule.google_apis[0].name, google_compute_global_forwarding_rule.vpc_sc[0].name, null)
   description = "The name of the consumer forwarding rule."
 }
 
 output "consumer_forwarding_rule_self_link" {
-  value       = try(google_compute_forwarding_rule.this[0].self_link, google_compute_global_forwarding_rule.google_apis[0].self_link, null)
+  value       = try(google_compute_forwarding_rule.this[0].self_link, google_compute_global_forwarding_rule.google_apis[0].self_link, google_compute_global_forwarding_rule.vpc_sc[0].self_link, null)
   description = "The self-link of the consumer forwarding rule."
 }
 

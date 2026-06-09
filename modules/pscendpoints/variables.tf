@@ -16,6 +16,7 @@ variable "subnetwork" {
 
 variable "region" {
   type        = string
+  default     = null
   description = "The region to deploy resources in."
 }
 
@@ -109,4 +110,14 @@ variable "create_global_address" {
   type        = bool
   default     = false
   description = "Set to true to create global compute address using the global_addresses module."
+}
+
+variable "service_directory_registrations" {
+  type = object({
+    namespace                = string
+    service                  = optional(string, null)
+    service_directory_region = optional(string, null)
+  })
+  default     = null
+  description = "Service Directory registration configuration."
 }

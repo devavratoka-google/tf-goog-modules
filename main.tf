@@ -463,6 +463,8 @@ module "pscendpoints" {
   forwarding_rule_name      = each.value.forwarding_rule_name
 
   service_attachment = each.value.service_attachment
+
+  service_directory_registrations = each.value.service_directory_registrations
 }
 
 module "gcs_buckets" {
