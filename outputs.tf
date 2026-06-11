@@ -46,3 +46,8 @@ output "sql_tenant_project_id" {
   value       = { for k, v in module.cloud_sql_postgresql : k => v.instance_tenant_project_id }
   description = "The tenant project ID of the Cloud SQL PostgreSQL instances."
 }
+
+output "network_attachments_self_link" {
+  value       = { for k, v in module.network_attachments : k => v.self_link }
+  description = "The URIs of the created network attachments."
+}
