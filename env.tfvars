@@ -278,6 +278,16 @@ dns_policies = {
   # }
 }
 
+dns_record_sets = {
+  # "test-record" = {
+  #   managed_zone = "gcp-example-com"
+  #   name         = "test.gcp.example.com."
+  #   type         = "A"
+  #   ttl          = 300
+  #   rrdatas      = ["10.100.1.10"]
+  # }
+}
+
 addresses = {
   # "ext-ip-01" : {
   #   address_type = "EXTERNAL"

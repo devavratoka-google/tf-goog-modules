@@ -276,6 +276,20 @@ module "dns_policies" {
   project                   = coalesce(each.value.project, var.env_project_id)
 }
 
+module "dns_record_sets" {
+  depends_on = [module.dns_zones]
+
+  source   = "./modules/dns_record_set"
+  for_each = var.dns_record_sets
+
+  project      = coalesce(each.value.project, var.env_project_id)
+  managed_zone = each.value.managed_zone
+  name         = each.value.name
+  type         = each.value.type
+  ttl          = each.value.ttl
+  rrdatas      = each.value.rrdatas
+}
+
 module "addresses" {
   depends_on = [module.networks, module.subnetworks]
 

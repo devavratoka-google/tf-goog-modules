@@ -328,6 +328,23 @@ variable "dns_policies" {
   default = {}
 }
 
+variable "dns_record_sets" {
+  type = map(object({
+    managed_zone = string
+    name         = string
+    type         = string
+    ttl          = optional(number, 300)
+    rrdatas      = optional(list(string), [])
+    project      = optional(string, null)
+  }))
+  default = {}
+
+  validation {
+    condition     = alltrue([for r in var.dns_record_sets : contains(["A", "AAAA", "CNAME"], r.type)])
+    error_message = "Only A, AAAA, and CNAME record types are allowed in DNS record sets."
+  }
+}
+
 variable "addresses" {
   type = map(object({
     description     = optional(string, null)
