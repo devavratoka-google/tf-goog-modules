@@ -314,6 +314,7 @@ variable "dns_zones" {
       rrdatas = list(string)
     })), {})
     project = optional(string, null)
+    labels  = optional(map(string), {})
   }))
   default = {}
 }

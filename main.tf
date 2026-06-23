@@ -260,6 +260,7 @@ module "dns_zones" {
   peering_config    = each.value.peering_config
   record_sets       = each.value.record_sets
   project           = coalesce(each.value.project, var.env_project_id)
+  labels            = each.value.labels
 }
 
 

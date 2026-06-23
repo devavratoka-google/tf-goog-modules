@@ -1,42 +1,42 @@
 env_project_id = "infra-proj-id"
 
 vpcs = {
-  "tf-vpc-01" : {
-  },
+  # "tf-vpc-01" : {
+  # },
 }
 
 subnetworks = {
-  "tf-vpc-01-sn01-usc1" : {
-    network_name             = "tf-vpc-01"
-    region                   = "us-central1"
-    ip_cidr_range            = "192.168.100.0/24"
-    purpose                  = "PRIVATE"
-    private_ip_google_access = true
-    log_config               = {}
-    secondary_ip_range = {
-      "pods" : {
-        range_name    = "pods"
-        ip_cidr_range = "100.100.0.0/23"
-      },
-      "services" : {
-        range_name    = "services"
-        ip_cidr_range = "100.100.2.0/23"
-      },
-    }
-  },
-  "tf-vpc-01-rmproxy" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.101.0/24"
-    purpose       = "REGIONAL_MANAGED_PROXY"
-    role          = "ACTIVE"
-  }
-  "tf-vpc-01-pscc" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.102.0/24"
-    purpose       = "PRIVATE_SERVICE_CONNECT"
-  }
+  # "tf-vpc-01-sn01-usc1" : {
+  #   network_name             = "tf-vpc-01"
+  #   region                   = "us-central1"
+  #   ip_cidr_range            = "192.168.100.0/24"
+  #   purpose                  = "PRIVATE"
+  #   private_ip_google_access = true
+  #   log_config               = {}
+  #   secondary_ip_range = {
+  #     "pods" : {
+  #       range_name    = "pods"
+  #       ip_cidr_range = "100.100.0.0/23"
+  #     },
+  #     "services" : {
+  #       range_name    = "services"
+  #       ip_cidr_range = "100.100.2.0/23"
+  #     },
+  #   }
+  # },
+  # "tf-vpc-01-rmproxy" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.101.0/24"
+  #   purpose       = "REGIONAL_MANAGED_PROXY"
+  #   role          = "ACTIVE"
+  # }
+  # "tf-vpc-01-pscc" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.102.0/24"
+  #   purpose       = "PRIVATE_SERVICE_CONNECT"
+  # }
 }
 
 cloud_routers = {
