@@ -20,13 +20,21 @@ variable "project_id" {
 }
 
 variable "database_id" {
-  description = "Unique identifier of the Firestore Database."
+  description = "Unique identifier of the Firestore Database. Required when creating a new database (existing_database_id is null)."
   type        = string
+  default     = null
 }
 
 variable "location" {
-  description = "The location in which the Firesotre Database is created."
+  description = "The location in which the Firestore Database is created. Required when creating a new database (existing_database_id is null)."
   type        = string
+  default     = null
+}
+
+variable "existing_database_id" {
+  description = "ID of an existing Firestore database to attach indexes and field configurations to. When set, the module will not create a database — it will only manage composite indexes and field configurations on the referenced database. Mutually exclusive with database_id/location. Use this when the database is owned by another module or project."
+  type        = string
+  default     = null
 }
 
 variable "database_type" {
