@@ -77,4 +77,3 @@ variable "labels" {
     error_message = "Validation Error: The 'applicationid' label is mandatory."
   }
 }
-
