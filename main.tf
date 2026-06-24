@@ -893,3 +893,20 @@ module "pubsub_topics" {
   subscriptions              = each.value.subscriptions
 }
 
+module "cloud_scheduler_jobs" {
+  source   = "./modules/cloud-scheduler"
+  for_each = var.cloud_scheduler_jobs
+
+  project_id             = coalesce(each.value.project_id, var.env_project_id)
+  region                 = each.value.region
+  name                   = each.key
+  schedule               = each.value.schedule
+  description            = each.value.description
+  time_zone              = each.value.time_zone
+  attempt_deadline       = each.value.attempt_deadline
+  paused                 = each.value.paused
+  retry_config           = each.value.retry_config
+  http_target            = each.value.http_target
+  pubsub_target          = each.value.pubsub_target
+  app_engine_http_target = each.value.app_engine_http_target
+}
