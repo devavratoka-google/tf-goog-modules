@@ -1026,3 +1026,42 @@ variable "vertex_ai_endpoints" {
   default     = {}
   description = "Map of Vertex AI Endpoint and Model Garden foundation model configurations."
 }
+
+variable "pubsub_topics" {
+  description = "Map of Pub/Sub topics and subscription configurations to deploy."
+  type = map(object({
+    project_id                 = optional(string, null)
+    labels                     = optional(map(string), {})
+    message_retention_duration = optional(string, null)
+    topic_iam                  = optional(map(list(string)), {})
+    subscriptions = optional(map(object({
+      ack_deadline_seconds       = optional(number, 10)
+      retain_acked_messages      = optional(bool, false)
+      message_retention_duration = optional(string, null)
+      labels                     = optional(map(string), {})
+      push_config = optional(object({
+        push_endpoint = string
+        oidc_token = optional(object({
+          service_account_email = string
+          audience              = optional(string, null)
+        }), null)
+      }), null)
+      bigquery_config = optional(object({
+        table               = string
+        use_topic_schema    = optional(bool, false)
+        write_metadata      = optional(bool, false)
+        drop_unknown_fields = optional(bool, false)
+      }), null)
+      dead_letter_policy = optional(object({
+        dead_letter_topic     = string
+        max_delivery_attempts = optional(number, 5)
+      }), null)
+      retry_policy = optional(object({
+        minimum_backoff = optional(string, null)
+        maximum_backoff = optional(string, null)
+      }), null)
+      iam = optional(map(list(string)), {})
+    })), {})
+  }))
+  default = {}
+}

@@ -1085,3 +1085,42 @@ iam_service_accounts = {
   #   # }
   # }
 }
+
+# pubsub_topics = {
+#   "agent-events-dev" = {
+#     project_id                 = "infra-proj-id"
+#     message_retention_duration = "604800s" # 7 days
+#     labels                     = { env = "dev", service = "events" }
+#
+#     topic_iam = {
+#       "roles/pubsub.publisher" = [
+#         "serviceAccount:publisher-sa@infra-proj-id.iam.gserviceaccount.com"
+#       ]
+#     }
+#
+#     subscriptions = {
+#       "events-push" = {
+#         ack_deadline_seconds = 20
+#         push_config = {
+#           push_endpoint = "https://orchestrator.run.app/internal/events"
+#           oidc_token = {
+#             service_account_email = "pubsub-invoker@infra-proj-id.iam.gserviceaccount.com"
+#             audience              = "https://orchestrator.run.app"
+#           }
+#         }
+#       }
+#       "events-bq-firehose" = {
+#         bigquery_config = {
+#           table          = "projects/infra-proj-id/datasets/analytics/tables/events"
+#           write_metadata = true
+#         }
+#         iam = {
+#           "roles/pubsub.subscriber" = [
+#             "serviceAccount:runtime-sa@infra-proj-id.iam.gserviceaccount.com"
+#           ]
+#         }
+#       }
+#     }
+#   }
+# }
+

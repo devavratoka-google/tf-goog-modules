@@ -881,3 +881,15 @@ module "vertex_ai_model_garden" {
   kms_key_name          = each.value.kms_key_name
 }
 
+module "pubsub_topics" {
+  source   = "./modules/pubsub"
+  for_each = var.pubsub_topics
+
+  project_id                 = coalesce(each.value.project_id, var.env_project_id)
+  topic_name                 = each.key
+  labels                     = each.value.labels
+  message_retention_duration = each.value.message_retention_duration
+  topic_iam                  = each.value.topic_iam
+  subscriptions              = each.value.subscriptions
+}
+

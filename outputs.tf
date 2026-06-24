@@ -51,3 +51,13 @@ output "network_attachments_self_link" {
   value       = { for k, v in module.network_attachments : k => v.self_link }
   description = "The URIs of the created network attachments."
 }
+
+output "pubsub_topic_ids" {
+  description = "IDs of the created Pub/Sub topics."
+  value       = { for k, v in module.pubsub_topics : k => v.topic_id }
+}
+
+output "pubsub_subscription_ids" {
+  description = "A map of topic keys to maps of subscription keys to subscription resource IDs."
+  value       = { for k, v in module.pubsub_topics : k => v.subscription_ids }
+}
