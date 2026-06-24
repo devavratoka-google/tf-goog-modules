@@ -1,87 +1,130 @@
 # GKE Autopilot
 
-This directory contains everything needed to deploy a GKE Autopilot cluster using Terraform.
+This Terraform root module creates a private GKE Autopilot cluster in Google Cloud.
 
-## Directory Structure
+It enables the required Google Cloud APIs and creates one `google_container_cluster` with Autopilot, VPC-native networking, Workload Identity, private nodes, configurable control plane access, logging, monitoring, cost management, security posture, and maintenance settings.
 
+## What It Creates
+
+- Enables these APIs in the target project:
+  - `compute.googleapis.com`
+  - `iam.googleapis.com`
+  - `container.googleapis.com`
+  - `run.googleapis.com`
+- Creates a GKE Autopilot cluster with:
+  - `enable_autopilot = true`
+  - `networking_mode = "VPC_NATIVE"`
+  - Workload Identity enabled
+  - private cluster defaults
+  - Dataplane V2 by default
+  - L4 ILB subsetting enabled by default
+  - external Service IPs disabled by default
+
+The API resources use `disable_on_destroy = false`, so destroying this Terraform stack does not disable the APIs in the project.
+
+## Required Existing Resources
+
+This module does not create the network layer. Before applying it, the following resources must already exist:
+
+- GCP project.
+- VPC network.
+- Subnet.
+- Secondary IP ranges for GKE pods and services, unless CIDR blocks are provided directly.
+- Private egress path for workloads, such as Cloud NAT, if workloads need internet access.
+- Any required firewall rules, DNS zones, bastion, VPN, or administrative access path.
+
+## Variables To Change
+
+| Variable | Required | What to set |
+| --- | --- | --- |
+| `project_id` | Yes | Target GCP project ID. |
+| `env` | Yes | Environment name, for example `dev`, `stg`, or `prod`. When `env = "prod"`, cluster deletion protection is enabled in `main.tf`. |
+| `name` | Yes | GKE cluster name. |
+| `location` | Yes | GCP region or zone for the cluster, for example `us-central1` or `southamerica-east1`. |
+| `network` | Yes | Existing VPC network name or self link. |
+| `subnetwork` | Yes | Existing subnet name or self link. |
+| `ip_allocation_policy` | Yes for VPC-native setup | Pod and service secondary range names, or explicit CIDR blocks. |
+| `resource_labels` | Recommended | Labels used for ownership, environment, billing, and operations. |
+| `description` | Recommended | Short description of the cluster purpose. |
+| `control_plane_endpoints_config` | Recommended | DNS and IP endpoint settings for the control plane. The current outputs expect the DNS endpoint block to exist. |
+| `private_cluster_config` | Recommended | Private node and private endpoint behavior. Defaults create private nodes. |
+| `master_authorized_networks` | Optional | CIDR allowlist for IP-based control plane endpoints. Not required when using DNS-only control plane access. |
+| `workload_pool` | Optional | Workload Identity pool. If omitted, it uses `<project_id>.svc.id.goog`. |
+
+Operational defaults can also be adjusted when needed:
+
+| Variable | Default |
+| --- | --- |
+| `release_channel` | `REGULAR` |
+| `logging_config` | `SYSTEM_COMPONENTS`, `WORKLOADS` |
+| `monitoring_config` | `SYSTEM_COMPONENTS` |
+| `cost_management_config` | enabled |
+| `security_posture_config` | `BASIC` and `VULNERABILITY_BASIC` |
+| `service_external_ips_config` | disabled |
+| `maintenance_policy` | daily window at `05:00` |
+| `node_pool_auto_config` | read-only kubelet port disabled and cgroup v2 enabled |
+| `timeouts` | `45m` for create, update, and delete |
+
+Note: `deletion_protection` is declared in `variables.tf`, but the current cluster resource uses `env == "prod"` to set deletion protection.
+
+## Example `gkeautopilot.tfvars`
+
+```hcl
+project_id = "my-gcp-project"
+env        = "dev"
+name       = "gke-autopilot-private"
+location   = "us-central1"
+
+network    = "my-vpc"
+subnetwork = "my-subnet"
+
+resource_labels = {
+  environment = "dev"
+  managed_by  = "terraform"
+  workload    = "gke-autopilot"
+}
+
+ip_allocation_policy = {
+  cluster_secondary_range_name  = "gke-pods"
+  services_secondary_range_name = "gke-services"
+}
+
+private_cluster_config = {
+  enable_private_nodes    = true
+  enable_private_endpoint = true
+}
+
+control_plane_endpoints_config = {
+  dns_endpoint_config = {
+    allow_external_traffic = true
+  }
+
+  ip_endpoints_config = {
+    enabled = false
+  }
+}
 ```
-gkeautopilot/
-├── deployments/
-│   └── gke-autopilot/      ← use this to create the cluster
-├── modules/                ← reusable Terraform modules consumed by the deployment
-│   ├── gke-autopilot-cluster/
-│   ├── services/
-│   └── ...
-└── examples/               ← reference examples for study in this stage
+
+## Usage
+
+Run Terraform from this directory:
+
+```bash
+cd modules/gkeautopilot
+terraform init
+terraform plan
+terraform apply
 ```
 
-## How to Use This Module
+## Expected Outputs
 
-**The GKE Autopilot cluster must be created from `deployments/gke-autopilot`.**
-
-That folder is the Terraform root module for this deployment. It wires together the reusable modules under `modules/` with the specific configuration values for your cluster.
-
-### Steps
-
-1. Navigate to the deployment folder:
-
-   ```bash
-   cd deployments/gke-autopilot
-   ```
-
-2. Edit `terraform.tfvars` with your values:
-
-   ```hcl
-   project_id = "your-project-id"
-   env        = "dev"
-   name       = "gke-autopilot-private"
-   location   = "us-central1"
-
-   network    = "your-vpc-name"
-   subnetwork = "your-subnet-name"
-
-   ip_allocation_policy = {
-     cluster_secondary_range_name  = "gke-pods"
-     services_secondary_range_name = "gke-services"
-   }
-   ```
-
-3. Initialize and apply:
-
-   ```bash
-   terraform init
-   terraform plan
-   terraform apply
-   ```
-
-## What the Deployment Creates
-
-The deployment in `deployments/gke-autopilot` calls two modules:
-
-| Module | Source | Purpose |
-|---|---|---|
-| `module.services` | `../../modules/services` | Enables the required Google Cloud APIs (Compute, IAM, Container, Cloud Run). |
-| `module.gke_autopilot` | `../../modules/gke-autopilot-cluster` | Creates the GKE Autopilot cluster. |
-
-The `module.gke_autopilot` explicitly depends on `module.services` so that the required APIs are always enabled before the cluster resource is created.
-
-## What the Deployment Does Not Create
-
-The following resources are outside the scope of this deployment and must already exist or be managed by another Terraform layer:
-
-- VPC network and subnet
-- Secondary IP ranges for pods and services
-- Cloud NAT
-- Firewall rules
-- Private DNS zones
-- Bastion host or VPN access
-- Artifact Registry repositories
-- Application namespaces and Kubernetes RBAC bindings
-
-## About the `modules/` Folder
-
-The `modules/` folder contains the reusable low-level Terraform modules. You do not run Terraform directly from these folders. They are consumed by the deployment in `deployments/gke-autopilot`.
-
-## About the `examples/` Folder
-
-The `examples/` folder contains a large collection of reference examples covering many GKE configurations (private clusters, autopilot, standard, workload identity, safer cluster, and others). These examples are **for study and reference only** in this stage. 
+| Output | Description |
+| --- | --- |
+| `cluster_name` | Name of the created GKE cluster. |
+| `cluster_id` | Full Terraform/GCP ID of the cluster. |
+| `location` | Region or zone where the cluster was created. |
+| `endpoint` | Private control plane endpoint. Marked as sensitive. |
+| `endpoint_dns` | DNS endpoint for the control plane. |
+| `ca_certificate` | Base64-encoded cluster CA certificate. Marked as sensitive. |
+| `master_version` | Current GKE control plane version. |
+| `node_locations` | Zones used by the Autopilot nodes. |
