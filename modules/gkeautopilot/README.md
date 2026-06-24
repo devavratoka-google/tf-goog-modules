@@ -107,10 +107,61 @@ control_plane_endpoints_config = {
 
 ## Usage
 
-Run Terraform from this directory:
+Call this module from a Terraform root module. When using it from the root of this repository, use `./modules/gkeautopilot` as the source:
+
+```hcl
+module "gkeautopilot" {
+  source = "./modules/gkeautopilot"
+
+  providers = {
+    google      = google
+    google-beta = google-beta
+  }
+
+  project_id  = "my-gcp-project"
+  env         = "dev"
+  name        = "gke-autopilot-private"
+  description = "Private GKE Autopilot cluster for application workloads."
+  location    = "us-central1"
+
+  network    = "my-vpc"
+  subnetwork = "my-subnet"
+
+  resource_labels = {
+    environment = "dev"
+    managed_by  = "terraform"
+    workload    = "gke-autopilot"
+  }
+
+  ip_allocation_policy = {
+    cluster_secondary_range_name  = "gke-pods"
+    services_secondary_range_name = "gke-services"
+  }
+
+  private_cluster_config = {
+    enable_private_nodes    = true
+    enable_private_endpoint = true
+    master_global_access_config = {
+      enabled = true
+    }
+  }
+
+  control_plane_endpoints_config = {
+    dns_endpoint_config = {
+      allow_external_traffic = true
+    }
+
+    ip_endpoints_config = {
+      enabled = false
+    }
+  }
+}
+
+```
+
+Then run Terraform from the root module directory:
 
 ```bash
-cd modules/gkeautopilot
 terraform init
 terraform plan
 terraform apply
