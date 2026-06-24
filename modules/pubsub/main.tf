@@ -11,7 +11,7 @@ resource "google_pubsub_subscription" "this" {
   project = var.project_id
   name    = each.key
   topic   = google_pubsub_topic.this.name
-  labels  = each.value.labels
+  labels  = merge(var.labels, each.value.labels)
 
   ack_deadline_seconds       = each.value.ack_deadline_seconds
   retain_acked_messages      = each.value.retain_acked_messages

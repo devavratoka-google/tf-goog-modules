@@ -83,3 +83,9 @@ variable "health_check_port" {
   type    = number
   default = 80
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "Key-value map of resource labels."
+  default     = {}
+}

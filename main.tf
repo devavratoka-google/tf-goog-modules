@@ -152,6 +152,7 @@ module "policy_based_routes" {
   dest_range            = each.value.dest_range
   ip_protocol           = each.value.ip_protocol
   protocol_version      = each.value.protocol_version
+  labels                = each.value.labels
 }
 
 module "subnet_iam_bindings" {
@@ -306,6 +307,7 @@ module "addresses" {
   subnetwork   = each.value.subnetwork_name != null ? module.subnetworks[each.value.subnetwork_name].subnets_self_link : null
   region       = each.value.region
   project      = coalesce(each.value.project, var.env_project_id)
+  labels       = each.value.labels
 }
 
 module "global_addresses" {
@@ -478,6 +480,7 @@ module "pscendpoints" {
   forwarding_rule_name      = each.value.forwarding_rule_name
 
   service_attachment = each.value.service_attachment
+  labels             = each.value.labels
 }
 
 module "gcs_buckets" {
@@ -548,6 +551,7 @@ module "bigquery_datasets" {
   storage_billing_model           = each.value.storage_billing_model
   encryption_key                  = each.value.encryption_key
   dataset_labels                  = each.value.dataset_labels
+  labels                          = each.value.labels
   resource_tags                   = each.value.resource_tags
   access                          = each.value.access
   tables                          = each.value.tables

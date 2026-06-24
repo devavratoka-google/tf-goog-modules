@@ -44,6 +44,15 @@ variable "iam_members" {
   default = []
 }
 
+variable "iam_additive" {
+  description = "Additive IAM member grants on the bucket. Map of \"role/member\" label => {role, member}. Supports computed principals (e.g. logging sink writer_identity)."
+  type = map(object({
+    role   = string
+    member = string
+  }))
+  default = {}
+}
+
 variable "storage_class" {
   description = "The Storage Class of the new bucket."
   type        = string

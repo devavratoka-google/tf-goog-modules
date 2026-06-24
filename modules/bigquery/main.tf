@@ -38,7 +38,7 @@ resource "google_bigquery_dataset" "main" {
   max_time_travel_hours           = var.max_time_travel_hours
   storage_billing_model           = var.storage_billing_model
   project                         = var.project_id
-  labels                          = var.dataset_labels
+  labels                          = merge(var.dataset_labels, var.labels)
   resource_tags                   = var.resource_tags
   default_partition_expiration_ms = var.default_partition_expiration_ms
 

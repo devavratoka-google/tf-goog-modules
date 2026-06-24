@@ -323,3 +323,9 @@ variable "timeouts" {
     delete = "45m"
   }
 }
+
+variable "labels" {
+  description = "Resource labels to apply to the cluster."
+  type        = map(string)
+  default     = {}
+}

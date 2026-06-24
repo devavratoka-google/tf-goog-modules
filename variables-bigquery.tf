@@ -30,6 +30,7 @@ variable "bigquery_datasets" {
     storage_billing_model           = optional(string, null)
     encryption_key                  = optional(string, null)
     dataset_labels                  = optional(map(string), {})
+    labels                          = optional(map(string), {})
     resource_tags                   = optional(map(string), {})
 
     access = optional(any, [{

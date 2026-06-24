@@ -13,4 +13,5 @@ module "nva_ilb_clusters" {
   resource_manager_tags = each.value.resource_manager_tags
 
   vm_tags = ["nva"]
+  labels  = each.value.labels
 }

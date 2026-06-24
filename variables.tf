@@ -356,8 +356,25 @@ variable "addresses" {
     subnetwork_name = optional(string, null)
     region          = optional(string, null)
     project         = optional(string, null)
+    labels          = optional(map(string), {})
   }))
   default = {}
+
+  # 1. Enforce that the 'environment' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["environment"])
+    ])
+    error_message = "Validation Error: The 'environment' label is mandatory for all addresses."
+  }
+
+  # 2. Enforce that the 'applicationid' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["applicationid"])
+    ])
+    error_message = "Validation Error: The 'applicationid' label is mandatory for all addresses."
+  }
 }
 
 variable "global_addresses" {

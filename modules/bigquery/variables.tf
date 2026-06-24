@@ -95,6 +95,12 @@ variable "dataset_labels" {
   default     = {}
 }
 
+variable "labels" {
+  description = "Key value pairs in a map for dataset labels (alias for dataset_labels)"
+  type        = map(string)
+  default     = {}
+}
+
 variable "resource_tags" {
   description = "A map of resource tags to add to the dataset"
   type        = map(string)

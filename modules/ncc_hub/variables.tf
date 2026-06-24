@@ -36,6 +36,7 @@ variable "ncc_groups" {
   type = map(object({
     description          = string
     auto_accept_projects = list(string)
+    labels               = optional(map(string), {})
   }))
   description = "A map of NCC groups to create."
 }
