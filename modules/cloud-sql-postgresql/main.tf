@@ -143,8 +143,9 @@ resource "google_sql_database_instance" "default" {
         dynamic "psc_config" {
           for_each = ip_configuration.value.psc_enabled ? ["psc_enabled"] : []
           content {
-            psc_enabled               = ip_configuration.value.psc_enabled
+            psc_enabled               = true
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
+            network_attachment_uri    = var.network_attachment_uri
           }
         }
 
@@ -383,4 +384,27 @@ resource "null_resource" "module_depends_on" {
   triggers = {
     value = length(var.module_depends_on)
   }
+}
+
+resource "google_compute_address" "cloud_sql_psc" {
+  depends_on   = [google_sql_database_instance.default]
+  count        = try(var.ip_configuration.psc_enabled, false) ? 1 : 0
+  project      = var.project_id
+  name         = "${local.instance_name}-psc-ip"
+  region       = var.region
+  address_type = "INTERNAL"
+  subnetwork   = var.psc_subnetwork_link
+  labels       = var.user_labels
+}
+
+resource "google_compute_forwarding_rule" "cloud_sql_psc" {
+  count                 = try(var.ip_configuration.psc_enabled, false) ? 1 : 0
+  project               = var.project_id
+  name                  = "${local.instance_name}-psc-fr"
+  region                = var.region
+  network               = var.psc_network_link
+  ip_address            = google_compute_address.cloud_sql_psc[0].self_link
+  target                = google_sql_database_instance.default.psc_service_attachment_link
+  load_balancing_scheme = ""
+  labels                = var.user_labels
 }

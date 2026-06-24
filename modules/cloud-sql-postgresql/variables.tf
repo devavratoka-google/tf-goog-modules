@@ -394,6 +394,10 @@ variable "read_replicas" {
       psc_enabled                                   = optional(bool, false)
       psc_allowed_consumer_projects                 = optional(list(string), [])
     })
+    psc_interface_config = optional(object({
+      network_attachment_link = string
+      consumer_address        = optional(string)
+    }), null)
     encryption_key_name = optional(string)
     data_cache_enabled  = optional(bool)
   }))
@@ -528,4 +532,22 @@ variable "connection_pool_config" {
     })), [])
   })
   default = null
+}
+
+variable "psc_network_link" {
+  type        = string
+  default     = null
+  description = "The self_link of the VPC network where the inbound PSC forwarding rule will be created."
+}
+
+variable "psc_subnetwork_link" {
+  type        = string
+  default     = null
+  description = "The self_link of the subnetwork where the inbound PSC IP address will be allocated."
+}
+
+variable "network_attachment_uri" {
+  type        = string
+  default     = null
+  description = "The self_link of the network attachment for outbound PSC connections."
 }

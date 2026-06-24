@@ -41,6 +41,7 @@ resource "google_dns_managed_zone" "this" {
   }
 
   project = var.project
+  labels  = var.labels
 }
 
 ################ End DNS Managed Zone ################

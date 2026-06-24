@@ -15,7 +15,7 @@ resource "google_network_security_firewall_endpoint_association" "this" {
   firewall_endpoint     = google_network_security_firewall_endpoint.this.id
   network               = each.value.network
   location              = each.value.fw_ip_association_location
-  labels                = each.value.fw_ep_association_labels
+  labels                = merge(var.labels, each.value.fw_ep_association_labels)
   tls_inspection_policy = each.value.tls_inspection_policy
   disabled              = each.value.disabled
 }

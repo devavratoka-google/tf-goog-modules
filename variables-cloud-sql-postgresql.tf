@@ -169,6 +169,10 @@ variable "cloud_sql_postgresql" {
         psc_enabled                                   = optional(bool, false)
         psc_allowed_consumer_projects                 = optional(list(string), [])
       })
+      psc_interface_config = optional(object({
+        network_attachment_link = string
+        consumer_address        = optional(string)
+      }), null)
       encryption_key_name = optional(string)
       data_cache_enabled  = optional(bool)
     })), [])
@@ -205,5 +209,9 @@ variable "cloud_sql_postgresql" {
         value = string
       })), [])
     }), null)
+
+    psc_network_link        = optional(string, null)
+    psc_subnetwork_link     = optional(string, null)
+    network_attachment_link = optional(string, null)
   }))
 }

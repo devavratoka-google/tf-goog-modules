@@ -1,42 +1,42 @@
 env_project_id = "infra-proj-id"
 
 vpcs = {
-  "tf-vpc-01" : {
-  },
+  # "tf-vpc-01" : {
+  # },
 }
 
 subnetworks = {
-  "tf-vpc-01-sn01-usc1" : {
-    network_name             = "tf-vpc-01"
-    region                   = "us-central1"
-    ip_cidr_range            = "192.168.100.0/24"
-    purpose                  = "PRIVATE"
-    private_ip_google_access = true
-    log_config               = {}
-    secondary_ip_range = {
-      "pods" : {
-        range_name    = "pods"
-        ip_cidr_range = "100.100.0.0/23"
-      },
-      "services" : {
-        range_name    = "services"
-        ip_cidr_range = "100.100.2.0/23"
-      },
-    }
-  },
-  "tf-vpc-01-rmproxy" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.101.0/24"
-    purpose       = "REGIONAL_MANAGED_PROXY"
-    role          = "ACTIVE"
-  }
-  "tf-vpc-01-pscc" : {
-    network_name  = "tf-vpc-01"
-    region        = "us-east4"
-    ip_cidr_range = "192.168.102.0/24"
-    purpose       = "PRIVATE_SERVICE_CONNECT"
-  }
+  # "tf-vpc-01-sn01-usc1" : {
+  #   network_name             = "tf-vpc-01"
+  #   region                   = "us-central1"
+  #   ip_cidr_range            = "192.168.100.0/24"
+  #   purpose                  = "PRIVATE"
+  #   private_ip_google_access = true
+  #   log_config               = {}
+  #   secondary_ip_range = {
+  #     "pods" : {
+  #       range_name    = "pods"
+  #       ip_cidr_range = "100.100.0.0/23"
+  #     },
+  #     "services" : {
+  #       range_name    = "services"
+  #       ip_cidr_range = "100.100.2.0/23"
+  #     },
+  #   }
+  # },
+  # "tf-vpc-01-rmproxy" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.101.0/24"
+  #   purpose       = "REGIONAL_MANAGED_PROXY"
+  #   role          = "ACTIVE"
+  # }
+  # "tf-vpc-01-pscc" : {
+  #   network_name  = "tf-vpc-01"
+  #   region        = "us-east4"
+  #   ip_cidr_range = "192.168.102.0/24"
+  #   purpose       = "PRIVATE_SERVICE_CONNECT"
+  # }
 }
 
 cloud_routers = {
@@ -278,6 +278,16 @@ dns_policies = {
   # }
 }
 
+dns_record_sets = {
+  # "test-record" = {
+  #   managed_zone = "gcp-example-com"
+  #   name         = "test.gcp.example.com."
+  #   type         = "A"
+  #   ttl          = 300
+  #   rrdatas      = ["10.100.1.10"]
+  # }
+}
+
 addresses = {
   # "ext-ip-01" : {
   #   address_type = "EXTERNAL"
@@ -468,8 +478,8 @@ vpc_peerings = {
 network_attachments = {
   # "nw-att-1" : {
   #   subnetwork_name = ["tf-vpc-01-sn01-usc1"]
-  #   connection_preference = "ACCEPT_MANUAL"
-  #   producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"]
+  #   connection_preference = "ACCEPT_AUTOMATIC"
+  #  # producer_accept_lists = ["<svc-proj-01>", "<svc-proj-02>"] // not needed for ACCEPT_AUTOMATIC
   # }
 }
 
@@ -517,42 +527,44 @@ vpc_firewall_rules = {
 }
 
 pscendpoints = {
-  #   "psc-endpoint-01" : { // PSC for regional google apis example
-  #     network_name                 = "tf-vpc-01"
-  #     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-  #     project                      = "<proj-id>"
-  #     region                       = "us-central1"
-  #     address                      = "192.168.100.16"
-  #     create_regional_address      = false
-  #     regional_endpoint_subnetwork = true
-  #     target_google_api            = "storage.us-central1.rep.googleapis.com"
-  #     access_type                  = "REGIONAL"
-  #   },
 
-  #   "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
-  #     network_name                 = "tf-vpc-01"
-  #     subnetwork_name              = "tf-vpc-01-sn01-usc1"
-  #     project                      = "<proj-id>"
-  #     region                       = "us-central1"
-  #     address                      = "192.168.100.17"
-  #     create_regional_address      = false
-  #     regional_endpoint_subnetwork = true
-  #     target_google_api            = "storage.us-central1.rep.googleapis.com"
-  #     access_type                  = "GLOBAL"
-  #   },
+  "psc-all-apis-global" : { // PSC for all google apis with global address
+    network_name          = "tf-vpc-01"
+    project               = "proj-oka-int-demo"
+    address               = "192.168.104.10" // has to be part of IP space used in VPC but not belong to an existing subnet
+    create_global_address = true
+    target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
+    access_type           = "GLOBAL"
+    forwarding_rule_name  = "pscallapis"
+    service_directory_registrations = {
+      namespace                = "my-namespace"
+      service_directory_region = "us-central1"
+    }
+  },
 
-  #   "psc-all-apis-global" : { // PSC for all google apis with global address
+  "psc-endpoint-01" : { // PSC for regional google apis example
+    network_name                 = "tf-vpc-01"
+    subnetwork_name              = "tf-vpc-01-sn-psc-outbound"
+    project                      = "proj-oka-int-demo"
+    region                       = "us-central1"
+    address                      = "192.168.103.20"
+    create_regional_address      = false
+    regional_endpoint_subnetwork = true
+    target_google_api            = "storage.us-central1.rep.googleapis.com"
+    access_type                  = "REGIONAL"
+  },
 
-  #     network_name          = "tf-vpc-01"
-  #     project               = "<proj-id>"
-  #     region                = "us-central1"
-  #     address               = "192.168.200.10" // has to be part of IP space used in VPC but not belong to an existing subnet
-  #     create_global_address = true
-  #     target_google_api     = "all-apis" // change to vpc-sc if using restricted.googleapis.com
-  #     access_type           = "GLOBAL"
-  #     forwarding_rule_name  = "pscallapis"
-
-  #   },
+  "psc-endpoint-01-global" : { // PSC for regional google apis example but with global access enabled
+    network_name                 = "tf-vpc-01"
+    subnetwork_name              = "tf-vpc-01-sn-psc-outbound"
+    project                      = "proj-oka-int-demo"
+    region                       = "us-central1"
+    address                      = "192.168.103.21"
+    create_regional_address      = false
+    regional_endpoint_subnetwork = true
+    target_google_api            = "bigquery.us-central1.rep.googleapis.com"
+    access_type                  = "GLOBAL"
+  },
 
   # Example for consumer forwarding rule:
   # "psc-consumer-forwarding-rule-01" : {
@@ -746,39 +758,90 @@ cloud_sql_mysql = {
 }
 
 cloud_sql_postgresql = {
-  # "app-pg" = {
-  #   region           = "us-east4"
-  #   database_version = "POSTGRES_16"
-  #   tier             = "db-perf-optimized-N-8"
-  #   availability_type = "REGIONAL" 
+  # "pg-instance" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_15"
+  #   tier                = "db-custom-2-7680"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
 
-  #   db_name              = "appdb"
-  #   user_name            = "app"
-  #   deletion_protection  = true # bloqueia destroy acidental
-
-  #   disk_size       = 20
-  #   disk_autoresize = true
-
-  #   backup_configuration = {
-  #     enabled                        = true
-  #     point_in_time_recovery_enabled = true
-  #     start_time                     = "03:00"
-  #     retained_backups               = 7
-  #   }
+  #   psc_network_link    = "tf-vpc-01"
+  #   psc_subnetwork_link = "tf-vpc-01-sn01-usc1"
+  #   # network_attachment_link = "nw-att-1"
 
   #   ip_configuration = {
-  #     ipv4_enabled    = false # so private
-  #     private_network = "projects/HOST_PROJ/global/networks/shared-vpc"
-  #     ssl_mode        = "ENCRYPTED_ONLY"
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
   #   }
+  # },
+  # "pg-instance2" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
 
-  #   database_flags = [
-  #     { name = "cloudsql.iam_authentication", value = "on" }, # auth via IAM
-  #     { name = "log_min_duration_statement", value = "1000" } # slow queries > 1s
-  #   ]
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
 
-  #   user_labels = { env = "dev", app = "core" }
-  # }
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
+  # "pg-instance3" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
+
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
+
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
+  #   "pg-instance4" = {
+  #   project_id          = "<proj-id>"
+  #   region              = "us-central1"
+  #   database_version    = "POSTGRES_17"
+  #   tier                = "db-f1-micro"
+  #   edition             = "ENTERPRISE"
+  #   availability_type   = "ZONAL"
+  #   deletion_protection = false
+
+  #   psc_network_link        = "tf-vpc-01"
+  #   psc_subnetwork_link     = "tf-vpc-01-sn01-usc1"
+  #   network_attachment_link = "nw-att-2"
+
+  #   ip_configuration = {
+  #     ipv4_enabled = false
+  #     psc_enabled  = true
+  #     psc_allowed_consumer_projects = [
+  #       "<proj-id>"
+  #     ]
+  #   }
+  # },
 }
 
 # -----------------------------------------------------------------------------
@@ -1022,3 +1085,42 @@ iam_service_accounts = {
   #   # }
   # }
 }
+
+# pubsub_topics = {
+#   "agent-events-dev" = {
+#     project_id                 = "infra-proj-id"
+#     message_retention_duration = "604800s" # 7 days
+#     labels                     = { env = "dev", service = "events" }
+#
+#     topic_iam = {
+#       "roles/pubsub.publisher" = [
+#         "serviceAccount:publisher-sa@infra-proj-id.iam.gserviceaccount.com"
+#       ]
+#     }
+#
+#     subscriptions = {
+#       "events-push" = {
+#         ack_deadline_seconds = 20
+#         push_config = {
+#           push_endpoint = "https://orchestrator.run.app/internal/events"
+#           oidc_token = {
+#             service_account_email = "pubsub-invoker@infra-proj-id.iam.gserviceaccount.com"
+#             audience              = "https://orchestrator.run.app"
+#           }
+#         }
+#       }
+#       "events-bq-firehose" = {
+#         bigquery_config = {
+#           table          = "projects/infra-proj-id/datasets/analytics/tables/events"
+#           write_metadata = true
+#         }
+#         iam = {
+#           "roles/pubsub.subscriber" = [
+#             "serviceAccount:runtime-sa@infra-proj-id.iam.gserviceaccount.com"
+#           ]
+#         }
+#       }
+#     }
+#   }
+# }
+

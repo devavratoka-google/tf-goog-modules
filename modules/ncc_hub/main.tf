@@ -14,6 +14,7 @@ resource "google_network_connectivity_group" "this" {
   project     = google_network_connectivity_hub.this.project
   name        = each.key
   description = each.value.description
+  labels      = merge(var.labels, each.value.labels)
 
   dynamic "auto_accept" {
     for_each = length(each.value.auto_accept_projects) > 0 ? [1] : []

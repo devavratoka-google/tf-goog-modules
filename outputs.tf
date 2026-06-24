@@ -41,3 +41,23 @@ output "vertex_ai_endpoint_id" {
   value       = { for k, v in module.vertex_ai_model_garden : k => v.endpoint_id }
   description = "Vertex AI Endpoint resource IDs via Model Garden submodule"
 }
+
+output "sql_tenant_project_id" {
+  value       = { for k, v in module.cloud_sql_postgresql : k => v.instance_tenant_project_id }
+  description = "The tenant project ID of the Cloud SQL PostgreSQL instances."
+}
+
+output "network_attachments_self_link" {
+  value       = { for k, v in module.network_attachments : k => v.self_link }
+  description = "The URIs of the created network attachments."
+}
+
+output "pubsub_topic_ids" {
+  description = "IDs of the created Pub/Sub topics."
+  value       = { for k, v in module.pubsub_topics : k => v.topic_id }
+}
+
+output "pubsub_subscription_ids" {
+  description = "A map of topic keys to maps of subscription keys to subscription resource IDs."
+  value       = { for k, v in module.pubsub_topics : k => v.subscription_ids }
+}

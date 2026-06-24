@@ -10,6 +10,7 @@ resource "google_compute_address" "this" {
   subnetwork   = var.subnetwork
   region       = var.region
   project      = var.project
+  labels       = var.labels
 }
 
 ################ End Compute Address ################

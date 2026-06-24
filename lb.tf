@@ -83,6 +83,8 @@ module "http_routing" {
   hosts           = each.value.hosts
 
   ssl_certificates = each.value.ssl_certificates
+  ssl_policy       = each.value.ssl_policy
+  path_rules       = each.value.path_rules
 }
 
 module "forwarding_rules" {

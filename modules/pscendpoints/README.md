@@ -1,14 +1,118 @@
 # PSC Endpoints Module
 
-This module manages Google Cloud Private Service Connect (PSC) resources.
+This module creates Google Cloud Private Service Connect (PSC) resources for three main paths:
 
-## Features
+- Consume Google APIs through PSC (regional or global).
+- Consume a Service Attachment published by another service.
+- Publish your own service through a Service Attachment (producer).
 
-- **Address Only**: Always creates an internal IP address reserved for PSC (`purpose = "GCE_ENDPOINT"`).
-- **Google APIs Regional Endpoint**: Creates a regional endpoint for Google APIs when `target_google_api` is provided and `access_type` is set to `REGIONAL`.
-- **Google APIs Global Endpoint**: Creates a global endpoint for Google APIs when `target_google_api` is provided and `access_type` is set to `GLOBAL`. It supports passing the address as a self-link.
-- **Consumer Forwarding Rule**: Creates a forwarding rule pointing to a published service (Service Attachment) when `target_service_attachment` is provided.
-- **Producer Service Attachment**: Creates a service attachment to publish a service when the `service_attachment` object is provided.
+## How The Code Works (Block By Block)
+
+1. `module "addresses"` in `main.tf`
+- Creates a regional internal IP when `create_regional_address = true`.
+- Uses `purpose = "GCE_ENDPOINT"`.
+- Typically used in the regional endpoint path.
+
+2. `google_compute_global_address.this` in `main.tf`
+- Creates a global internal IP when `create_global_address = true`.
+- Uses `purpose = "PRIVATE_SERVICE_CONNECT"`.
+- Required for global scenarios (`all-apis` and `vpc-sc`).
+
+3. `google_network_connectivity_regional_endpoint.this` in `main.tf`
+- Creates a regional endpoint for a Google API when `target_google_api` is set and is not `all-apis` or `vpc-sc`.
+- Example: `storage.us-central1.rep.googleapis.com`.
+
+4. `google_compute_global_forwarding_rule.google_apis` in `main.tf`
+- Creates a global forwarding rule when `target_google_api = "all-apis"`.
+- Uses the created global IP (or the IP provided in `address`).
+
+5. `google_compute_global_forwarding_rule.vpc_sc` in `main.tf`
+- Creates a global forwarding rule when `target_google_api = "vpc-sc"`.
+- Uses the created global IP (or the IP provided in `address`).
+
+6. `google_compute_forwarding_rule.this` in `main.tf`
+- Creates a regional forwarding rule to consume `target_service_attachment`.
+- This path is not for Google APIs. It is for PSC consumer service attachments.
+
+7. `google_compute_service_attachment.this` in `main.tf`
+- Creates a Service Attachment (producer) when `service_attachment` is set.
+- Publishes a service to be consumed via PSC.
+
+## Module Decision Rules
+
+| Scenario | Main keys | Created resource |
+|---|---|---|
+| Google APIs regional | `target_google_api = "<api-regional>"` | `google_network_connectivity_regional_endpoint.this` |
+| Google APIs global (private.googleapis.com) | `target_google_api = "all-apis"` | `google_compute_global_forwarding_rule.google_apis` |
+| Google APIs global (restricted.googleapis.com / VPC-SC) | `target_google_api = "vpc-sc"` | `google_compute_global_forwarding_rule.vpc_sc` |
+| Service attachment consumer | `target_service_attachment` set | `google_compute_forwarding_rule.this` |
+| Service attachment producer | `service_attachment` set | `google_compute_service_attachment.this` |
+
+## Where To Change Values To Build Resources In GCP
+
+1. In the root layer, edit the `pscendpoints` map in your environment file.
+- Typical example: `env.tfvars`.
+- Each map item creates one module instance (`for_each`).
+
+2. Minimum fields you should set for each item:
+- `project`: project where resources will be created.
+- `network_name`: target VPC.
+- `region`: required for regional resources and kept as part of the object convention.
+- `address`: desired internal IP (or use automatic allocation with `null`).
+- `create_global_address` or `create_regional_address`: defines who creates the IP.
+
+3. Field that defines the Google APIs endpoint type:
+- `target_google_api = "all-apis"` for private.googleapis.com.
+- `target_google_api = "vpc-sc"` for restricted.googleapis.com.
+- `target_google_api = "<api-regional>"` for a specific regional endpoint.
+
+4. Forwarding rule name:
+- Use `forwarding_rule_name` for an explicit name.
+- If omitted, the module uses `<address_name>-fr`.
+
+## Practical Examples
+
+### 1) Google APIs global - all-apis
+
+```hcl
+pscendpoints = {
+	"psc-allapis" = {
+		project               = "infra-proj-id"
+		network_name          = "tf-vpc-01"
+		region                = "us-central1"
+		address               = "192.168.104.12"
+		create_global_address = true
+		target_google_api     = "all-apis"
+		access_type           = "GLOBAL"
+		forwarding_rule_name  = "pscallapis"
+	}
+}
+```
+
+### 2) Google APIs global - vpc-sc
+
+```hcl
+pscendpoints = {
+	"psc-vpc-sc" = {
+		project               = "infra-proj-id"
+		network_name          = "tf-vpc-01"
+		region                = "us-central1"
+		address               = "192.168.104.11"
+		create_global_address = true
+		target_google_api     = "vpc-sc"
+		access_type           = "GLOBAL"
+		forwarding_rule_name  = "pscvpcsc"
+	}
+}
+```
+
+## Important Outputs
+
+- `address` and `address_self_link`: effective reserved IP.
+- `psc_forwarding_rule`: created forwarding rule resource (regional or global).
+- `consumer_forwarding_rule_name` and `consumer_forwarding_rule_self_link`: reference to the created endpoint.
+- `regional_endpoint_name` and `regional_endpoint_id`: populated when the regional path is used.
+- `service_attachment_name` and `service_attachment_self_link`: populated when the producer path is used.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -38,6 +142,7 @@ This module manages Google Cloud Private Service Connect (PSC) resources.
 | [google_compute_forwarding_rule.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_forwarding_rule) | resource |
 | [google_compute_global_address.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_address) | resource |
 | [google_compute_global_forwarding_rule.google_apis](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule) | resource |
+| [google_compute_global_forwarding_rule.vpc_sc](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule) | resource |
 | [google_compute_service_attachment.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_service_attachment) | resource |
 | [google_network_connectivity_regional_endpoint.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/network_connectivity_regional_endpoint) | resource |
 
@@ -59,6 +164,7 @@ This module manages Google Cloud Private Service Connect (PSC) resources.
 | <a name="input_regional_endpoint_address_use_self_link"></a> [regional\_endpoint\_address\_use\_self\_link](#input\_regional\_endpoint\_address\_use\_self\_link) | Set to true to use self link for address in global endpoint. | `bool` | `false` | no |
 | <a name="input_regional_endpoint_subnetwork"></a> [regional\_endpoint\_subnetwork](#input\_regional\_endpoint\_subnetwork) | Set to true for global endpoint to use subnetwork. | `bool` | `false` | no |
 | <a name="input_service_attachment"></a> [service\_attachment](#input\_service\_attachment) | Configuration for the producer service attachment. | <pre>object({<br/>    name                  = string<br/>    description           = optional(string)<br/>    target_service        = string<br/>    nat_subnets           = list(string)<br/>    connection_preference = string<br/>    enable_proxy_protocol = optional(bool, false)<br/>    reconcile_connections = optional(bool, false)<br/>    domain_names          = optional(list(string), [])<br/>    consumer_reject_lists = optional(list(string), [])<br/>    consumer_accept_lists = optional(list(object({<br/>      project_id_or_num = string<br/>      connection_limit  = number<br/>    })), [])<br/>  })</pre> | `null` | no |
+| <a name="input_service_directory_registrations"></a> [service\_directory\_registrations](#input\_service\_directory\_registrations) | Service Directory registration configuration. | <pre>object({<br/>    namespace                = string<br/>    service                  = optional(string, null)<br/>    service_directory_region = optional(string, null)<br/>  })</pre> | `null` | no |
 | <a name="input_subnetwork"></a> [subnetwork](#input\_subnetwork) | The self-link of the subnetwork. | `string` | `null` | no |
 | <a name="input_target_google_api"></a> [target\_google\_api](#input\_target\_google\_api) | The target Google API for the regional/global endpoint (e.g., storage.us-central1.rep.googleapis.com). | `string` | `null` | no |
 | <a name="input_target_service_attachment"></a> [target\_service\_attachment](#input\_target\_service\_attachment) | The target service attachment for the consumer forwarding rule. | `string` | `null` | no |

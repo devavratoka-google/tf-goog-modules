@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+locals {
+  database_name = var.existing_database_id != null ? var.existing_database_id : one(google_firestore_database.firestore_database[*].name)
+}
+
 resource "google_firestore_database" "firestore_database" {
+  count                             = var.existing_database_id == null ? 1 : 0
   project                           = var.project_id
   name                              = var.database_id
   location_id                       = var.location
@@ -34,9 +39,9 @@ resource "google_firestore_database" "firestore_database" {
 }
 
 resource "google_firestore_backup_schedule" "weekly_backup_schedule" {
-  count     = try(var.backup_schedule_configuration.weekly_recurrence != null, false) ? 1 : 0
+  count     = var.existing_database_id == null && try(var.backup_schedule_configuration.weekly_recurrence != null, false) ? 1 : 0
   project   = var.project_id
-  database  = google_firestore_database.firestore_database.name
+  database  = local.database_name
   retention = var.backup_schedule_configuration.weekly_recurrence.retention
 
   weekly_recurrence {
@@ -45,9 +50,9 @@ resource "google_firestore_backup_schedule" "weekly_backup_schedule" {
 }
 
 resource "google_firestore_backup_schedule" "daily_backup_schedule" {
-  count     = try(var.backup_schedule_configuration.daily_recurrence != null, false) ? 1 : 0
+  count     = var.existing_database_id == null && try(var.backup_schedule_configuration.daily_recurrence != null, false) ? 1 : 0
   project   = var.project_id
-  database  = google_firestore_database.firestore_database.name
+  database  = local.database_name
   retention = var.backup_schedule_configuration.daily_recurrence.retention
   daily_recurrence {}
   depends_on = [google_firestore_backup_schedule.weekly_backup_schedule]
@@ -57,7 +62,7 @@ resource "google_firestore_backup_schedule" "daily_backup_schedule" {
 resource "google_firestore_index" "firestore_index" {
   for_each    = { for obj in var.composite_index_configuration : obj.index_id => obj }
   project     = var.project_id
-  database    = google_firestore_database.firestore_database.name
+  database    = local.database_name
   collection  = each.value.collection
   query_scope = each.value.query_scope
   api_scope   = each.value.api_scope
@@ -84,7 +89,7 @@ resource "google_firestore_index" "firestore_index" {
 resource "google_firestore_field" "firestore_field" {
   for_each   = { for obj in var.field_configuration : "${obj.collection}#${obj.field}" => obj }
   project    = var.project_id
-  database   = google_firestore_database.firestore_database.name
+  database   = local.database_name
   collection = each.value.collection
   field      = each.value.field
 
@@ -119,3 +124,4 @@ resource "google_firestore_field" "firestore_field" {
     }
   }
 }
+

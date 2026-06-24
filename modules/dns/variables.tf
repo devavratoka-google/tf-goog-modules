@@ -60,3 +60,20 @@ variable "record_sets" {
   description = "Map of record sets to create in the zone"
   default     = {}
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "A map of labels to assign to the resource."
+  default     = {}
+
+  # 1. Enforce that the 'environment' key MUST exist
+  validation {
+    condition     = can(var.labels["environment"])
+    error_message = "Validation Error: The 'environment' label is mandatory."
+  }
+  # 2. Enforce that the 'applicationid' key MUST exist
+  validation {
+    condition     = can(var.labels["applicationid"])
+    error_message = "Validation Error: The 'applicationid' label is mandatory."
+  }
+}

@@ -63,10 +63,11 @@ resource "google_sql_database_instance" "replicas" {
           }
         }
         dynamic "psc_config" {
-          for_each = ip_configuration.value.psc_enabled ? ["psc_enabled"] : []
+          for_each = ip_configuration.value.psc_enabled || lookup(each.value, "psc_interface_config", null) != null ? ["psc_enabled"] : []
           content {
-            psc_enabled               = ip_configuration.value.psc_enabled
+            psc_enabled               = ip_configuration.value.psc_enabled || lookup(each.value, "psc_interface_config", null) != null
             allowed_consumer_projects = ip_configuration.value.psc_allowed_consumer_projects
+            network_attachment_uri    = lookup(each.value, "psc_interface_config", null) != null ? each.value.psc_interface_config.network_attachment_link : null
           }
         }
       }

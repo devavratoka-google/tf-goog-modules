@@ -16,12 +16,12 @@
 
 output "database_resource_id" {
   description = "The database id of the firestore database."
-  value       = var.database_id
+  value       = local.database_name
 }
 
 output "database_id" {
   description = "The full database resource name of the firestore database, in the format projects/{{project_id}}/databases/{{name}}"
-  value       = google_firestore_database.firestore_database.id
+  value       = var.existing_database_id != null ? "projects/${var.project_id}/databases/${var.existing_database_id}" : google_firestore_database.firestore_database[0].id
 }
 
 output "daily_backup_schedule_id" {

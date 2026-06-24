@@ -53,3 +53,9 @@ variable "protocol_version" {
   type        = string
   description = "The protocol version of this policy based route."
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "Key-value map of resource labels."
+  default     = {}
+}

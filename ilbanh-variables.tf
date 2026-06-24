@@ -10,6 +10,7 @@ variable "nva_clusters" {
     vms = map(object({
       address = string
     }))
+    labels = optional(map(string), {})
   }))
   default = {}
 }

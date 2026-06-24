@@ -170,6 +170,17 @@ variable "http_routing_configs" {
     hosts           = optional(list(string), [])
     //Optional list of certificate self-links. Defaults to empty list for HTTP.
     ssl_certificates = optional(list(string), [])
+    ssl_policy       = optional(string, null)
+    path_rules = optional(list(object({
+      paths   = list(string)
+      service = string
+      route_action = optional(object({
+        url_rewrite = optional(object({
+          path_prefix_rewrite = string
+          host_rewrite        = optional(string)
+        }))
+      }))
+    })), [])
   }))
   default = {}
 }

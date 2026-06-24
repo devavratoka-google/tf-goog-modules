@@ -314,6 +314,7 @@ variable "dns_zones" {
       rrdatas = list(string)
     })), {})
     project = optional(string, null)
+    labels  = optional(map(string), {})
   }))
   default = {}
 }
@@ -328,6 +329,23 @@ variable "dns_policies" {
   default = {}
 }
 
+variable "dns_record_sets" {
+  type = map(object({
+    managed_zone = string
+    name         = string
+    type         = string
+    ttl          = optional(number, 300)
+    rrdatas      = optional(list(string), [])
+    project      = optional(string, null)
+  }))
+  default = {}
+
+  validation {
+    condition     = alltrue([for r in var.dns_record_sets : contains(["A", "AAAA", "CNAME"], r.type)])
+    error_message = "Only A, AAAA, and CNAME record types are allowed in DNS record sets."
+  }
+}
+
 variable "addresses" {
   type = map(object({
     description     = optional(string, null)
@@ -338,8 +356,25 @@ variable "addresses" {
     subnetwork_name = optional(string, null)
     region          = optional(string, null)
     project         = optional(string, null)
+    labels          = optional(map(string), {})
   }))
   default = {}
+
+  # 1. Enforce that the 'environment' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["environment"])
+    ])
+    error_message = "Validation Error: The 'environment' label is mandatory for all addresses."
+  }
+
+  # 2. Enforce that the 'applicationid' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["applicationid"])
+    ])
+    error_message = "Validation Error: The 'applicationid' label is mandatory for all addresses."
+  }
 }
 
 variable "global_addresses" {
@@ -539,7 +574,7 @@ variable "pscendpoints" {
     network_name                 = string
     subnetwork_name              = optional(string, "")
     project                      = string
-    region                       = string
+    region                       = optional(string, null)
     address                      = optional(string, null)
     create_regional_address      = optional(bool, false)
     create_global_address        = optional(bool, false)
@@ -564,6 +599,11 @@ variable "pscendpoints" {
         project_id_or_num = string
         connection_limit  = number
       })), [])
+    }), null)
+    service_directory_registrations = optional(object({
+      namespace                = string
+      service                  = optional(string, null)
+      service_directory_region = optional(string, null)
     }), null)
   }))
   default     = {}
@@ -657,7 +697,8 @@ variable "gcs_buckets" {
 variable "firestore_databases" {
   type = map(object({
     project_id                        = optional(string, null)
-    location                          = string
+    location                          = optional(string, null)
+    existing_database_id              = optional(string, null)
     database_type                     = optional(string, "FIRESTORE_NATIVE")
     database_edition                  = optional(string, "STANDARD")
     concurrency_mode                  = optional(string, "PESSIMISTIC")
@@ -847,8 +888,9 @@ variable "cloud_run_v2" {
       cloud_sql_instances = optional(list(string))
       empty_dir_size      = optional(string)
       gcs = optional(object({
-        bucket       = string
-        is_read_only = optional(bool)
+        bucket        = string
+        is_read_only  = optional(bool)
+        mount_options = optional(list(string))
       }))
       nfs = optional(object({
         server       = string
@@ -985,10 +1027,10 @@ variable "vertex_ai_endpoints" {
     network               = optional(string)
     kms_key_name          = optional(string)
 
-    create_model          = optional(bool, true)
-    model_display_name    = optional(string)
-    model_description     = optional(string)
-    artifact_uri          = optional(string)
+    create_model       = optional(bool, true)
+    model_display_name = optional(string)
+    model_description  = optional(string)
+    artifact_uri       = optional(string)
     container_spec = optional(object({
       image_uri = string
       command   = optional(list(string))
@@ -1001,4 +1043,43 @@ variable "vertex_ai_endpoints" {
   }))
   default     = {}
   description = "Map of Vertex AI Endpoint and Model Garden foundation model configurations."
+}
+
+variable "pubsub_topics" {
+  description = "Map of Pub/Sub topics and subscription configurations to deploy."
+  type = map(object({
+    project_id                 = optional(string, null)
+    labels                     = optional(map(string), {})
+    message_retention_duration = optional(string, null)
+    topic_iam                  = optional(map(list(string)), {})
+    subscriptions = optional(map(object({
+      ack_deadline_seconds       = optional(number, 10)
+      retain_acked_messages      = optional(bool, false)
+      message_retention_duration = optional(string, null)
+      labels                     = optional(map(string), {})
+      push_config = optional(object({
+        push_endpoint = string
+        oidc_token = optional(object({
+          service_account_email = string
+          audience              = optional(string, null)
+        }), null)
+      }), null)
+      bigquery_config = optional(object({
+        table               = string
+        use_topic_schema    = optional(bool, false)
+        write_metadata      = optional(bool, false)
+        drop_unknown_fields = optional(bool, false)
+      }), null)
+      dead_letter_policy = optional(object({
+        dead_letter_topic     = string
+        max_delivery_attempts = optional(number, 5)
+      }), null)
+      retry_policy = optional(object({
+        minimum_backoff = optional(string, null)
+        maximum_backoff = optional(string, null)
+      }), null)
+      iam = optional(map(list(string)), {})
+    })), {})
+  }))
+  default = {}
 }
