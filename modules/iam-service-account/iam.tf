@@ -221,3 +221,10 @@ resource "google_storage_bucket_iam_member" "bucket-roles" {
   )
   member = local.iam_email
 }
+
+resource "google_service_account_iam_member" "self_token_creator" {
+  count              = var.create_self_token_creator ? 1 : 0
+  service_account_id = local.service_account.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${local.service_account.email}"
+}

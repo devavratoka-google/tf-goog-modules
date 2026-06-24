@@ -43,9 +43,21 @@ resource "google_compute_region_url_map" "this" {
   }
 }
 
+resource "google_compute_region_ssl_certificate" "managed" {
+  count       = var.ssl_certificate != null ? 1 : 0
+  name_prefix = "${var.name}-cert-"
+  region      = var.region
+  certificate = var.ssl_certificate.certificate
+  private_key = var.ssl_certificate.private_key
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 # Creates HTTP proxy ONLY if no SSL cert is provided
 resource "google_compute_region_target_http_proxy" "http" {
-  count   = length(var.ssl_certificates) == 0 ? 1 : 0
+  count   = (length(var.ssl_certificates) == 0 && var.ssl_certificate == null) ? 1 : 0
   name    = "${var.name}-proxy"
   region  = var.region
   url_map = google_compute_region_url_map.this.id
@@ -53,10 +65,13 @@ resource "google_compute_region_target_http_proxy" "http" {
 
 # Creates HTTPS proxy ONLY if an SSL cert is provided
 resource "google_compute_region_target_https_proxy" "https" {
-  count            = length(var.ssl_certificates) > 0 ? 1 : 0
-  name             = "${var.name}-proxy"
-  region           = var.region
-  url_map          = google_compute_region_url_map.this.id
-  ssl_certificates = var.ssl_certificates
-  ssl_policy       = var.ssl_policy
+  count  = (length(var.ssl_certificates) > 0 || var.ssl_certificate != null) ? 1 : 0
+  name   = "${var.name}-proxy"
+  region = var.region
+  url_map = google_compute_region_url_map.this.id
+  ssl_certificates = concat(
+    var.ssl_certificates,
+    var.ssl_certificate != null ? [google_compute_region_ssl_certificate.managed[0].id] : []
+  )
+  ssl_policy = var.ssl_policy
 }
