@@ -20,4 +20,6 @@ resource "google_network_connectivity_policy_based_route" "this" {
     ip_protocol      = var.ip_protocol
     protocol_version = var.protocol_version
   }
+
+  labels = var.labels
 }

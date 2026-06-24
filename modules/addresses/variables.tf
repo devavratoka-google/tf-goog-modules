@@ -49,3 +49,9 @@ variable "region" {
   description = "The region where the address will be created"
   default     = null
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "Key-value map of resource labels."
+  default     = {}
+}

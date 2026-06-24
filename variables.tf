@@ -194,6 +194,7 @@ variable "policy_based_routes" {
     dest_range            = string
     ip_protocol           = optional(string, "ALL")
     protocol_version      = optional(string, "IPV4")
+    labels                = optional(map(string), {})
   }))
 }
 
@@ -356,6 +357,7 @@ variable "addresses" {
     subnetwork_name = optional(string, null)
     region          = optional(string, null)
     project         = optional(string, null)
+    labels          = optional(map(string), {})
   }))
   default = {}
 }
@@ -588,6 +590,7 @@ variable "pscendpoints" {
       service                  = optional(string, null)
       service_directory_region = optional(string, null)
     }), null)
+    labels = optional(map(string), {})
   }))
   default     = {}
   description = "Map of PSC Endpoints configurations."

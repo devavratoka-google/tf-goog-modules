@@ -10,6 +10,7 @@ resource "google_compute_address" "this" {
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork_id
   address      = each.value.address
+  labels       = var.labels
 }
 
 resource "google_compute_region_instance_template" "this" {
@@ -58,6 +59,7 @@ resource "google_compute_region_instance_template" "this" {
   }
 
   can_ip_forward = var.can_ip_forward
+  labels         = var.labels
 }
 
 resource "google_compute_instance_from_template" "this" {
@@ -74,6 +76,7 @@ resource "google_compute_instance_from_template" "this" {
 
   desired_status           = var.desired_status
   source_instance_template = google_compute_region_instance_template.this.self_link
+  labels                   = var.labels
 }
 
 # ------------------------------------------------------------------------------
@@ -124,4 +127,5 @@ resource "google_compute_forwarding_rule" "this" {
   allow_global_access   = true
   network               = var.network_id
   subnetwork            = var.subnetwork_id
+  labels                = var.labels
 }

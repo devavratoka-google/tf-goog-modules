@@ -394,6 +394,7 @@ resource "google_compute_address" "cloud_sql_psc" {
   region       = var.region
   address_type = "INTERNAL"
   subnetwork   = var.psc_subnetwork_link
+  labels       = var.user_labels
 }
 
 resource "google_compute_forwarding_rule" "cloud_sql_psc" {
@@ -405,4 +406,5 @@ resource "google_compute_forwarding_rule" "cloud_sql_psc" {
   ip_address            = google_compute_address.cloud_sql_psc[0].self_link
   target                = google_sql_database_instance.default.psc_service_attachment_link
   load_balancing_scheme = ""
+  labels                = var.user_labels
 }

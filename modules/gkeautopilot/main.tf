@@ -34,7 +34,7 @@ resource "google_container_cluster" "main" {
   project             = var.project_id
   name                = var.name
   description         = var.description
-  resource_labels     = var.resource_labels
+  resource_labels     = merge(var.resource_labels, var.labels)
   location            = var.location
   node_locations      = var.node_locations
   network             = var.network

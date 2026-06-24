@@ -121,3 +121,9 @@ variable "service_directory_registrations" {
   default     = null
   description = "Service Directory registration configuration."
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "Key-value map of resource labels."
+  default     = {}
+}
