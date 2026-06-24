@@ -59,4 +59,8 @@ resource "google_compute_region_target_https_proxy" "https" {
   url_map          = google_compute_region_url_map.this.id
   ssl_certificates = var.ssl_certificates
   ssl_policy       = var.ssl_policy
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
