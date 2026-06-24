@@ -194,7 +194,6 @@ variable "policy_based_routes" {
     dest_range            = string
     ip_protocol           = optional(string, "ALL")
     protocol_version      = optional(string, "IPV4")
-    labels                = optional(map(string), {})
   }))
 }
 
@@ -360,6 +359,22 @@ variable "addresses" {
     labels          = optional(map(string), {})
   }))
   default = {}
+
+  # 1. Enforce that the 'environment' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["environment"])
+    ])
+    error_message = "Validation Error: The 'environment' label is mandatory for all addresses."
+  }
+
+  # 2. Enforce that the 'applicationid' key MUST exist in labels of each address
+  validation {
+    condition = alltrue([
+      for addr in var.addresses : can(addr.labels["applicationid"])
+    ])
+    error_message = "Validation Error: The 'applicationid' label is mandatory for all addresses."
+  }
 }
 
 variable "global_addresses" {
@@ -590,7 +605,6 @@ variable "pscendpoints" {
       service                  = optional(string, null)
       service_directory_region = optional(string, null)
     }), null)
-    labels = optional(map(string), {})
   }))
   default     = {}
   description = "Map of PSC Endpoints configurations."

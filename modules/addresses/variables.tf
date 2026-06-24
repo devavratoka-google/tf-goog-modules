@@ -52,6 +52,17 @@ variable "region" {
 
 variable "labels" {
   type        = map(string)
-  description = "Key-value map of resource labels."
-  default     = {}
+  description = "A map of labels to assign to the resource."
+  default     = null
+
+  # 1. Enforce that the 'environment' key MUST exist
+  validation {
+    condition     = var.labels == null || can(var.labels["environment"])
+    error_message = "Validation Error: The 'environment' label is mandatory."
+  }
+  # 2. Enforce that the 'applicationid' key MUST exist
+  validation {
+    condition     = var.labels == null || can(var.labels["applicationid"])
+    error_message = "Validation Error: The 'applicationid' label is mandatory."
+  }
 }
