@@ -26,3 +26,24 @@ variable "hosts" {
   type        = list(string)
   default     = []
 }
+
+variable "ssl_policy" {
+  type        = string
+  description = "Optional self-link of a regional SSL policy to apply to the target HTTPS proxy."
+  default     = null
+}
+
+variable "path_rules" {
+  description = "A list of path rules to apply to the path matcher. Each rule contains paths, service, and optional route_action."
+  type = list(object({
+    paths   = list(string)
+    service = string
+    route_action = optional(object({
+      url_rewrite = optional(object({
+        path_prefix_rewrite = string
+        host_rewrite        = optional(string)
+      }))
+    }))
+  }))
+  default = []
+}
