@@ -130,6 +130,12 @@ variable "iam" {
   default     = {}
 }
 
+variable "iam_additive" {
+  description = "Additive IAM bindings on the Cloud Run service. Map of role => list of members."
+  type        = map(list(string))
+  default     = {}
+}
+
 variable "job_config" {
   description = "Cloud Run Job specific configuration."
   type = object({

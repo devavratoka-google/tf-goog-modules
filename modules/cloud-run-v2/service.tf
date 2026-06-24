@@ -23,6 +23,26 @@ resource "google_cloud_run_v2_service_iam_binding" "binding" {
   members  = [for member in each.value : lookup(local.ctx.iam_principals, member, member)]
 }
 
+locals {
+  _iam_additive_flat = flatten([
+    for role, members in var.iam_additive : [
+      for member in members : { role = role, member = member }
+    ]
+  ])
+}
+
+resource "google_cloud_run_v2_service_iam_member" "additive" {
+  for_each = var.type == "SERVICE" ? {
+    for e in local._iam_additive_flat : "${e.role}/${e.member}" => e
+  } : {}
+
+  project  = local.resource.project
+  location = local.resource.location
+  name     = local.resource.name
+  role     = lookup(local.ctx.custom_roles, each.value.role, each.value.role)
+  member   = lookup(local.ctx.iam_principals, each.value.member, each.value.member)
+}
+
 resource "google_iap_web_cloud_run_service_iam_member" "member" {
   for_each               = var.service_config.iap_config == null ? toset([]) : toset(var.service_config.iap_config.iam_additive)
   project                = local.resource.project
