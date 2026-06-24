@@ -33,6 +33,16 @@ variable "ssl_policy" {
   default     = null
 }
 
+variable "ssl_certificate" {
+  description = "Optional SELF_MANAGED SSL certificate. When set, the module creates a google_compute_region_ssl_certificate and adds it to the HTTPS proxy alongside any externally-supplied ssl_certificates. Set to null to use only external certs."
+  type = object({
+    certificate = string
+    private_key = string
+  })
+  sensitive = true
+  default   = null
+}
+
 variable "path_rules" {
   description = "A list of path rules to apply to the path matcher. Each rule contains paths, service, and optional route_action."
   type = list(object({
