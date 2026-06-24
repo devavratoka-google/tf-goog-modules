@@ -131,3 +131,9 @@ variable "crypto_key_backend" {
   description = "(Optional) The resource name of the backend environment associated with all CryptoKeyVersions within this CryptoKey. The resource name is in the format 'projects//locations//ekmConnections/*' and only applies to 'EXTERNAL_VPC' keys."
   default     = null
 }
+
+variable "iam_additive" {
+  description = "Additive IAM member grants on crypto keys. Map of key name => map of role => list of members."
+  type        = map(map(list(string)))
+  default     = {}
+}
