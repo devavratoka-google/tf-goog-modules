@@ -20,13 +20,21 @@ variable "project_id" {
 }
 
 variable "database_id" {
-  description = "Unique identifier of the Firestore Database."
+  description = "Unique identifier of the Firestore Database. Required when existing_database_id is not set."
   type        = string
+  default     = null
 }
 
 variable "location" {
-  description = "The location in which the Firesotre Database is created."
+  description = "The location in which the Firestore Database is created. Required when existing_database_id is not set."
   type        = string
+  default     = null
+}
+
+variable "existing_database_id" {
+  description = "The ID of an existing Firestore Database. When set, database creation is skipped, and indexes are attached to this database."
+  type        = string
+  default     = null
 }
 
 variable "database_type" {

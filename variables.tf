@@ -680,7 +680,8 @@ variable "gcs_buckets" {
 variable "firestore_databases" {
   type = map(object({
     project_id                        = optional(string, null)
-    location                          = string
+    location                          = optional(string, null)
+    existing_database_id              = optional(string, null)
     database_type                     = optional(string, "FIRESTORE_NATIVE")
     database_edition                  = optional(string, "STANDARD")
     concurrency_mode                  = optional(string, "PESSIMISTIC")

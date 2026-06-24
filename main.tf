@@ -518,6 +518,7 @@ module "firestore_databases" {
   project_id                        = coalesce(each.value.project_id, var.env_project_id)
   database_id                       = each.key
   location                          = each.value.location
+  existing_database_id              = each.value.existing_database_id
   database_type                     = each.value.database_type
   database_edition                  = each.value.database_edition
   concurrency_mode                  = each.value.concurrency_mode
