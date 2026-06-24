@@ -16,6 +16,18 @@
 
 locals {
   keys_by_name = zipmap(var.keys, var.prevent_destroy ? slice(google_kms_crypto_key.key[*].id, 0, length(var.keys)) : slice(google_kms_crypto_key.key_ephemeral[*].id, 0, length(var.keys)))
+
+  _iam_additive_flat = flatten([
+    for key_name, roles in var.iam_additive : [
+      for role, members in roles : [
+        for member in members : {
+          key_name = key_name
+          role     = role
+          member   = member
+        }
+      ]
+    ]
+  ])
 }
 
 resource "google_kms_key_ring" "key_ring" {
@@ -91,4 +103,14 @@ resource "google_kms_crypto_key_iam_binding" "encrypters" {
   role          = "roles/cloudkms.cryptoKeyEncrypter"
   crypto_key_id = local.keys_by_name[element(var.set_encrypters_for, count.index)]
   members       = compact(split(",", var.encrypters[count.index]))
+}
+
+resource "google_kms_crypto_key_iam_member" "additive" {
+  for_each = {
+    for e in local._iam_additive_flat : "${e.key_name}/${e.role}/${e.member}" => e
+  }
+
+  crypto_key_id = local.keys_by_name[each.value.key_name]
+  role          = each.value.role
+  member        = each.value.member
 }

@@ -109,6 +109,12 @@ variable "service_account_reuse" {
   default  = null
 }
 
+variable "create_self_token_creator" {
+  description = "Grant roles/iam.serviceAccountTokenCreator to the service account itself."
+  type        = bool
+  default     = false
+}
+
 variable "tag_bindings" {
   description = "Tag bindings for this service accounts, in key => tag value id format."
   type        = map(string)

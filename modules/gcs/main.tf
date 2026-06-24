@@ -152,6 +152,14 @@ resource "google_storage_bucket_iam_member" "members" {
   member = each.value.member
 }
 
+resource "google_storage_bucket_iam_member" "additive" {
+  for_each = var.iam_additive
+
+  bucket = google_storage_bucket.bucket.name
+  role   = each.value.role
+  member = each.value.member
+}
+
 data "google_storage_project_service_account" "gcs_account" {
   project = var.project_id
 }
