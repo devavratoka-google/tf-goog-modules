@@ -871,8 +871,9 @@ variable "cloud_run_v2" {
       cloud_sql_instances = optional(list(string))
       empty_dir_size      = optional(string)
       gcs = optional(object({
-        bucket       = string
-        is_read_only = optional(bool)
+        bucket        = string
+        is_read_only  = optional(bool)
+        mount_options = optional(list(string))
       }))
       nfs = optional(object({
         server       = string
