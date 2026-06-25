@@ -684,6 +684,27 @@ bigquery_datasets = {
   #   }
 }
 
+gcs_buckets = {
+  # "my-app-data-bucket" = {
+  #   project_id               = "nyl01-iac-deploy"
+  #   location                 = "us-east4"
+  #   force_destroy            = false
+  #   storage_class            = "STANDARD"
+  #   bucket_policy_only       = true
+  #   versioning               = true
+  #   public_access_prevention = "inherited"
+  #   
+  #   labels = {
+  #     application_id      = "app-123"
+  #     environment         = "dev"
+  #     business_unit       = "nyl"
+  #     data_classification = "confidential"
+  #     owner_team          = "devops"
+  #     managed_by          = "terraform"
+  #   }
+  # }
+}
+
 cloud_sql_mssql = {
   # "app-mssql" = {
   #   region           = "us-east4"

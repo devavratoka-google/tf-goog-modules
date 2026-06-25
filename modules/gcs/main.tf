@@ -19,13 +19,19 @@ locals {
   encryption          = var.internal_encryption_config.create_encryption_key ? local.internal_encryption : var.encryption
 }
 
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_storage_bucket" "bucket" {
   name                        = var.name
   project                     = var.project_id
   location                    = var.location
   storage_class               = var.storage_class
   uniform_bucket_level_access = var.bucket_policy_only
-  labels                      = var.labels
+  labels                      = module.label_governance.validated_labels
   force_destroy               = var.force_destroy
   public_access_prevention    = var.public_access_prevention
 
