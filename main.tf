@@ -480,7 +480,6 @@ module "pscendpoints" {
   forwarding_rule_name      = each.value.forwarding_rule_name
 
   service_attachment = each.value.service_attachment
-  labels             = each.value.labels
 }
 
 module "gcs_buckets" {
@@ -897,3 +896,14 @@ module "pubsub_topics" {
   subscriptions              = each.value.subscriptions
 }
 
+module "certmgr_issuance_configs" {
+  source   = "./modules/certmgr_issuance_config"
+
+  name = "nonprod_use4"
+  certificate_authority_config = {
+    certificate_authority_service_config = {
+      ca_pool = "projects/<id>/locations/us-east4/caPools/nonprod-ca-pool"
+    }
+  }
+  project = "<id>"
+}
