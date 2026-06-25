@@ -1,33 +1,53 @@
-# Secret Manager Module
+# Secret Manager
 
-This module manages a Secret Manager secret and optional IAM accessors.
+Creates a Secret Manager secret and optionally grants
+`roles/secretmanager.secretAccessor` to a list of IAM members in a single
+call.
+
+The resources this module creates:
+
+- `google_secret_manager_secret` — the secret container (no version/value)
+- `google_secret_manager_secret_iam_member` — one binding per entry in
+  `accessors` (omitted when the list is empty)
+
+Secret versions (the actual values) are managed outside Terraform to avoid
+storing sensitive data in state.
 
 ## Usage
 
 ```hcl
-module "secret" {
-  source     = "./modules/secret-manager"
+# Automatic replication (default)
+module "api_key_secret" {
+  source = "./modules/secret-manager"
+
   project_id = "my-project-id"
-  secret_id  = "my-secret-id"
-  accessors  = ["serviceAccount:my-sa@my-project-id.iam.gserviceaccount.com"]
+  secret_id  = "api-key"
+  accessors  = [
+    "serviceAccount:backend@my-project-id.iam.gserviceaccount.com",
+  ]
+}
+
+# User-managed replication (pinned regions)
+module "db_password_secret" {
+  source = "./modules/secret-manager"
+
+  project_id = "my-project-id"
+  secret_id  = "db-password"
+
+  replication = {
+    auto         = false
+    user_managed = [
+      { location = "us-east4" },
+      { location = "us-central1" },
+    ]
+  }
 }
 ```
 
+To grant access to a secret that was provisioned outside Terraform, use the
+companion [`secret-manager-iam`](../secret-manager-iam) module instead.
+
 <!-- BEGIN_TF_DOCS -->
-Copyright 2021 Google LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
 ## Requirements
 
 | Name | Version |
@@ -56,16 +76,16 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_accessors"></a> [accessors](#input\_accessors) | List of IAM members to grant roles/secretmanager.secretAccessor. | `list(string)` | `[]` | no |
-| <a name="input_labels"></a> [labels](#input\_labels) | n/a | `map(string)` | `{}` | no |
-| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | n/a | yes |
-| <a name="input_replication"></a> [replication](#input\_replication) | Replication policy. Defaults to automatic. | <pre>object({<br/>    auto         = optional(bool, true)<br/>    user_managed = optional(list(object({ location = string })), [])<br/>  })</pre> | <pre>{<br/>  "auto": true<br/>}</pre> | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP project ID. | `string` | n/a | yes |
 | <a name="input_secret_id"></a> [secret\_id](#input\_secret\_id) | ID for the secret. Must be unique within the project. | `string` | n/a | yes |
+| <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the secret resource. | `map(string)` | `{}` | no |
+| <a name="input_replication"></a> [replication](#input\_replication) | Replication policy. Defaults to automatic. Set `auto = false` and provide `user_managed` locations to pin replicas. | <pre>object({<br/>    auto         = optional(bool, true)<br/>    user_managed = optional(list(object({ location = string })), [])<br/>  })</pre> | `{ auto = true }` | no |
+| <a name="input_accessors"></a> [accessors](#input\_accessors) | List of IAM members to grant roles/secretmanager.secretAccessor. | `list(string)` | `[]` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_name"></a> [name](#output\_name) | n/a |
-| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | n/a |
+| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | The secret ID within the project. |
+| <a name="output_name"></a> [name](#output\_name) | Fully-qualified secret resource name. |
 <!-- END_TF_DOCS -->
