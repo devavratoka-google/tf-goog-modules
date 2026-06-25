@@ -32,6 +32,25 @@ resource "google_cloud_scheduler_job" "this" {
           audience              = try(oidc_token.value.audience, null)
         }
       }
+
+      dynamic "oauth_token" {
+        for_each = http_target.value.oauth_token != null ? [http_target.value.oauth_token] : []
+        content {
+          service_account_email = oauth_token.value.service_account_email
+          scope                 = oauth_token.value.scope
+        }
+      }
+    }
+  }
+
+  dynamic "retry_config" {
+    for_each = var.retry_config != null ? [var.retry_config] : []
+    content {
+      retry_count          = try(retry_config.value.retry_count, null)
+      max_retry_duration   = try(retry_config.value.max_retry_duration, null)
+      min_backoff_duration = try(retry_config.value.min_backoff_duration, null)
+      max_backoff_duration = try(retry_config.value.max_backoff_duration, null)
+      max_doublings        = try(retry_config.value.max_doublings, null)
     }
   }
 }
