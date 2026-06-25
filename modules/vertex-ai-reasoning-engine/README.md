@@ -1,18 +1,38 @@
 # Vertex AI Reasoning Engine
 
 Deploys a [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/reasoning-engine/overview)
-(formerly Reasoning Engine) resource — an ADK-compatible sandbox for hosting
-Python-based AI agents on Vertex AI.
+(formerly Reasoning Engine) resource on Vertex AI.
 
-The agent package must be staged in GCS before `terraform apply`. The
-`spec.package_spec.pickle_object_gcs_uri` points to the serialised agent
-object and `spec.package_spec.requirements_gcs_uri` to a `requirements.txt`
-for its dependencies.
+The module supports two usage patterns:
+
+1. **Parent-only engine** (`spec` omitted) — the engine hosts no deployed
+   code and serves purely as a parent for Agent Engine sandbox children
+   (ADK code-execution sandboxes) and/or Vertex AI Session Service
+   persistence. This is the default.
+2. **Deployed-agent engine** (`spec` set) — hosts a Python-based AI agent.
+   The agent package must be staged in GCS before `terraform apply`:
+   `spec.package_spec.pickle_object_gcs_uri` points to the serialised agent
+   object and `spec.package_spec.requirements_gcs_uri` to a `requirements.txt`.
 
 Uses the `google-beta` provider (`google_vertex_ai_reasoning_engine` is a
 beta resource).
 
 ## Usage
+
+### Parent-only engine (sandbox / session parent)
+
+```hcl
+module "agent_engine" {
+  source = "./modules/vertex-ai-reasoning-engine"
+
+  project_id   = "my-project-id"
+  region       = "us-central1"
+  display_name = "my-sandbox-parent"
+  # spec omitted — no deployed agent code
+}
+```
+
+### Deployed-agent engine
 
 ```hcl
 module "agent_engine" {
@@ -45,8 +65,14 @@ module "agent_engine" {
 - The resource has no built-in IAM support — grant callers
   `roles/aiplatform.user` at the project level via the
   [`project-iam`](../project-iam) module.
-- `display_name` and `description` are mutable. Changes to `spec` replace the
-  resource.
+- `display_name` and `description` are mutable. Changes to `spec` (including
+  adding or removing it) **replace** the resource.
+- The module does **not** set `prevent_destroy`. Deleting or replacing an
+  engine cascades to every child sandbox and live session, and the resource
+  has no GCP-side deletion_protection — so consumers running production
+  engines that hold live sessions should add their own
+  `lifecycle { prevent_destroy = true }` at the call site, or pin a
+  pre-created engine out of band.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -78,9 +104,9 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP project ID. | `string` | n/a | yes |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | Display name for the reasoning engine resource. | `string` | n/a | yes |
-| <a name="input_spec"></a> [spec](#input\_spec) | Reasoning Engine spec. `package_spec.python_version` is required. `pickle_object_gcs_uri` points to the serialised agent object in GCS. | <pre>object({<br/>    package_spec = object({<br/>      python_version           = string<br/>      pickle_object_gcs_uri    = optional(string)<br/>      dependency_files_gcs_uri = optional(list(string), [])<br/>      requirements_gcs_uri     = optional(string)<br/>    })<br/>    class_methods = optional(list(object({<br/>      name = string<br/>    })), [])<br/>  })</pre> | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Vertex AI region for the reasoning engine. | `string` | `"us-central1"` | no |
 | <a name="input_description"></a> [description](#input\_description) | Optional description for the reasoning engine resource. | `string` | `null` | no |
+| <a name="input_spec"></a> [spec](#input\_spec) | Optional Reasoning Engine spec. When `null` (default), the engine is created with no spec block — a parent-only engine for sandbox children / session persistence. When set, describes deployed agent code; `package_spec.python_version` is required. | <pre>object({<br/>    package_spec = object({<br/>      python_version           = string<br/>      pickle_object_gcs_uri    = optional(string)<br/>      dependency_files_gcs_uri = optional(list(string), [])<br/>      requirements_gcs_uri     = optional(string)<br/>    })<br/>    class_methods = optional(list(object({<br/>      name = string<br/>    })), [])<br/>  })</pre> | `null` | no |
 
 ## Outputs
 
