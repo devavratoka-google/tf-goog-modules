@@ -18,7 +18,7 @@ locals {
   } : null
 }
 
-resource "google_project_service" "services" {
+/* resource "google_project_service" "services" {
   for_each = local.required_services
 
   project = var.project_id
@@ -26,7 +26,7 @@ resource "google_project_service" "services" {
 
   disable_dependent_services = false
   disable_on_destroy         = false
-}
+} */
 
 resource "google_container_cluster" "main" {
   provider = google-beta
@@ -303,7 +303,7 @@ resource "google_container_cluster" "main" {
     delete = var.timeouts.delete
   }
 
-  depends_on = [
+/*   depends_on = [
     google_project_service.services,
-  ]
+  ] */
 }
