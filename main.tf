@@ -894,19 +894,3 @@ module "pubsub_topics" {
   topic_iam                  = each.value.topic_iam
   subscriptions              = each.value.subscriptions
 }
-
-module "certmgr_issuance_configs" {
-  source   = "./modules/certmgr_issuance_config"
-  for_each = var.certmgr_issuance_configs
-
-  name                       = each.key
-  description                = each.value.description
-  rotation_window_percentage = each.value.rotation_window_percentage
-  key_algorithm              = each.value.key_algorithm
-  lifetime                   = each.value.lifetime
-  ca_pool                    = each.value.ca_pool
-  labels                     = each.value.labels
-  location                   = each.value.location
-  project                    = coalesce(each.value.project, var.env_project_id)
-  members                    = each.value.members
-}
