@@ -16,7 +16,7 @@
 # TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
 module "label_governance" {
   source = "../label-governance"
-  labels = coalesce(merge(var.dataset_labels, var.labels), {})
+  labels = coalesce(var.labels, {})
 }
 
 locals {

@@ -549,7 +549,6 @@ module "bigquery_datasets" {
   max_time_travel_hours           = each.value.max_time_travel_hours
   storage_billing_model           = each.value.storage_billing_model
   encryption_key                  = each.value.encryption_key
-  dataset_labels                  = each.value.dataset_labels
   labels                          = each.value.labels
   resource_tags                   = each.value.resource_tags
   access                          = each.value.access

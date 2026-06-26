@@ -88,15 +88,8 @@ variable "encryption_key" {
   type        = string
   default     = null
 }
-
-variable "dataset_labels" {
-  description = "Key value pairs in a map for dataset labels"
-  type        = map(string)
-  default     = {}
-}
-
 variable "labels" {
-  description = "Key value pairs in a map for dataset labels (alias for dataset_labels)"
+  description = "Key value pairs in a map for dataset labels"
   type        = map(string)
   default     = {}
 }

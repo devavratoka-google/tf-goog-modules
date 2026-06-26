@@ -21,7 +21,7 @@ The following modules accept `labels` (or custom parameters like `user_labels`),
 | Module Folder / Path | Variable Used | Resources Validated |
 |---|---|---|
 | `modules/addresses` | `labels` | `google_compute_address` |
-| `modules/bigquery` | `labels` & `dataset_labels` | `google_bigquery_dataset` |
+| `modules/bigquery` | `labels` | `google_bigquery_dataset` |
 | `modules/certmgr_issuance_config` | `labels` | `google_certificate_manager_certificate_issuance_config` |
 | `modules/cloud-run-v2` | `labels` | `google_cloud_run_v2_service`, `google_cloud_run_v2_job`, `google_cloud_run_v2_worker_pool` |
 | `modules/cloud-sql-mssql` | `user_labels` | `google_sql_database_instance` |
