@@ -30,8 +30,8 @@ resource "terraform_data" "validation" {
       error_message = "Governance Error: The mandatory label 'environment' is missing."
     }
     precondition {
-      condition     = contains(["dev", "prod"], lookup(var.labels, "environment", ""))
-      error_message = "Governance Error: The 'environment' label value must be either 'dev' or 'prod'."
+      condition     = contains(["test", "dev", "qa", "stage", "prod"], lookup(var.labels, "environment", ""))
+      error_message = "Governance Error: The 'environment' label value must be one of: test, dev, qa, stage, prod."
     }
 
     # Validate Label 3: business_unit
