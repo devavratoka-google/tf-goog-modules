@@ -27,6 +27,7 @@ resource "google_certificate_manager_certificate_issuance_config" "this_use4" {
 resource "google_privateca_ca_pool_iam_member" "certrequester_use4" {
   for_each = { for p in data.google_projects.all_org_projects.projects : p.project_id => p }
   ca_pool  = "projects/<pki-proj-id>/locations/us-east4/caPools/<ca-pool-id>"
+  project  = "pki-proj"
   role     = "roles/privateca.certificateRequester"
   member   = "service-${each.value.number}@gcp-sa-certificatemanager.iam.gserviceaccount.com"
 }
@@ -55,6 +56,7 @@ resource "google_certificate_manager_certificate_issuance_config" "this_usw1" {
 resource "google_privateca_ca_pool_iam_member" "certrequester_usw1" {
   for_each = { for p in data.google_projects.all_org_projects.projects : p.project_id => p }
   ca_pool  = "projects/sjc-pr-ssvcs-pki-01/locations/us-west1/caPools/<ca-pool-id>"
+  project  = "pki-proj"
   role     = "roles/privateca.certificateRequester"
   member   = "service-${each.value.number}@gcp-sa-certificatemanager.iam.gserviceaccount.com"
 }

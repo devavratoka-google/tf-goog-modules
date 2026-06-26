@@ -33,8 +33,8 @@ module "token_signing" {
   prevent_destroy      = true
   purpose              = "ASYMMETRIC_SIGN"
   key_algorithm        = "RSA_SIGN_PKCS1_2048_SHA256"
-  key_protection_level = "HSM"   # use "SOFTWARE" for non-production
-  key_rotation_period  = null    # asymmetric keys do not support auto-rotation
+  key_protection_level = "HSM" # use "SOFTWARE" for non-production
+  key_rotation_period  = null  # asymmetric keys do not support auto-rotation
 
   iam_additive = {
     "token-exchange-v1" = {

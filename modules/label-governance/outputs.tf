@@ -19,5 +19,5 @@ output "validated_labels" {
   description = "Fully validated map of resource labels."
   # CRITICAL: This forces Terraform to evaluate the terraform_data validations 
   # BEFORE outputting the labels to other modules.
-  depends_on  = [terraform_data.validation]
+  depends_on = [terraform_data.validation]
 }

@@ -20,8 +20,8 @@ module "cert_issuance_config" {
 
 - This module auto-discovers all active projects in your GCP organization.
 - It provisions a Certificate Manager Issuance Config for each project in two regions:
-  - **Region 1 (us-east4)**: using `projects/nyl-pr-ssvcs-pki-01/locations/us-east4/caPools/ssvcs-pki-01-nonprod-poo1-01`
-  - **Region 2 (us-west1)**: using `projects/sjc-pr-ssvcs-pki-01/locations/us-west1/caPools/ssvcs-pki-01-nonprod-poo1-01`
+  - **Region 1 (us-east4)**: using `projects/<pki-proj-id>/locations/us-east4/caPools/<ca-pool-id>`
+  - **Region 2 (us-west1)**: using `projects/sjc-pr-ssvcs-pki-01/locations/us-west1/caPools/<ca-pool-id>`
 - It binds `roles/privateca.certificateRequester` for each project's Certificate Manager service agent to the respective CA Pool.
 
 <!-- BEGIN_TF_DOCS -->
