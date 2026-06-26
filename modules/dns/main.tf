@@ -67,3 +67,13 @@ resource "google_dns_record_set" "this" {
 }
 
 ################ End DNS Record Sets ################
+
+################ Begin DNS IAM binding for private zones ###############
+
+resource "google_dns_managed_zone_iam_member" "this" {
+  count        = (var.visibility == "private" && var.forwarding_config == null && var.peering_config == null && var.member != null) ? 1 : 0
+  project      = google_dns_managed_zone.this.project
+  managed_zone = google_dns_managed_zone.this.name
+  role         = "organizations/<org-id>/roles/serviceprojectdnsuser"
+  member       = var.member
+}

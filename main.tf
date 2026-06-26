@@ -262,6 +262,7 @@ module "dns_zones" {
   record_sets       = each.value.record_sets
   project           = coalesce(each.value.project, var.env_project_id)
   labels            = each.value.labels
+  member            = each.value.member
 }
 
 

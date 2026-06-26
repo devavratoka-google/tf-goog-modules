@@ -229,6 +229,7 @@ dns_zones = {
   #   description = "Private zone for GCP"
   #   visibility  = "private"
   #   networks    = ["tf-vpc-01"]
+  #   member      = "serviceAccount:my-service-account@my-project.iam.gserviceaccount.com"
   #   record_sets = {
   #     "test-a" : {
   #       name    = "test.gcp.example.com."

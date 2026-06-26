@@ -66,3 +66,9 @@ variable "labels" {
   description = "A map of labels to assign to the resource."
   default     = {}
 }
+
+variable "member" {
+  type        = string
+  description = "The member to add to the IAM policy"
+  default     = null
+}

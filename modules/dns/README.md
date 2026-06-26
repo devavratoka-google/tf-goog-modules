@@ -29,13 +29,16 @@ module "dns" {
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_label_governance"></a> [label\_governance](#module\_label\_governance) | ../label-governance | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [google_dns_managed_zone.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) | resource |
+| [google_dns_managed_zone_iam_member.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone_iam_member) | resource |
 | [google_dns_record_set.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) | resource |
 
 ## Inputs
@@ -45,6 +48,8 @@ No modules.
 | <a name="input_description"></a> [description](#input\_description) | A description of this managed zone | `string` | `"Managed by Terraform"` | no |
 | <a name="input_dns_name"></a> [dns\_name](#input\_dns\_name) | The DNS name of this managed zone, for example "example.com." | `string` | n/a | yes |
 | <a name="input_forwarding_config"></a> [forwarding\_config](#input\_forwarding\_config) | The presence of this field indicates that outbound forwarding is enabled | <pre>object({<br/>    target_name_servers = list(object({<br/>      ipv4_address    = string<br/>      forwarding_path = string<br/>    }))<br/>  })</pre> | `null` | no |
+| <a name="input_labels"></a> [labels](#input\_labels) | A map of labels to assign to the resource. | `map(string)` | `{}` | no |
+| <a name="input_member"></a> [member](#input\_member) | The member to add to the IAM policy | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the managed zone | `string` | n/a | yes |
 | <a name="input_networks"></a> [networks](#input\_networks) | For private zones, the list of VPC networks that can see this zone | `list(string)` | `[]` | no |
 | <a name="input_peering_config"></a> [peering\_config](#input\_peering\_config) | The presence of this field indicates that DNS peering is enabled | <pre>object({<br/>    target_network = string<br/>  })</pre> | `null` | no |

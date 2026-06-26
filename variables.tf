@@ -315,6 +315,7 @@ variable "dns_zones" {
     })), {})
     project = optional(string, null)
     labels  = optional(map(string), {})
+    member  = optional(string, null)
   }))
   default = {}
 }
