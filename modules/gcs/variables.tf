@@ -62,7 +62,7 @@ variable "storage_class" {
 variable "labels" {
   description = "A set of key/value label pairs to assign to the bucket."
   type        = map(string)
-  default     = null
+  default     = {}
 }
 
 

@@ -1,7 +1,13 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_pubsub_topic" "this" {
   project                    = var.project_id
   name                       = var.topic_name
-  labels                     = var.labels
+  labels                     = module.label_governance.validated_labels
   message_retention_duration = var.message_retention_duration
 }
 
@@ -11,7 +17,7 @@ resource "google_pubsub_subscription" "this" {
   project = var.project_id
   name    = each.key
   topic   = google_pubsub_topic.this.name
-  labels  = merge(var.labels, each.value.labels)
+  labels  = merge(module.label_governance.validated_labels, each.value.labels)
 
   ack_deadline_seconds       = each.value.ack_deadline_seconds
   retain_acked_messages      = each.value.retain_acked_messages

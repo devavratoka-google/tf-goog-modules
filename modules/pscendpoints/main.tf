@@ -1,3 +1,9 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 module "addresses" {
   count  = var.create_regional_address ? 1 : 0
   source = "../addresses"
@@ -10,7 +16,7 @@ module "addresses" {
   network      = null
   subnetwork   = var.subnetwork
   region       = var.region
-  labels       = var.labels
+  labels       = module.label_governance.validated_labels
 }
 
 resource "google_compute_global_address" "this" {
@@ -23,7 +29,7 @@ resource "google_compute_global_address" "this" {
   purpose      = "PRIVATE_SERVICE_CONNECT"
   network      = var.network
   description  = "Global PSC IP reserved inside pscendpoints module"
-  labels       = var.labels
+  labels       = module.label_governance.validated_labels
 }
 
 resource "google_network_connectivity_regional_endpoint" "this" {
@@ -38,7 +44,7 @@ resource "google_network_connectivity_regional_endpoint" "this" {
   subnetwork        = var.regional_endpoint_subnetwork ? var.subnetwork : null
 
   address = var.create_regional_address ? module.addresses[0].address : var.address
-  labels  = var.labels
+  labels  = module.label_governance.validated_labels
 }
 
 resource "google_compute_global_forwarding_rule" "google_apis" {
@@ -50,7 +56,7 @@ resource "google_compute_global_forwarding_rule" "google_apis" {
   ip_address            = var.create_global_address ? google_compute_global_address.this[0].id : var.address
   target                = "all-apis"
   load_balancing_scheme = ""
-  labels                = var.labels
+  labels                = module.label_governance.validated_labels
 
   dynamic "service_directory_registrations" {
     for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []
@@ -70,7 +76,7 @@ resource "google_compute_global_forwarding_rule" "vpc_sc" {
   ip_address            = var.create_global_address ? google_compute_global_address.this[0].id : var.address
   target                = "vpc-sc"
   load_balancing_scheme = ""
-  labels                = var.labels
+  labels                = module.label_governance.validated_labels
 
   dynamic "service_directory_registrations" {
     for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []
@@ -93,7 +99,7 @@ resource "google_compute_forwarding_rule" "this" {
   load_balancing_scheme   = ""
   allow_psc_global_access = var.allow_psc_global_access
   no_automate_dns_zone    = var.no_automate_dns_zone
-  labels                  = var.labels
+  labels                  = module.label_governance.validated_labels
 
   dynamic "service_directory_registrations" {
     for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []

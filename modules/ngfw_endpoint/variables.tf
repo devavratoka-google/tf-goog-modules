@@ -23,6 +23,7 @@ variable "billing_project_id" {
 variable "labels" {
   type        = map(string)
   description = "A map of key/value label pairs to assign to the resource."
+  default     = {}
 }
 
 ## Firewall Endpoint Association Variables

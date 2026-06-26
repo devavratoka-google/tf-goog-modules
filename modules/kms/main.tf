@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
 
 locals {
   keys_by_name = zipmap(var.keys, var.prevent_destroy ? slice(google_kms_crypto_key.key[*].id, 0, length(var.keys)) : slice(google_kms_crypto_key.key_ephemeral[*].id, 0, length(var.keys)))
@@ -57,7 +62,7 @@ resource "google_kms_crypto_key" "key" {
     protection_level = var.key_protection_level
   }
 
-  labels = var.labels
+  labels = module.label_governance.validated_labels
 }
 
 resource "google_kms_crypto_key" "key_ephemeral" {
@@ -81,7 +86,7 @@ resource "google_kms_crypto_key" "key_ephemeral" {
     protection_level = var.key_protection_level
   }
 
-  labels = var.labels
+  labels = module.label_governance.validated_labels
 }
 
 resource "google_kms_crypto_key_iam_binding" "owners" {

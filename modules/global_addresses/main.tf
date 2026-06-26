@@ -1,8 +1,14 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_compute_global_address" "this" {
   name          = var.name
   address       = var.address
   description   = var.description
-  labels        = var.labels
+  labels        = module.label_governance.validated_labels
   ip_version    = var.ip_version
   prefix_length = var.prefix_length
   address_type  = var.address_type

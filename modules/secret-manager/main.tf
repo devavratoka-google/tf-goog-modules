@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_secret_manager_secret" "this" {
   project   = var.project_id
   secret_id = var.secret_id
-  labels    = var.labels
+  labels    = module.label_governance.validated_labels
 
   dynamic "replication" {
     for_each = [var.replication]

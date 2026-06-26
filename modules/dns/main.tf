@@ -1,5 +1,11 @@
 ################ Start DNS Managed Zone ################
 
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_dns_managed_zone" "this" {
   name        = var.name
   dns_name    = var.dns_name
@@ -41,7 +47,7 @@ resource "google_dns_managed_zone" "this" {
   }
 
   project = var.project
-  labels  = var.labels
+  labels  = module.label_governance.validated_labels
 }
 
 ################ End DNS Managed Zone ################

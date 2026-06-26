@@ -13,6 +13,7 @@ variable "description" {
 variable "labels" {
   type        = map(string)
   description = "Optional labels in key:value format."
+  default     = {}
 }
 
 variable "preset_topology" {

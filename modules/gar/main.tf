@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_artifact_registry_repository" "repo" {
   provider = google-beta
 
@@ -23,7 +29,7 @@ resource "google_artifact_registry_repository" "repo" {
   project       = var.project_id
   mode          = var.mode
   description   = var.description
-  labels        = var.labels
+  labels        = module.label_governance.validated_labels
 
   kms_key_name = var.kms_key_name
 

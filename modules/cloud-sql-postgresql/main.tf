@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.user_labels, {})
+}
 
 locals {
   instance_name         = var.random_instance_name ? "${var.name}-${random_id.suffix[0].hex}" : var.name
@@ -213,7 +218,7 @@ resource "google_sql_database_instance" "default" {
       }
     }
 
-    user_labels = var.user_labels
+    user_labels = module.label_governance.validated_labels
 
     dynamic "location_preference" {
       for_each = var.zone != null ? ["location_preference"] : []
@@ -394,7 +399,7 @@ resource "google_compute_address" "cloud_sql_psc" {
   region       = var.region
   address_type = "INTERNAL"
   subnetwork   = var.psc_subnetwork_link
-  labels       = var.user_labels
+  labels       = module.label_governance.validated_labels
 }
 
 resource "google_compute_forwarding_rule" "cloud_sql_psc" {
@@ -406,5 +411,5 @@ resource "google_compute_forwarding_rule" "cloud_sql_psc" {
   ip_address            = google_compute_address.cloud_sql_psc[0].self_link
   target                = google_sql_database_instance.default.psc_service_attachment_link
   load_balancing_scheme = ""
-  labels                = var.user_labels
+  labels                = module.label_governance.validated_labels
 }

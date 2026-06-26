@@ -11,6 +11,7 @@ variable "description" {
 variable "labels" {
   type        = map(string)
   description = "Labels"
+  default     = {}
 }
 
 variable "ip_version" {

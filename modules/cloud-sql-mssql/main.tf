@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.user_labels, {})
+}
 
 locals {
   ip_configuration_enabled = length(keys(var.ip_configuration)) > 0 ? true : false
@@ -167,7 +172,7 @@ resource "google_sql_database_instance" "default" {
       }
     }
 
-    user_labels = var.user_labels
+    user_labels = module.label_governance.validated_labels
 
     dynamic "location_preference" {
       for_each = var.zone != null ? ["location_preference"] : []

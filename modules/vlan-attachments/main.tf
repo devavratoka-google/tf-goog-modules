@@ -1,3 +1,9 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_compute_interconnect_attachment" "this" {
   router                   = var.router
   name                     = var.name
@@ -10,7 +16,7 @@ resource "google_compute_interconnect_attachment" "this" {
   type                     = var.type
   vlan_tag8021q            = var.vlan_tag8021q
   encryption               = var.encryption
-  labels                   = var.labels
+  labels                   = module.label_governance.validated_labels
 }
 
 resource "google_network_management_vpc_flow_logs_config" "this" {
@@ -23,5 +29,5 @@ resource "google_network_management_vpc_flow_logs_config" "this" {
   description             = "VPC Flow Logs for ${google_compute_interconnect_attachment.this.name}"
   flow_sampling           = var.flow_sampling
   metadata                = var.metadata
-  labels                  = var.labels
+  labels                  = module.label_governance.validated_labels
 }

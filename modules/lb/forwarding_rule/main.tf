@@ -1,3 +1,9 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_compute_forwarding_rule" "this" {
   name                  = var.name
   region                = var.region
@@ -13,7 +19,7 @@ resource "google_compute_forwarding_rule" "this" {
   load_balancing_scheme = var.load_balancing_scheme
   allow_global_access   = var.allow_global_access
   network_tier          = var.network_tier
-  labels                = var.labels
+  labels                = module.label_governance.validated_labels
 
   dynamic "service_directory_registrations" {
     for_each = var.service_directory_registrations != null ? [var.service_directory_registrations] : []

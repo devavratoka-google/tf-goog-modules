@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.user_labels, {})
+}
 
 locals {
   master_instance_name     = var.random_instance_name ? "${var.name}-${random_id.suffix[0].hex}" : var.name
@@ -183,7 +188,7 @@ resource "google_sql_database_instance" "default" {
     disk_size    = var.disk_size
     disk_type    = var.disk_type
     pricing_plan = var.pricing_plan
-    user_labels  = var.user_labels
+    user_labels  = module.label_governance.validated_labels
 
     dynamic "connection_pool_config" {
       for_each = var.connection_pool_config != null ? [var.connection_pool_config] : []

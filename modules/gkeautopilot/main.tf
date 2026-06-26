@@ -1,3 +1,9 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(merge(var.resource_labels, var.labels), {})
+}
+
 locals {
   required_services = toset([
     "compute.googleapis.com",
@@ -34,7 +40,7 @@ resource "google_container_cluster" "main" {
   project             = var.project_id
   name                = var.name
   description         = var.description
-  resource_labels     = merge(var.resource_labels, var.labels)
+  resource_labels     = module.label_governance.validated_labels
   location            = var.location
   node_locations      = var.node_locations
   network             = var.network

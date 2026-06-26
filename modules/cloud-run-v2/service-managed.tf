@@ -22,7 +22,7 @@ resource "google_cloud_run_v2_service" "service" {
   name                 = var.name
   ingress              = var.service_config.ingress
   invoker_iam_disabled = var.service_config.invoker_iam_disabled
-  labels               = var.labels
+  labels               = module.label_governance.validated_labels
   launch_stage         = var.launch_stage
   custom_audiences     = var.service_config.custom_audiences
   deletion_protection  = var.deletion_protection

@@ -20,7 +20,7 @@ resource "google_cloud_run_v2_worker_pool" "default_managed" {
   project             = local.project_id
   location            = local.location
   name                = var.name
-  labels              = var.labels
+  labels              = module.label_governance.validated_labels
   launch_stage        = var.launch_stage
   deletion_protection = var.deletion_protection
 

@@ -1,9 +1,15 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_network_connectivity_spoke" "this" {
   provider    = google-beta
   name        = var.name
   hub         = var.hub
   location    = var.location
-  labels      = var.labels
+  labels      = module.label_governance.validated_labels
   description = var.description
   group       = var.group
   project     = var.project

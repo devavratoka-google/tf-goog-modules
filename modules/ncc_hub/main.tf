@@ -1,7 +1,13 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_network_connectivity_hub" "this" {
   name            = var.name
   description     = var.description
-  labels          = var.labels
+  labels          = module.label_governance.validated_labels
   preset_topology = var.preset_topology
   #  policy_mode = var.policy_mode
   export_psc = var.export_psc
@@ -14,7 +20,7 @@ resource "google_network_connectivity_group" "this" {
   project     = google_network_connectivity_hub.this.project
   name        = each.key
   description = each.value.description
-  labels      = merge(var.labels, each.value.labels)
+  labels      = merge(module.label_governance.validated_labels, each.value.labels)
 
   dynamic "auto_accept" {
     for_each = length(each.value.auto_accept_projects) > 0 ? [1] : []

@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(merge(var.dataset_labels, var.labels), {})
+}
 
 locals {
   tables             = { for table in var.tables : table["table_id"] => table }
@@ -38,7 +43,7 @@ resource "google_bigquery_dataset" "main" {
   max_time_travel_hours           = var.max_time_travel_hours
   storage_billing_model           = var.storage_billing_model
   project                         = var.project_id
-  labels                          = merge(var.dataset_labels, var.labels)
+  labels                          = module.label_governance.validated_labels
   resource_tags                   = var.resource_tags
   default_partition_expiration_ms = var.default_partition_expiration_ms
 
