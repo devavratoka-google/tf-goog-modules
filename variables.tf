@@ -1083,3 +1083,19 @@ variable "pubsub_topics" {
   }))
   default = {}
 }
+
+variable "certmgr_issuance_configs" {
+  description = "Map of Certificate Manager Certificate Issuance Configs."
+  type = map(object({
+    ca_pool                    = string
+    description                = optional(string, null)
+    rotation_window_percentage = optional(number, 66)
+    key_algorithm              = optional(string, "RSA_2048")
+    lifetime                   = optional(string, "2592000s")
+    labels                     = optional(map(string), {})
+    location                   = optional(string, "us-east4")
+    project                    = optional(string, null)
+    members                    = optional(set(string), [])
+  }))
+  default = {}
+}

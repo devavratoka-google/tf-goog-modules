@@ -898,12 +898,16 @@ module "pubsub_topics" {
 
 module "certmgr_issuance_configs" {
   source   = "./modules/certmgr_issuance_config"
+  for_each = var.certmgr_issuance_configs
 
-  name = "nonprod_use4"
-  certificate_authority_config = {
-    certificate_authority_service_config = {
-      ca_pool = "projects/<id>/locations/us-east4/caPools/nonprod-ca-pool"
-    }
-  }
-  project = "<id>"
+  name                       = each.key
+  description                = each.value.description
+  rotation_window_percentage = each.value.rotation_window_percentage
+  key_algorithm              = each.value.key_algorithm
+  lifetime                   = each.value.lifetime
+  ca_pool                    = each.value.ca_pool
+  labels                     = each.value.labels
+  location                   = each.value.location
+  project                    = coalesce(each.value.project, var.env_project_id)
+  members                    = each.value.members
 }

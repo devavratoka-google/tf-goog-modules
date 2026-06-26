@@ -43,13 +43,9 @@ variable "lifetime" {
   default     = "2592000s"
 }
 
-variable "certificate_authority_config" {
-  description = "The CA configuration for certificate issuance."
-  type = object({
-    certificate_authority_service_config = optional(object({
-      ca_pool = string
-    }), null)
-  })
+variable "ca_pool" {
+  description = "The CA pool resource ID used to issue certificates."
+  type        = string
 }
 
 variable "labels" {
@@ -70,3 +66,8 @@ variable "project" {
   default     = null
 }
 
+variable "members" {
+  description = "The members to add to the IAM binding."
+  type        = set(string)
+  default     = []
+}
