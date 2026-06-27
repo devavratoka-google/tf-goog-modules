@@ -29,7 +29,7 @@ resource "google_cloud_run_v2_service" "service" {
   iap_enabled          = var.service_config.iap_config != null
 
   template {
-    labels         = var.revision.labels
+    labels         = module.label_governance.validated_labels
     encryption_key = var.encryption_key
     revision       = local.revision_name
     execution_environment = (

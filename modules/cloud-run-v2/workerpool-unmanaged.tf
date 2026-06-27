@@ -35,7 +35,7 @@ resource "google_cloud_run_v2_worker_pool" "default_unmanaged" {
   }
 
   template {
-    labels         = var.revision.labels
+    labels         = module.label_governance.validated_labels
     encryption_key = var.encryption_key
     revision       = local.revision_name
 

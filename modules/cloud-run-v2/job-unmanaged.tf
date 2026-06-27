@@ -24,7 +24,7 @@ resource "google_cloud_run_v2_job" "job_unmanaged" {
   launch_stage        = var.launch_stage
   deletion_protection = var.deletion_protection
   template {
-    labels     = var.revision.labels
+    labels     = module.label_governance.validated_labels
     task_count = var.job_config.task_count
     template {
       encryption_key                = var.encryption_key
