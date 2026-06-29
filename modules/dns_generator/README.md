@@ -58,3 +58,9 @@ dns_zones = {
   },
 }
 ```
+
+## Deployment Notes
+
+- **Private Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file (e.g., `dev.tfvars`, `prd.tfvars`) inside the **`nyl-gcp-prod-network-iac`** repository.
+- **Peering Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file inside the **`nyl-gcp-transit-network-iac`** repository.
+

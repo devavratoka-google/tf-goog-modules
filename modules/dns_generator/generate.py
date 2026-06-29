@@ -49,7 +49,11 @@ def generate_tfvars(project_names):
         zones_content.append(peering_zone)
         
     inner_content = "\n".join(zones_content)
-    tfvars = f'''dns_zones = {{\n{inner_content}\n}}'''
+    tfvars = f'''# NOTE:
+# - Private zone tfvars belong in the appropriate <sdlc>.tfvars in the nyl-gcp-prod-network-iac repo.
+# - Peering zone tfvars belong in the appropriate <sdlc>.tfvars in the nyl-gcp-transit-network-iac repo.
+
+dns_zones = {{\n{inner_content}\n}}'''
     return tfvars
 
 if __name__ == "__main__":
