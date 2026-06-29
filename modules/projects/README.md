@@ -44,14 +44,16 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_cloud_asset_resources_search.recursive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_asset_resources_search) | data source |
-| [google_projects.non_recursive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/projects) | data source |
+| [google_folders.level1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/folders) | data source |
+| [google_folders.level2](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/folders) | data source |
+| [google_folders.level3](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/folders) | data source |
+| [google_projects.by_folder](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/projects) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_parent_folder_id"></a> [parent\_folder\_id](#input\_parent\_folder\_id) | The ID of the parent folder to search projects under (e.g., '1234567890'). | `string` | `"581347979992"` | no |
+| <a name="input_parent_folder_id"></a> [parent\_folder\_id](#input\_parent\_folder\_id) | The ID of the parent folder to search projects under (e.g., '1234567890'). | `string` | `null` | no |
 
 ## Outputs
 

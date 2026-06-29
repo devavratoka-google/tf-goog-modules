@@ -16,28 +16,10 @@
 
 output "projects" {
   description = "List of active projects retrieved."
-  value = var.parent_folder_id == null ? [
-    for p in data.google_projects.non_recursive[0].projects : {
-      project_id = p.project_id
-      name       = p.name
-      number     = p.number
-      labels     = p.labels
-    }
-  ] : [
-    for r in data.google_cloud_asset_resources_search.recursive[0].results : {
-      project_id = split("/", r.name)[4]
-      name       = r.display_name
-      number     = split("/", r.project)[1]
-      labels     = {}
-    }
-  ]
+  value       = local.all_retrieved_projects
 }
 
 output "project_ids" {
   description = "List of active project IDs retrieved."
-  value = var.parent_folder_id == null ? [
-    for p in data.google_projects.non_recursive[0].projects : p.project_id
-  ] : [
-    for r in data.google_cloud_asset_resources_search.recursive[0].results : split("/", r.name)[4]
-  ]
+  value       = [for p in local.all_retrieved_projects : p.project_id]
 }

@@ -17,5 +17,5 @@
 variable "parent_folder_id" {
   description = "The ID of the parent folder to search projects under (e.g., '1234567890')."
   type        = string
-  default     = "581347979992"
+  default     = null
 }
