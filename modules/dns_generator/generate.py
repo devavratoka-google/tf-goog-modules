@@ -16,29 +16,35 @@ def parse_project(project_name):
         )
     return match.group("function"), match.group("sdlc")
 
-def generate_tfvars(project_name):
-    function_name, sdlc = parse_project(project_name)
-    
-    tfvars = f'''dns_zones = {{
-  "{function_name}" : {{
+def generate_tfvars(project_names):
+    zones_content = []
+    for project_name in project_names:
+        project_name = project_name.strip()
+        if not project_name:
+            continue
+        function_name, sdlc = parse_project(project_name)
+        zone_entry = f'''  "{function_name}" : {{
     dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
     description = "Private zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
     project     = "{project_name}"
     record_sets = {{}}
-  }},
-}}'''
+  }},'''
+        zones_content.append(zone_entry)
+        
+    inner_content = "\n".join(zones_content)
+    tfvars = f'''dns_zones = {{\n{inner_content}\n}}'''
     return tfvars
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python3 generate.py <gcp-project-name>")
+        print("Usage: python3 generate.py <gcp-project-name-1> [gcp-project-name-2] ...")
         sys.exit(1)
         
-    project_name = sys.argv[1].strip()
+    project_names = sys.argv[1:]
     try:
-        result = generate_tfvars(project_name)
+        result = generate_tfvars(project_names)
         print(result)
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

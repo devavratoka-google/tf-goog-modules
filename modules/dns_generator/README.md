@@ -5,27 +5,35 @@ This helper script automates creating a Terraform `.tfvars` DNS zone entry from 
 
 ## Usage
 
-Run the script by passing the GCP project name as a command-line argument:
+Run the script by passing one or more GCP project names as command-line arguments:
 
 ```bash
-python3 modules/dns_generator/generate.py <gcp-project-name>
+python3 modules/dns_generator/generate.py <gcp-project-name-1> [gcp-project-name-2] ...
 ```
 
 ### Example
 
 ```bash
-python3 modules/dns_generator/generate.py nyl-pr-nyl360-data-dev-01
+python3 modules/dns_generator/generate.py nyl-pr-abcd-dev-01 nyl-pr-agentgw-dev-01
 ```
 
 **Output:**
 ```hcl
 dns_zones = {
-  "nyl360-data" : {
-    dns_name    = "nyl360-data.dev.gcpinternal.newyorklife.com."
-    description = "Private zone for nyl360-data.dev.gcpinternal.newyorklife.com"
+  "abcd" : {
+    dns_name    = "abcd.dev.gcpinternal.newyorklife.com."
+    description = "Private zone for abcd.dev.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
-    project     = "nyl-pr-nyl360-data-dev-01"
+    project     = "nyl-pr-abcd-dev-01"
+    record_sets = {}
+  },
+  "agentgw" : {
+    dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
+    description = "Private zone for agentgw.dev.gcpinternal.newyorklife.com"
+    visibility  = "private"
+    networks    = ["vpc-name"]
+    project     = "nyl-pr-agentgw-dev-01"
     record_sets = {}
   },
 }
