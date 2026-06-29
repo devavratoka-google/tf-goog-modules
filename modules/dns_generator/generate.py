@@ -23,7 +23,9 @@ def generate_tfvars(project_names):
         if not project_name:
             continue
         function_name, sdlc = parse_project(project_name)
-        zone_entry = f'''  "{function_name}" : {{
+        
+        # 1. Private DNS managed zone
+        private_zone = f'''  "{function_name}" : {{
     dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
     description = "Private zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com"
     visibility  = "private"
@@ -31,7 +33,20 @@ def generate_tfvars(project_names):
     project     = "{project_name}"
     record_sets = {{}}
   }},'''
-        zones_content.append(zone_entry)
+        zones_content.append(private_zone)
+
+        # 2. Peering DNS managed zone in nyl-pr-ssvcs-transit-nw-01
+        peering_zone = f'''  "peering-{function_name}.{sdlc}.gcpinternal.newyorklife.com" : {{
+    dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
+    description = "DNS Peering zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com."
+    visibility  = "private"
+    networks    = ["vpc-g-ssvcs-transit"]
+    project     = "nyl-pr-ssvcs-transit-nw-01"
+    peering_config = {{
+      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-{sdlc}-01/global/networks/vpc-name"
+    }}
+  }},'''
+        zones_content.append(peering_zone)
         
     inner_content = "\n".join(zones_content)
     tfvars = f'''dns_zones = {{\n{inner_content}\n}}'''

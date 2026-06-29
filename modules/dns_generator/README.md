@@ -28,6 +28,16 @@ dns_zones = {
     project     = "nyl-pr-abcd-dev-01"
     record_sets = {}
   },
+  "peering-abcd.dev.gcpinternal.newyorklife.com" : {
+    dns_name    = "abcd.dev.gcpinternal.newyorklife.com."
+    description = "DNS Peering zone for abcd.dev.gcpinternal.newyorklife.com."
+    visibility  = "private"
+    networks    = ["vpc-g-ssvcs-transit"]
+    project     = "nyl-pr-ssvcs-transit-nw-01"
+    peering_config = {
+      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-dev-01/global/networks/vpc-name"
+    }
+  },
   "agentgw" : {
     dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
     description = "Private zone for agentgw.dev.gcpinternal.newyorklife.com"
@@ -35,6 +45,16 @@ dns_zones = {
     networks    = ["vpc-name"]
     project     = "nyl-pr-agentgw-dev-01"
     record_sets = {}
+  },
+  "peering-agentgw.dev.gcpinternal.newyorklife.com" : {
+    dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
+    description = "DNS Peering zone for agentgw.dev.gcpinternal.newyorklife.com."
+    visibility  = "private"
+    networks    = ["vpc-g-ssvcs-transit"]
+    project     = "nyl-pr-ssvcs-transit-nw-01"
+    peering_config = {
+      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-dev-01/global/networks/vpc-name"
+    }
   },
 }
 ```
