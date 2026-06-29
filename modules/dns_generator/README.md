@@ -28,7 +28,7 @@ dns_zones = {
     project     = "nyl-pr-abcd-dev-01"
     record_sets = {}
   },
-  "peering-abcd.dev.gcpinternal.newyorklife.com" : {
+  "peering-abcd-dev-gcpinternal-newyorklife-com" : {
     dns_name    = "abcd.dev.gcpinternal.newyorklife.com."
     description = "DNS Peering zone for abcd.dev.gcpinternal.newyorklife.com."
     visibility  = "private"
@@ -46,7 +46,7 @@ dns_zones = {
     project     = "nyl-pr-agentgw-dev-01"
     record_sets = {}
   },
-  "peering-agentgw.dev.gcpinternal.newyorklife.com" : {
+  "peering-agentgw-dev-gcpinternal-newyorklife-com" : {
     dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
     description = "DNS Peering zone for agentgw.dev.gcpinternal.newyorklife.com."
     visibility  = "private"

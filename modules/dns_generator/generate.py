@@ -36,7 +36,7 @@ def generate_tfvars(project_names):
         zones_content.append(private_zone)
 
         # 2. Peering DNS managed zone in nyl-pr-ssvcs-transit-nw-01
-        peering_zone = f'''  "peering-{function_name}.{sdlc}.gcpinternal.newyorklife.com" : {{
+        peering_zone = f'''  "peering-{function_name}-{sdlc}-gcpinternal-newyorklife-com" : {{
     dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
     description = "DNS Peering zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com."
     visibility  = "private"
