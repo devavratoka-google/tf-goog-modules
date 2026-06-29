@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-data "google_projects" "this" {
-  filter = var.parent_folder_id != null ? "parent.id:${var.parent_folder_id} parent.type:folder lifecycleState:ACTIVE" : "lifecycleState:ACTIVE"
+data "google_projects" "non_recursive" {
+  count  = var.parent_folder_id == null ? 1 : 0
+  filter = "lifecycleState:ACTIVE"
+}
+
+data "google_cloud_asset_resources_search" "recursive" {
+  count       = var.parent_folder_id != null ? 1 : 0
+  scope       = "folders/${var.parent_folder_id}"
+  asset_types = ["cloudresourcemanager.googleapis.com/Project"]
+  query       = "state:ACTIVE"
 }
