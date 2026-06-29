@@ -224,21 +224,15 @@ ncc_spokes = {
 }
 
 dns_zones = {
-  # "gcp-example-com" : {
-  #   dns_name    = "gcp.example.com."
-  #   description = "Private zone for GCP"
-  #   visibility  = "private"
-  #   networks    = ["tf-vpc-01"]
-  #   member      = "serviceAccount:my-service-account@my-project.iam.gserviceaccount.com"
-  #   record_sets = {
-  #     "test-a" : {
-  #       name    = "test.gcp.example.com."
-  #       type    = "A"
-  #       ttl     = 300
-  #       rrdatas = ["10.100.1.10"]
-  #     }
-  #   }
-  # },
+  "ny1360-data" : {
+    dns_name    = "ny1360-data.dev.gcpinternal.newyorklife.com."
+    description = "Private zone for ny1360-data.dev.gcpinternal.newyorklife.com"
+    visibility  = "private"
+    networks    = ["vpc-name"]
+    project = "nyl-pr-ny1360-data-dev-01"
+    member      = "serviceAccount:my-service-account@my-project.iam.gserviceaccount.com"
+    record_sets = {}
+  },
 
   # "example-com-forwarding" : {
   #   dns_name    = "example.com."
