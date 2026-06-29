@@ -49,7 +49,6 @@ No modules.
 | [google_certificate_manager_certificate_issuance_config.this_use4](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/certificate_manager_certificate_issuance_config) | resource |
 | [google_certificate_manager_certificate_issuance_config.this_usw1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/certificate_manager_certificate_issuance_config) | resource |
 | [google_privateca_ca_pool_iam_member.certrequester_use4](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/privateca_ca_pool_iam_member) | resource |
-| [google_privateca_ca_pool_iam_member.certrequester_usw1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/privateca_ca_pool_iam_member) | resource |
 | [google_projects.all_org_projects](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/projects) | data source |
 
 ## Inputs
