@@ -27,6 +27,12 @@ variable "location" {
 variable "name" {
   description = "The name of the bucket."
   type        = string
+
+  validation {
+    # Bucket name must start with 'gcp-'
+    condition     = startswith(var.name, "gcp-")
+    error_message = "The bucket name must start with the prefix 'gcp-'."
+  }
 }
 
 variable "force_destroy" {
