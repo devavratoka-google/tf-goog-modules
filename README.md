@@ -92,3 +92,27 @@ Always format files recursively prior to submitting commits or PRs:
 ```bash
 terraform fmt -recursive
 ```
+
+---
+
+## 5. Testing Submodules
+
+Individual submodules in this repository support unit testing using the native **Terraform Test Framework** (`v1.6.0` or later). These tests utilize provider mocking to run fully locally, ensuring your variable validations and configuration logic are correct without deploying real infrastructure or requiring GCP credentials.
+
+### How to Run Submodule Tests:
+
+1. **Navigate to the directory of the submodule you wish to test:**
+   ```bash
+   cd modules/gcs
+   ```
+
+2. **Initialize Terraform:**
+   This downloads the mock provider schemas required to validate the configurations locally:
+   ```bash
+   terraform init
+   ```
+
+3. **Execute the test suite:**
+   ```bash
+   terraform test
+   ```
