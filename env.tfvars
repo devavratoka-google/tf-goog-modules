@@ -229,7 +229,7 @@ dns_zones = {
     description = "Private zone for ny1360-data.dev.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
-    project = "nyl-pr-ny1360-data-dev-01"
+    project     = "nyl-pr-ny1360-data-dev-01"
     member      = "serviceAccount:my-service-account@my-project.iam.gserviceaccount.com"
     record_sets = {}
   },
