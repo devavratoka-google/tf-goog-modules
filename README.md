@@ -99,6 +99,16 @@ terraform fmt -recursive
 
 Individual submodules in this repository support unit testing using the native **Terraform Test Framework** (`v1.6.0` or later). These tests utilize provider mocking to run fully locally, ensuring your variable validations and configuration logic are correct without deploying real infrastructure or requiring GCP credentials.
 
+### Modules with Test Coverage:
+
+The following submodules currently have unit test coverage:
+* **Storage**: [gcs](file:///Users/devavratoka/Documents/tf-goog-modules/modules/gcs)
+* **Connectivity & Routing**: [ncc_spoke](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ncc_spoke), [pscendpoints](file:///Users/devavratoka/Documents/tf-goog-modules/modules/pscendpoints), [subnetworks](file:///Users/devavratoka/Documents/tf-goog-modules/modules/subnetworks), [vpc](file:///Users/devavratoka/Documents/tf-goog-modules/modules/vpc), [dns](file:///Users/devavratoka/Documents/tf-goog-modules/modules/dns)
+* **Security & Firewall**: [ngfw_hfw](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ngfw_hfw)
+* **Load Balancing**: [lb/region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service)
+* **Databases**: [cloud-sql-postgresql](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud-sql-postgresql)
+* **Compute & Orchestration**: [cloud-run-v2](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud-run-v2), [gkeautopilot](file:///Users/devavratoka/Documents/tf-goog-modules/modules/gkeautopilot)
+
 ### How to Run Submodule Tests:
 
 1. **Navigate to the directory of the submodule you wish to test:**

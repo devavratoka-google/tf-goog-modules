@@ -15,18 +15,18 @@ output "location" {
 
 output "endpoint" {
   description = "Control plane endpoint."
-  value       = google_container_cluster.main.private_cluster_config[0].private_endpoint
+  value       = try(google_container_cluster.main.private_cluster_config[0].private_endpoint, null)
   sensitive   = true
 }
 
 output "endpoint_dns" {
   description = "Control plane DNS endpoint."
-  value       = google_container_cluster.main.control_plane_endpoints_config[0].dns_endpoint_config[0].endpoint
+  value       = try(google_container_cluster.main.control_plane_endpoints_config[0].dns_endpoint_config[0].endpoint, null)
 }
 
 output "ca_certificate" {
   description = "Cluster CA certificate in base64."
-  value       = google_container_cluster.main.master_auth[0].cluster_ca_certificate
+  value       = try(google_container_cluster.main.master_auth[0].cluster_ca_certificate, null)
   sensitive   = true
 }
 
