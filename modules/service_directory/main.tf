@@ -23,7 +23,7 @@ resource "google_service_directory_endpoint" "endpoint" {
   for_each = var.endpoints
 
   endpoint_id = each.key
-  service     = google_service_directory_service[each.value.service_id].id
+  service     = google_service_directory_service.service[each.value.service_id].id
   address     = each.value.address
   port        = try(each.value.port, 443)
   network     = try(each.value.network, null)
