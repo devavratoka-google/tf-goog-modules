@@ -292,6 +292,26 @@ dns_record_sets = {
   # }
 }
 
+service_directories = {
+  # "nyl-aws-namespace" : {
+  #   location     = "us-east4"
+  #   labels       = { environment = "production" }
+  #   services = {
+  #     "nyl-aws-s3-service" = {
+  #       metadata = { catalog_type = "databricks-unity" }
+  #     }
+  #   }
+  #   endpoints = {
+  #     "nyl-s3-private-lb-endpoint" = {
+  #       service_id   = "nyl-aws-s3-service"
+  #       address      = "10.100.1.50" # ILB Forwarding Rule IP
+  #       port         = 443
+  #       network_name = "tf-vpc-01"   # References the VPC network managed by root orchestration
+  #     }
+  #   }
+  # }
+}
+
 addresses = {
   # "ext-ip-01" : {
   #   address_type = "EXTERNAL"

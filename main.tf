@@ -298,6 +298,28 @@ module "dns_record_sets" {
   rrdatas      = each.value.rrdatas
 }
 
+module "service_directories" {
+  depends_on = [module.networks]
+
+  source   = "./modules/service_directory"
+  for_each = var.service_directories
+
+  project_id   = coalesce(each.value.project_id, var.env_project_id)
+  location     = each.value.location
+  namespace_id = coalesce(each.value.namespace_id, each.key)
+  labels       = each.value.labels
+  services     = each.value.services
+  endpoints = {
+    for k, ep in each.value.endpoints : k => {
+      service_id = ep.service_id
+      address    = ep.address
+      port       = ep.port
+      network    = ep.network_name != null ? module.networks[ep.network_name].network_self_link : ep.network
+      metadata   = ep.metadata
+    }
+  }
+}
+
 module "addresses" {
   depends_on = [module.networks, module.subnetworks]
 

@@ -215,9 +215,24 @@
 #       function = "my-data-processing-func"
 #     }
 #   }
+
+#   # Example 5: Hybrid NEG (Cross-cloud or on-premises target, instance is omitted)
+#   "my-hybrid-neg" = {
+#     network_endpoint_type = "NON_GCP_PRIVATE_IP_PORT"
+#     description           = "Hybrid NEG for remote AWS Databricks endpoint over Interconnect"
+#     network               = "projects/<proj-id>/global/networks/vpc-crosscloud-01"
+#     zone                  = "us-east4-a"
+
+#     endpoints = {
+#       "aws-node-01" = {
+#         ip_address = "10.100.1.50" # Remote AWS Private IP
+#         port       = 443
+#       }
+#     }
+#   }
 # }
 
-# # 1. First, define the URL Map and Target Proxy
+# # 1. First, define the URL Map and Target Proxy for HTTP(S) L7 LB
 # http_routing_configs = {
 #   "my-regional-http-routing" = {
 #     # FIXED: Changed from us-east4 to us-central1 to match the backend service
@@ -228,6 +243,16 @@
 #     default_service = "projects/<proj-id>/regions/us-central1/backendServices/zonal-neg-backend-srv"
 #   }
 # }
+
+# # 2. Or Define Target TCP Proxy for Regional TCP Proxy Load Balancers (Internal or External)
+# tcp_routing_configs = {
+#   "my-regional-tcp-proxy" = {
+#     region          = "us-east4"
+#     description     = "Target TCP proxy for cross-cloud hybrid NEG backend"
+#     backend_service = "projects/<proj-id>/regions/us-east4/backendServices/hybrid-neg-backend-srv"
+#   }
+# }
+
 
 # forwarding_rules = {
 

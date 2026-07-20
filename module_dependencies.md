@@ -29,6 +29,7 @@ flowchart TD
         DNSPol[modules/dns_policy]
         Hub[modules/ncc_hub]
         Spoke[modules/ncc_spoke]
+        SD[modules/service_directory]
     end
 
     subgraph Services PSA [3. Private Services Access]
@@ -52,6 +53,7 @@ flowchart TD
         HC[modules/lb/region_health_check]
         BES[modules/lb/region_backend_service]
         HTTP[modules/lb/http_routing]
+        TCP[modules/lb/tcp_routing]
         FWD[modules/lb/forwarding_rule]
     end
 
@@ -77,6 +79,7 @@ flowchart TD
     VPC -->|depends_on| Hub
     Hub -->|depends_on / hub_id| Spoke
     VPC -->|depends_on| Spoke
+    VPC -->|depends_on / network_id| SD
 
     %% 3. PSA Dependencies
     VPC -->|network_self_link| Address
@@ -97,8 +100,10 @@ flowchart TD
     %% 5. Load Balancing Dependencies
     HC -->|health_checks list| BES
     BES -->|depends_on / region_backend_service| HTTP
+    BES -->|depends_on / region_backend_service| TCP
     BES -->|depends_on| FWD
     HTTP -->|depends_on / http_routing| FWD
+    TCP -->|depends_on / tcp_routing| FWD
 
     %% 6. Identity Dependencies
     CRole -->|local.iam_custom_roles_ctx| SAccount
@@ -126,6 +131,7 @@ Below is an exhaustive list of module dependency mappings defined across root or
 | **[cloud_nat](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud_nat)** | **[cloud_router](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud_router)** | `module.cloud_routers[router_name].router_name` | NAT gateways must be associated with an active Router name. |
 | **[vlan-attachments](file:///Users/devavratoka/Documents/tf-goog-modules/modules/vlan-attachments)** | **[cloud_router](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud_router)** | `module.cloud_routers[router_name].router_name` | Interconnect VLANs attach to a specific Router name. |
 | **[ncc_spoke](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ncc_spoke)** | **[ncc_hub](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ncc_hub)** | `module.ncc_hub[hub_name].ncc_hub_id` | Network Connectivity Spokes must register with a central Hub ID. |
+| **[service_directory](file:///Users/devavratoka/Documents/tf-goog-modules/modules/service_directory)** | **[vpc](file:///Users/devavratoka/Documents/tf-goog-modules/modules/vpc)** | `module.networks[network_name].network_id` | Service Directory endpoints link to internal VPC networks and forwarding rules for private naming. |
 
 ### Layer 3: Private Services Access (Orchestrated in `main.tf`)
 | Module Name | Depends Directly On | Bound Output Attribute | Description |
@@ -140,7 +146,8 @@ Below is an exhaustive list of module dependency mappings defined across root or
 | :--- | :--- | :--- | :--- |
 | **[region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service)** | **[region_health_check](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_health_check)** | `each.value.health_checks` (matching health check name) | Backend services depend on associated health checks. |
 | **[http_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/http_routing)** | **[region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service)** | (Implicit `depends_on` block) | HTTP target proxies route traffic to backend services. |
-| **[forwarding_rule](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/forwarding_rule)** | **[http_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/http_routing)** | (Implicit `depends_on` block) | Entrypoint IP forwarding rules direct traffic to target proxies. |
+| **[tcp_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/tcp_routing)** | **[region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service)** | (Implicit `depends_on` block) | TCP target proxies route traffic to backend services. |
+| **[forwarding_rule](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/forwarding_rule)** | **[http_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/http_routing)**, **[tcp_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/tcp_routing)** | (Implicit `depends_on` block) | Entrypoint IP forwarding rules direct traffic to target proxies. |
 
 ### Layer 5: Identity & Security (Orchestrated in `main.tf`)
 | Module Name | Depends Directly On | Bound Output Attribute | Description |
