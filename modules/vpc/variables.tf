@@ -86,9 +86,9 @@ variable "bgp_inter_region_cost" {
   default     = null
 }
 
-variable "tag_bindings" {
-  description = "Tag bindings for the VPC network, in key => tag value id format."
+variable "resource_manager_tags" {
+  description = "Resource manager tags for the VPC network, in key => tag value id format."
   type        = map(string)
-  default     = {}
+  default     = null
 }
 

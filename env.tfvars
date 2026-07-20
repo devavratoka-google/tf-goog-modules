@@ -3,9 +3,9 @@ env_project_id = "infra-proj-id"
 vpcs = {
   # "tf-vpc-01" : {
   #   # Optional Resource Manager Tag Bindings: key => tag value id format
-  #   # tag_bindings = {
-  #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
-  #   # }
+  #   resource_manager_tags = {
+  #     "tagKeys/281484934839792" = "tagValues/281481636069700"
+  #   }
   # },
 }
 

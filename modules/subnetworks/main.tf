@@ -35,16 +35,16 @@ resource "google_compute_subnetwork" "this" {
   external_ipv6_prefix             = var.external_ipv6_prefix
   project                          = var.project
   send_secondary_ip_range_if_empty = var.send_secondary_ip_range_if_empty
+  dynamic "params" {
+    for_each = var.resource_manager_tags != null ? (length(var.resource_manager_tags) > 0 ? [1] : []) : []
+    content {
+      resource_manager_tags = var.resource_manager_tags
+    }
+  }
 
   lifecycle {
     ignore_changes = [secondary_ip_range]
   }
-}
-
-resource "google_tags_tag_binding" "binding" {
-  for_each  = var.tag_bindings
-  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/subnetworks/${google_compute_subnetwork.this.name}"
-  tag_value = each.value
 }
 
 ################ End Subnetworks ################

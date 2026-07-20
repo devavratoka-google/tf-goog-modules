@@ -97,9 +97,9 @@ variable "log_config" {
   })
 }
 
-variable "tag_bindings" {
-  description = "Tag bindings for the subnetwork, in key => tag value id format."
+variable "resource_manager_tags" {
+  description = "Resource manager tags for the subnetwork, in key => tag value id format."
   type        = map(string)
-  default     = {}
+  default     = null
 }
 

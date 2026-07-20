@@ -18,7 +18,7 @@ module "networks" {
   bgp_best_path_selection_mode              = each.value.bgp_best_path_selection_mode
   bgp_always_compare_med                    = each.value.bgp_always_compare_med
   bgp_inter_region_cost                     = each.value.bgp_inter_region_cost
-  tag_bindings                              = try(each.value.tag_bindings, {})
+  resource_manager_tags                     = each.value.resource_manager_tags
 }
 
 module "subnetworks" {
@@ -45,7 +45,7 @@ module "subnetworks" {
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
   project                          = module.networks[each.value.network_name].network_project
-  tag_bindings                     = try(each.value.tag_bindings, {})
+  resource_manager_tags            = each.value.resource_manager_tags
 }
 
 
