@@ -209,5 +209,8 @@ variable "cloud_sql_mysql" {
         value = string
       })), [])
     }), null)
+
+    tag_bindings = optional(map(string), {})
   }))
 }
+

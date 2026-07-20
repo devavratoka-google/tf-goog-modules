@@ -29,3 +29,10 @@ resource "google_network_connectivity_policy_based_route" "this" {
 
   labels = module.label_governance.validated_labels
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//networkconnectivity.googleapis.com/projects/${var.project}/locations/global/policyBasedRoutes/${google_network_connectivity_policy_based_route.this.name}"
+  tag_value = each.value
+  location  = "global"
+}

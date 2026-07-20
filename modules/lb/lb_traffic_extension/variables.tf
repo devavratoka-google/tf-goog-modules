@@ -55,3 +55,10 @@ variable "labels" {
   type        = map(string)
   default     = {}
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the LB Traffic Extension, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

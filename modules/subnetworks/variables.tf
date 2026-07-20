@@ -96,3 +96,10 @@ variable "log_config" {
     filter_expr          = string      // Export filter used to define which VPC flow logs should be logged, as as CEL expression. See https://cloud.google.com/vpc/docs/flow-logs#filtering for details on how to format this field. The default value is 'true', which evaluates to include everything.
   })
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the subnetwork, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

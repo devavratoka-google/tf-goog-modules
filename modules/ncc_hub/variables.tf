@@ -41,3 +41,9 @@ variable "ncc_groups" {
   }))
   description = "A map of NCC groups to create."
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the NCC Hub, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

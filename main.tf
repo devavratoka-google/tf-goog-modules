@@ -18,7 +18,7 @@ module "networks" {
   bgp_best_path_selection_mode              = each.value.bgp_best_path_selection_mode
   bgp_always_compare_med                    = each.value.bgp_always_compare_med
   bgp_inter_region_cost                     = each.value.bgp_inter_region_cost
-
+  tag_bindings                              = try(each.value.tag_bindings, {})
 }
 
 module "subnetworks" {
@@ -45,7 +45,9 @@ module "subnetworks" {
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
   project                          = module.networks[each.value.network_name].network_project
+  tag_bindings                     = try(each.value.tag_bindings, {})
 }
+
 
 module "cloud_routers" {
 
@@ -74,6 +76,7 @@ module "cloud_routers" {
 
   // Router Peers  
   router_peers = each.value.router_peers
+  tag_bindings = try(each.value.tag_bindings, {})
 }
 
 module "cloud_nat" {
@@ -106,10 +109,12 @@ module "cloud_nat" {
   project                             = module.cloud_routers[each.value.router_name].router_project
   subnetwork                          = each.value.subnetwork
   # log_config                          = each.value.log_config
-  enable = each.value.enable
-  filter = each.value.filter
-  rules  = each.value.rules
+  enable       = each.value.enable
+  filter       = each.value.filter
+  rules        = each.value.rules
+  tag_bindings = try(each.value.tag_bindings, {})
 }
+
 
 module "static_routes" {
 

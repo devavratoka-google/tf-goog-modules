@@ -551,3 +551,9 @@ variable "network_attachment_uri" {
   default     = null
   description = "The self_link of the network attachment for outbound PSC connections."
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Cloud SQL instance, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

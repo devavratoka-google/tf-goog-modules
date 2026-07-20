@@ -119,3 +119,11 @@ resource "google_kms_crypto_key_iam_member" "additive" {
   role          = each.value.role
   member        = each.value.member
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//cloudkms.googleapis.com/${google_kms_key_ring.key_ring.id}"
+  tag_value = each.value
+  location  = var.location
+}
+

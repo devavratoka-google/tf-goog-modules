@@ -65,3 +65,9 @@ variable "service_directory_registrations" {
   })
   default = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Forwarding Rule, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

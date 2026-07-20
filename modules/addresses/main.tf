@@ -19,4 +19,11 @@ resource "google_compute_address" "this" {
   labels       = module.label_governance.validated_labels
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/addresses/${google_compute_address.this.name}"
+  tag_value = each.value
+}
+
 ################ End Compute Address ################
+

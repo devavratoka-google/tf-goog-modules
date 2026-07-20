@@ -29,3 +29,11 @@ resource "google_network_connectivity_group" "this" {
     }
   }
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//networkconnectivity.googleapis.com/projects/${var.project}/locations/global/hubs/${google_network_connectivity_hub.this.name}"
+  tag_value = each.value
+  location  = "global"
+}
+

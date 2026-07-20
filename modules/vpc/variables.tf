@@ -85,3 +85,10 @@ variable "bgp_inter_region_cost" {
   description = "Specifies the BGP inter-region cost mode. Valid values are `DEFAULT` or `ADD_COST_TO_MED`."
   default     = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the VPC network, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

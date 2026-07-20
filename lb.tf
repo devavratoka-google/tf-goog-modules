@@ -17,6 +17,7 @@ module "region_health_checks" {
   http2_health_check = each.value.http2_health_check
   ssl_health_check   = each.value.ssl_health_check
   grpc_health_check  = each.value.grpc_health_check
+  tag_bindings       = try(each.value.tag_bindings, {})
 }
 
 module "region_backend_services" {
@@ -34,8 +35,9 @@ module "region_backend_services" {
   health_checks                   = each.value.health_checks
   enable_cdn                      = each.value.enable_cdn
 
-  log_config = each.value.log_config
-  backends   = each.value.backends
+  log_config   = each.value.log_config
+  backends     = each.value.backends
+  tag_bindings = try(each.value.tag_bindings, {})
 }
 
 module "instance_groups" {
@@ -112,6 +114,7 @@ module "forwarding_rules" {
   labels                = each.value.labels
 
   service_directory_registrations = each.value.service_directory_registrations
+  tag_bindings                    = try(each.value.tag_bindings, {})
 }
 
 # 1. Generate a private key
@@ -168,4 +171,5 @@ module "lb_traffic_extensions" {
   forwarding_rules      = each.value.forwarding_rules
   labels                = each.value.labels
   extension_chains      = each.value.extension_chains
+  tag_bindings          = try(each.value.tag_bindings, {})
 }

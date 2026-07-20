@@ -93,3 +93,9 @@ variable "linked_router_appliance_instances" {
   }))
   description = "The URIs of linked Router appliance resources"
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the NCC Spoke, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

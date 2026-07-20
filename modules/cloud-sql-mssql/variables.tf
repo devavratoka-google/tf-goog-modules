@@ -395,3 +395,10 @@ variable "final_backup_config" {
   })
   default = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Cloud SQL instance, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

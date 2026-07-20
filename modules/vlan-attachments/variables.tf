@@ -94,6 +94,13 @@ variable "metadata" {
   default     = "INCLUDE_ALL_METADATA"
 }
 
+variable "tag_bindings" {
+  description = "Tag bindings for the VLAN Interconnect Attachment, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+
+
 # variable "flow_log_labels" {
 #   description = "Labels for this resource. These can only be added or modified by the setLabels method. Each label key/value pair must comply with RFC1035. Label values may be empty."
 #   type        = map(string)

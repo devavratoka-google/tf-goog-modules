@@ -105,3 +105,9 @@ variable "grpc_health_check" {
   })
   default = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Region Health Check, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

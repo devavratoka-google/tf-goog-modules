@@ -365,3 +365,10 @@ resource "null_resource" "module_depends_on" {
     value = length(var.module_depends_on)
   }
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//sqladmin.googleapis.com/projects/${var.project_id}/instances/${google_sql_database_instance.default.name}"
+  tag_value = each.value
+}
+

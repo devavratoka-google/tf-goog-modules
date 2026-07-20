@@ -20,6 +20,7 @@ variable "vpcs" {
     bgp_best_path_selection_mode              = optional(string, "LEGACY")
     bgp_always_compare_med                    = optional(bool, false)
     bgp_inter_region_cost                     = optional(string, null)
+    tag_bindings                              = optional(map(string), {})
   }))
 }
 
@@ -52,8 +53,10 @@ variable "subnetworks" {
 
     stack_type                       = optional(string, "IPV4_ONLY")
     send_secondary_ip_range_if_empty = optional(bool, false)
+    tag_bindings                     = optional(map(string), {})
   }))
 }
+
 
 variable "cloud_routers" {
   type = map(object({

@@ -63,3 +63,10 @@ variable "subscriptions" {
   }))
   default = {}
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Pub/Sub topic, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

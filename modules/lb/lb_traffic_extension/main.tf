@@ -38,3 +38,11 @@ resource "google_network_services_lb_traffic_extension" "this" {
     }
   }
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//networkservices.googleapis.com/projects/${google_network_services_lb_traffic_extension.this.project}/locations/${var.location}/lbTrafficExtensions/${google_network_services_lb_traffic_extension.this.name}"
+  tag_value = each.value
+  location  = var.location
+}
+

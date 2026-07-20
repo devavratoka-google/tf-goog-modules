@@ -2,6 +2,10 @@ env_project_id = "infra-proj-id"
 
 vpcs = {
   # "tf-vpc-01" : {
+  #   # Optional Resource Manager Tag Bindings: key => tag value id format
+  #   # tag_bindings = {
+  #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
+  #   # }
   # },
 }
 
@@ -12,7 +16,12 @@ subnetworks = {
   #   ip_cidr_range            = "192.168.100.0/24"
   #   purpose                  = "PRIVATE"
   #   private_ip_google_access = true
+  #   # Optional Resource Manager Tag Bindings: key => tag value id format
+  #   # tag_bindings = {
+  #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
+  #   # }
   #   log_config               = {}
+
   #   secondary_ip_range = {
   #     "pods" : {
   #       range_name    = "pods"

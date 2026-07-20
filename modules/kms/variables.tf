@@ -138,3 +138,10 @@ variable "iam_additive" {
   type        = map(map(list(string)))
   default     = {}
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the KMS key ring, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

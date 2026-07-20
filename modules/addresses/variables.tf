@@ -55,3 +55,9 @@ variable "labels" {
   description = "A map of labels to assign to the resource."
   default     = {}
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the compute address, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

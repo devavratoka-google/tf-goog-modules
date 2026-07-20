@@ -85,3 +85,10 @@ variable "container_spec" {
   description = "(Optional) Container specification for serving the model via Model Garden or custom image."
   default     = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Vertex AI Endpoint, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

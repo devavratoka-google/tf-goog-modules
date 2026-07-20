@@ -187,3 +187,10 @@ variable "members" {
     error_message = "The supported keys are readers and writers."
   }
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for this repository, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

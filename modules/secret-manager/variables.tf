@@ -42,3 +42,10 @@ variable "accessors" {
   type        = list(string)
   default     = []
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Secret Manager secret, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

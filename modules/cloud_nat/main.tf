@@ -58,4 +58,11 @@ resource "google_compute_router_nat" "this" {
   }
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/routers/${var.router}/nats/${google_compute_router_nat.this.name}"
+  tag_value = each.value
+}
+
 ################ End Cloud NAT ################
+

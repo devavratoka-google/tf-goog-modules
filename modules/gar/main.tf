@@ -226,3 +226,11 @@ resource "google_artifact_registry_repository_iam_member" "writers" {
     google_artifact_registry_repository.repo
   ]
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//artifactregistry.googleapis.com/projects/${var.project_id}/locations/${var.location}/repositories/${google_artifact_registry_repository.repo.repository_id}"
+  tag_value = each.value
+  location  = var.location
+}
+

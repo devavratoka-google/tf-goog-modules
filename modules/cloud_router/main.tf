@@ -103,4 +103,11 @@ resource "google_compute_router_peer" "this" {
   # import_policies = each.value.import_policies
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/routers/${google_compute_router.this.name}"
+  tag_value = each.value
+}
+
 ################ End Cloud Router Peers ################
+

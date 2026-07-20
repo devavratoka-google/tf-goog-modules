@@ -25,3 +25,10 @@ resource "google_network_security_firewall_endpoint_association" "this" {
   tls_inspection_policy = each.value.tls_inspection_policy
   disabled              = each.value.disabled
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//networksecurity.googleapis.com/${google_network_security_firewall_endpoint.this.id}"
+  tag_value = each.value
+  location  = var.location
+}

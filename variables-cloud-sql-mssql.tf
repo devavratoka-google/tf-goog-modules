@@ -136,5 +136,8 @@ variable "cloud_sql_mssql" {
       enabled        = optional(bool, false)
       retention_days = optional(number, 0)
     }), null)
+
+    tag_bindings = optional(map(string), {})
   }))
 }
+
