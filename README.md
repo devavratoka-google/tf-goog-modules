@@ -25,15 +25,15 @@ graph TD
 
 ## 2. Module Catalog
 
-The repository contains 36 submodules inside the [modules/](file:///Users/devavratoka/Documents/tf-goog-modules/modules) directory:
+The repository contains 38 submodules inside the [modules/](file:///Users/devavratoka/Documents/tf-goog-modules/modules) directory:
 
 * **Networking & Routing**: `vpc`, `subnetworks`, `cloud_router`, `cloud_nat`, `vpc_peering`, `static_routes`, `policy_based_routes`, `vlan-attachments`.
-* **Load Balancing (LB)**: Located under `modules/lb/` (`region_health_check`, `region_backend_service`, `umig`, `neg`, `http_routing`, `forwarding_rule`).
+* **Load Balancing (LB)**: Located under `modules/lb/` (`region_health_check`, `region_backend_service`, `umig`, `neg`, `http_routing`, `tcp_routing`, `forwarding_rule`).
 * **Security & NGFW**: `ngfw_endpoint`, `ngfw_hfw`, `ngfw_nwfw`, `vpc_firewall`, `secure_tags`.
 * **Databases & Storage**: `cloud-sql-mysql`, `cloud-sql-postgresql`, `cloud-sql-mssql`, `firestore`, `bigquery`, `gcs`.
 * **Application & Compute**: `cloud-run-v2`, `ilbanh` (Internal Load Balancing Active Network Appliance Clusters).
 * **Identity & Access Management (IAM)**: `iam-custom-role`, `iam-service-account`, `subnet_iam_binding`.
-* **Connectivity**: `psa`, `pscendpoints`, `ncc_hub`, `ncc_spoke`, `network_attachments`, `addresses`, `global_addresses`, `dns`, `dns_policy`, `kms`.
+* **Connectivity**: `psa`, `pscendpoints`, `service_directory`, `ncc_hub`, `ncc_spoke`, `network_attachments`, `addresses`, `global_addresses`, `dns`, `dns_policy`, `kms`.
 
 ---
 
@@ -103,9 +103,9 @@ Individual submodules in this repository support unit testing using the native *
 
 The following submodules currently have unit test coverage:
 * **Storage**: [gcs](file:///Users/devavratoka/Documents/tf-goog-modules/modules/gcs)
-* **Connectivity & Routing**: [ncc_spoke](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ncc_spoke), [pscendpoints](file:///Users/devavratoka/Documents/tf-goog-modules/modules/pscendpoints), [subnetworks](file:///Users/devavratoka/Documents/tf-goog-modules/modules/subnetworks), [vpc](file:///Users/devavratoka/Documents/tf-goog-modules/modules/vpc), [dns](file:///Users/devavratoka/Documents/tf-goog-modules/modules/dns)
+* **Connectivity & Routing**: [ncc_spoke](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ncc_spoke), [pscendpoints](file:///Users/devavratoka/Documents/tf-goog-modules/modules/pscendpoints), [service_directory](file:///Users/devavratoka/Documents/tf-goog-modules/modules/service_directory), [subnetworks](file:///Users/devavratoka/Documents/tf-goog-modules/modules/subnetworks), [vpc](file:///Users/devavratoka/Documents/tf-goog-modules/modules/vpc), [dns](file:///Users/devavratoka/Documents/tf-goog-modules/modules/dns)
 * **Security & Firewall**: [ngfw_hfw](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ngfw_hfw)
-* **Load Balancing**: [lb/region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service)
+* **Load Balancing**: [lb/region_backend_service](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/region_backend_service), [lb/tcp_routing](file:///Users/devavratoka/Documents/tf-goog-modules/modules/lb/tcp_routing)
 * **Databases**: [cloud-sql-postgresql](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud-sql-postgresql)
 * **Compute & Orchestration**: [cloud-run-v2](file:///Users/devavratoka/Documents/tf-goog-modules/modules/cloud-run-v2), [gkeautopilot](file:///Users/devavratoka/Documents/tf-goog-modules/modules/gkeautopilot)
 

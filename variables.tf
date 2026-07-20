@@ -350,6 +350,28 @@ variable "dns_record_sets" {
   }
 }
 
+variable "service_directories" {
+  description = "A map of Service Directory namespaces, services, and endpoints to create."
+  type = map(object({
+    project_id   = optional(string, null)
+    location     = string
+    namespace_id = optional(string, null)
+    labels       = optional(map(string), {})
+    services = optional(map(object({
+      metadata = optional(map(string), {})
+    })), {})
+    endpoints = optional(map(object({
+      service_id   = string
+      address      = string
+      port         = optional(number, 443)
+      network      = optional(string, null)
+      network_name = optional(string, null)
+      metadata     = optional(map(string), {})
+    })), {})
+  }))
+  default = {}
+}
+
 variable "addresses" {
   type = map(object({
     description     = optional(string, null)

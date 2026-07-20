@@ -89,12 +89,27 @@ module "http_routing" {
   path_rules       = each.value.path_rules
 }
 
+module "tcp_routing" {
+  source   = "./modules/lb/tcp_routing"
+  for_each = var.tcp_routing_configs
+  depends_on = [
+    module.region_backend_services
+  ]
+
+  name            = each.key
+  region          = each.value.region
+  description     = each.value.description
+  backend_service = each.value.backend_service
+  proxy_header    = each.value.proxy_header
+}
+
 module "forwarding_rules" {
   source   = "./modules/lb/forwarding_rule"
   for_each = var.forwarding_rules
   depends_on = [
     module.region_backend_services,
-    module.http_routing
+    module.http_routing,
+    module.tcp_routing
   ]
 
   name                  = each.key

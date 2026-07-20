@@ -61,3 +61,13 @@ output "pubsub_subscription_ids" {
   description = "A map of topic keys to maps of subscription keys to subscription resource IDs."
   value       = { for k, v in module.pubsub_topics : k => v.subscription_ids }
 }
+
+output "service_directory_namespace_ids" {
+  description = "A map of Service Directory namespace IDs created via root orchestration."
+  value       = { for k, v in module.service_directories : k => v.namespace_id }
+}
+
+output "service_directory_service_ids" {
+  description = "A map of created Service Directory service resource IDs per namespace key."
+  value       = { for k, v in module.service_directories : k => v.service_ids }
+}
