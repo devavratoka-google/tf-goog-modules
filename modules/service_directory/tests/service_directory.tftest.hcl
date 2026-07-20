@@ -13,6 +13,14 @@ variables {
   project_id   = "test-project-123"
   location     = "us-east4"
   namespace_id = "test-namespace"
+  labels = {
+    application_id      = "app-s3-federation"
+    environment         = "dev"
+    business_unit       = "data-analytics"
+    data_classification = "confidential"
+    owner_team          = "platform-engineering"
+    managed_by          = "terraform"
+  }
   services = {
     "s3-service" = {
       metadata = { environment = "test" }

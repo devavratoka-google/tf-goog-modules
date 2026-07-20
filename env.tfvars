@@ -294,8 +294,15 @@ dns_record_sets = {
 
 service_directories = {
   # "nyl-aws-namespace" : {
-  #   location     = "us-east4"
-  #   labels       = { environment = "production" }
+  #   location = "us-east4"
+  #   labels = {
+  #     application_id      = "lakehouse-federation-01"
+  #     environment         = "prod"
+  #     business_unit       = "data-engineering"
+  #     data_classification = "confidential"
+  #     owner_team          = "data-platform"
+  #     managed_by          = "terraform"
+  #   }
   #   services = {
   #     "nyl-aws-s3-service" = {
   #       metadata = { catalog_type = "databricks-unity" }

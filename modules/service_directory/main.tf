@@ -1,8 +1,14 @@
+# TODO: Update the source path below to the remote repository URL if hosting in a separate harness repository.
+module "label_governance" {
+  source = "../label-governance"
+  labels = coalesce(var.labels, {})
+}
+
 resource "google_service_directory_namespace" "namespace" {
   namespace_id = var.namespace_id
   location     = var.location
   project      = var.project_id
-  labels       = var.labels
+  labels       = module.label_governance.validated_labels
 }
 
 resource "google_service_directory_service" "service" {

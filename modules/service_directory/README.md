@@ -10,7 +10,14 @@ module "service_directory" {
   project_id   = "my-project-id"
   location     = "us-east4"
   namespace_id = "nyl-aws-namespace"
-  labels       = { environment = "production" }
+  labels = {
+    application_id      = "lakehouse-federation-01"
+    environment         = "prod"
+    business_unit       = "data-engineering"
+    data_classification = "confidential"
+    owner_team          = "data-platform"
+    managed_by          = "terraform"
+  }
 
   services = {
     "nyl-aws-s3-service" = {
