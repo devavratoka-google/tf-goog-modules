@@ -125,3 +125,10 @@ resource "google_firestore_field" "firestore_field" {
   }
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//firestore.googleapis.com/projects/${var.project_id}/databases/${local.database_name}"
+  tag_value = each.value
+}
+
+

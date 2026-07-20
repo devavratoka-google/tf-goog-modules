@@ -38,3 +38,9 @@ variable "fw_ep_associations" {
     disabled                   = bool
   }))
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Firewall Endpoint, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

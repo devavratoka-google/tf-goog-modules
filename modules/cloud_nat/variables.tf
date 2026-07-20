@@ -153,4 +153,11 @@ variable "project" {
   type        = string
 }
 
+variable "tag_bindings" {
+  description = "Tag bindings for the Cloud NAT Gateway, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+
 ################ End Variables for Cloud NAT ################
+

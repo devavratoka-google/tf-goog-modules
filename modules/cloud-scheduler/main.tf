@@ -54,3 +54,11 @@ resource "google_cloud_scheduler_job" "this" {
     }
   }
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//cloudscheduler.googleapis.com/projects/${var.project_id}/locations/${var.region}/jobs/${google_cloud_scheduler_job.this.name}"
+  tag_value = each.value
+  location  = var.region
+}
+

@@ -29,3 +29,9 @@ resource "google_compute_forwarding_rule" "this" {
     }
   }
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${google_compute_forwarding_rule.this.project}/regions/${var.region}/forwardingRules/${google_compute_forwarding_rule.this.name}"
+  tag_value = each.value
+}

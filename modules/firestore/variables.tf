@@ -210,3 +210,10 @@ variable "field_configuration" {
   }
 }
 
+variable "tag_bindings" {
+  description = "Tag bindings for the Firestore database, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+
+

@@ -213,5 +213,7 @@ variable "cloud_sql_postgresql" {
     psc_network_link        = optional(string, null)
     psc_subnetwork_link     = optional(string, null)
     network_attachment_link = optional(string, null)
+
+    tag_bindings = optional(map(string), {})
   }))
 }

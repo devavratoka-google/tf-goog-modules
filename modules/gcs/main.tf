@@ -187,3 +187,10 @@ module "encryption_key" {
   decrypters                     = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
   encrypters                     = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//storage.googleapis.com/projects/_/buckets/${google_storage_bucket.bucket.name}"
+  tag_value = each.value
+}
+

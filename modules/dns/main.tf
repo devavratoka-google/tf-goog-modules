@@ -77,3 +77,9 @@ resource "google_dns_managed_zone_iam_member" "this" {
   role         = "organizations/<org-id>/roles/serviceprojectdnsuser"
   member       = var.member
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//dns.googleapis.com/projects/${var.project}/managedZones/${google_dns_managed_zone.this.name}"
+  tag_value = each.value
+}

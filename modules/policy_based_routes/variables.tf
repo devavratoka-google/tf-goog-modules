@@ -59,3 +59,9 @@ variable "labels" {
   description = "Key-value map of resource labels."
   default     = {}
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Policy-based Route, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

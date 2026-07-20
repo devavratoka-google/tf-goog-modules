@@ -84,3 +84,10 @@ variable "retry_config" {
   })
   default = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Cloud Scheduler job, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

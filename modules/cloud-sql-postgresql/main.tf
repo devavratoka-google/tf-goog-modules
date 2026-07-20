@@ -413,3 +413,9 @@ resource "google_compute_forwarding_rule" "cloud_sql_psc" {
   load_balancing_scheme = ""
   labels                = module.label_governance.validated_labels
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//sqladmin.googleapis.com/projects/${var.project_id}/instances/${google_sql_database_instance.default.name}"
+  tag_value = each.value
+}

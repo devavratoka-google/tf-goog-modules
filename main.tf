@@ -18,7 +18,7 @@ module "networks" {
   bgp_best_path_selection_mode              = each.value.bgp_best_path_selection_mode
   bgp_always_compare_med                    = each.value.bgp_always_compare_med
   bgp_inter_region_cost                     = each.value.bgp_inter_region_cost
-
+  tag_bindings                              = try(each.value.tag_bindings, {})
 }
 
 module "subnetworks" {
@@ -45,7 +45,9 @@ module "subnetworks" {
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
   project                          = module.networks[each.value.network_name].network_project
+  tag_bindings                     = try(each.value.tag_bindings, {})
 }
+
 
 module "cloud_routers" {
 
@@ -74,6 +76,7 @@ module "cloud_routers" {
 
   // Router Peers  
   router_peers = each.value.router_peers
+  tag_bindings = try(each.value.tag_bindings, {})
 }
 
 module "cloud_nat" {
@@ -106,10 +109,12 @@ module "cloud_nat" {
   project                             = module.cloud_routers[each.value.router_name].router_project
   subnetwork                          = each.value.subnetwork
   # log_config                          = each.value.log_config
-  enable = each.value.enable
-  filter = each.value.filter
-  rules  = each.value.rules
+  enable       = each.value.enable
+  filter       = each.value.filter
+  rules        = each.value.rules
+  tag_bindings = try(each.value.tag_bindings, {})
 }
+
 
 module "static_routes" {
 
@@ -153,7 +158,9 @@ module "policy_based_routes" {
   ip_protocol           = each.value.ip_protocol
   protocol_version      = each.value.protocol_version
   labels                = each.value.labels
+  tag_bindings          = try(each.value.tag_bindings, {})
 }
+
 
 module "subnet_iam_bindings" {
 
@@ -193,6 +200,7 @@ module "vlan-attachments" {
   aggregation_interval     = each.value.aggregation_interval
   flow_sampling            = each.value.flow_sampling
   metadata                 = each.value.metadata
+  tag_bindings             = try(each.value.tag_bindings, {})
 }
 
 # resource "google_compute_shared_vpc_host_project" "this" {
@@ -219,10 +227,10 @@ module "ncc_hub" {
   labels          = each.value.labels
   preset_topology = each.value.preset_topology
   #  policy_mode = each.value.policy_mode
-  export_psc = each.value.export_psc
-  project    = var.env_project_id
-  ncc_groups = each.value.ncc_groups
-
+  export_psc   = each.value.export_psc
+  project      = var.env_project_id
+  ncc_groups   = each.value.ncc_groups
+  tag_bindings = try(each.value.tag_bindings, {})
 }
 
 module "ncc_spoke" {
@@ -244,6 +252,7 @@ module "ncc_spoke" {
   linked_vpc_network                = each.value.linked_vpc_network
   linked_producer_vpc_network       = each.value.linked_producer_vpc_network
   linked_router_appliance_instances = each.value.linked_router_appliance_instances
+  tag_bindings                      = try(each.value.tag_bindings, {})
 }
 
 module "dns_zones" {
@@ -263,7 +272,9 @@ module "dns_zones" {
   project           = coalesce(each.value.project, var.env_project_id)
   labels            = each.value.labels
   member            = each.value.member
+  tag_bindings      = try(each.value.tag_bindings, {})
 }
+
 
 
 module "dns_policies" {
@@ -309,6 +320,7 @@ module "addresses" {
   region       = each.value.region
   project      = coalesce(each.value.project, var.env_project_id)
   labels       = each.value.labels
+  tag_bindings = try(each.value.tag_bindings, {})
 }
 
 module "global_addresses" {
@@ -327,7 +339,7 @@ module "global_addresses" {
   purpose       = each.value.purpose
   network       = module.networks[each.value.network_name].network_self_link
   project       = module.networks[each.value.network_name].network_project
-
+  tag_bindings  = try(each.value.tag_bindings, {})
 }
 
 module "psa" {
@@ -360,7 +372,7 @@ module "ngfw_endpoints" {
   billing_project_id = each.value.billing_project_id
   labels             = each.value.labels
   fw_ep_associations = each.value.fw_ep_associations
-
+  tag_bindings       = try(each.value.tag_bindings, {})
 }
 
 module "hierarchical_fw_policy" {
@@ -446,6 +458,7 @@ module "network_attachments" {
   producer_reject_lists = each.value.producer_reject_lists
   region                = module.subnetworks[each.value.subnetwork_name[0]].subnets_region
   project               = module.subnetworks[each.value.subnetwork_name[0]].subnets_project
+  tag_bindings          = try(each.value.tag_bindings, {})
 }
 
 module "vpc_firewall_rules" {
@@ -481,7 +494,9 @@ module "pscendpoints" {
   forwarding_rule_name      = each.value.forwarding_rule_name
 
   service_attachment = each.value.service_attachment
+  tag_bindings       = try(each.value.tag_bindings, {})
 }
+
 
 module "gcs_buckets" {
 
@@ -532,6 +547,7 @@ module "firestore_databases" {
   backup_schedule_configuration     = each.value.backup_schedule_configuration
   composite_index_configuration     = each.value.composite_index_configuration
   field_configuration               = each.value.field_configuration
+  tag_bindings                      = try(each.value.tag_bindings, {})
 }
 
 module "bigquery_datasets" {
@@ -640,6 +656,7 @@ module "cloud_sql_postgresql" {
   psc_network_link       = each.value.psc_network_link != null ? try(module.networks[each.value.psc_network_link].network_self_link, each.value.psc_network_link) : null
   psc_subnetwork_link    = each.value.psc_subnetwork_link != null ? try(module.subnetworks[each.value.psc_subnetwork_link].subnets_self_link, each.value.psc_subnetwork_link) : null
   network_attachment_uri = each.value.network_attachment_link != null ? try(module.network_attachments[each.value.network_attachment_link].id, each.value.network_attachment_link) : null
+  tag_bindings           = try(each.value.tag_bindings, {})
 }
 
 module "cloud_sql_mysql" {
@@ -718,6 +735,7 @@ module "cloud_sql_mysql" {
   enable_dataplex_integration      = each.value.enable_dataplex_integration
   database_integration_roles       = each.value.database_integration_roles
   connection_pool_config           = each.value.connection_pool_config
+  tag_bindings                     = try(each.value.tag_bindings, {})
 }
 
 module "cloud_sql_mssql" {
@@ -781,6 +799,7 @@ module "cloud_sql_mssql" {
   enable_dataplex_integration = each.value.enable_dataplex_integration
   insights_config             = each.value.insights_config
   final_backup_config         = each.value.final_backup_config
+  tag_bindings                = try(each.value.tag_bindings, {})
 }
 
 module "cloud_run_v2" {
@@ -882,6 +901,7 @@ module "vertex_ai_model_garden" {
   labels                = each.value.labels
   network               = each.value.network != null ? try(module.networks[each.value.network].network_self_link, each.value.network) : null
   kms_key_name          = each.value.kms_key_name
+  tag_bindings          = try(each.value.tag_bindings, {})
 }
 
 module "pubsub_topics" {
@@ -894,4 +914,6 @@ module "pubsub_topics" {
   message_retention_duration = each.value.message_retention_duration
   topic_iam                  = each.value.topic_iam
   subscriptions              = each.value.subscriptions
+  tag_bindings               = try(each.value.tag_bindings, {})
 }
+

@@ -133,3 +133,10 @@ resource "google_compute_service_attachment" "this" {
     }
   }
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/forwardingRules/${google_compute_forwarding_rule.this[0].name}"
+  tag_value = each.value
+}
+

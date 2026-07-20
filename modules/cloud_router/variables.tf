@@ -128,4 +128,10 @@ variable "router_peers" {
   }))
 }
 
+variable "tag_bindings" {
+  description = "Tag bindings for the Cloud Router, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+
 ################ End Variables for Cloud Router Peers ################

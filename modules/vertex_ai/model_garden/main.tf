@@ -20,3 +20,11 @@ resource "google_vertex_ai_endpoint" "this" {
     }
   }
 }
+
+resource "google_tags_location_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//aiplatform.googleapis.com/projects/${var.project_id}/locations/${var.region}/endpoints/${google_vertex_ai_endpoint.this.name}"
+  tag_value = each.value
+  location  = var.region
+}
+

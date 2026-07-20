@@ -72,3 +72,9 @@ variable "member" {
   description = "The member to add to the IAM policy"
   default     = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the DNS managed zone, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

@@ -63,3 +63,9 @@ variable "backends" {
   }))
   default = []
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the Region Backend Service, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

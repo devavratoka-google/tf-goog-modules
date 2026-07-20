@@ -41,4 +41,10 @@ resource "google_compute_subnetwork" "this" {
   }
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/subnetworks/${google_compute_subnetwork.this.name}"
+  tag_value = each.value
+}
+
 ################ End Subnetworks ################

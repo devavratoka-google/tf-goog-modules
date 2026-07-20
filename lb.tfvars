@@ -373,8 +373,13 @@ forwarding_rules = {
     port_range            = "443"
     target                = "projects/<proj-id>/regions/us-central1/targetHttpsProxies/my-regional-http-routing-proxy"
     //target = "projects/<proj-id>/regions/us-central1/targetHttpProxies/my-regional-http-routing-proxy"
+    # Optional Resource Manager Tag Bindings: key => tag value id format
+    # tag_bindings = {
+    #   "tagKeys/281480126525795" = "tagValues/281477869187443"
+    # }
   }
 }
+
 
 lb_traffic_extensions = {
   "dev-flex-gateway-modelarmor-extension" = {

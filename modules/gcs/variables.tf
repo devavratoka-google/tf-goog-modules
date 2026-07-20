@@ -272,3 +272,10 @@ EOT
   })
   default = null
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the storage bucket, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}
+

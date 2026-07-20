@@ -31,3 +31,9 @@ resource "google_network_management_vpc_flow_logs_config" "this" {
   metadata                = var.metadata
   labels                  = module.label_governance.validated_labels
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/regions/${var.region}/interconnectAttachments/${google_compute_interconnect_attachment.this.name}"
+  tag_value = each.value
+}

@@ -87,3 +87,9 @@ resource "google_compute_region_health_check" "this" {
     }
   }
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${google_compute_region_health_check.this.project}/regions/${var.region}/healthChecks/${google_compute_region_health_check.this.name}"
+  tag_value = each.value
+}

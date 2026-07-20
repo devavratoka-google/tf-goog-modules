@@ -18,4 +18,10 @@ resource "google_compute_network" "this" {
   bgp_inter_region_cost                     = var.bgp_best_path_selection_mode == "STANDARD" ? var.bgp_inter_region_cost : null
 }
 
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project_id}/global/networks/${google_compute_network.this.name}"
+  tag_value = each.value
+}
+
 ################ End VPCs ################

@@ -48,3 +48,9 @@ variable "address_type" {
   type        = string
   description = "The type of the address to reserve. Default value is EXTERNAL. Possible values are: EXTERNAL, INTERNAL."
 }
+
+variable "tag_bindings" {
+  description = "Tag bindings for the global address, in key => tag value id format."
+  type        = map(string)
+  default     = {}
+}

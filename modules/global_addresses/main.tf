@@ -16,3 +16,9 @@ resource "google_compute_global_address" "this" {
   network       = var.network
   project       = var.project
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${var.project}/global/addresses/${google_compute_global_address.this.name}"
+  tag_value = each.value
+}

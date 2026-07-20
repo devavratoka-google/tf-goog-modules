@@ -54,3 +54,10 @@ resource "google_secret_manager_secret_iam_member" "accessors" {
   role      = "roles/secretmanager.secretAccessor"
   member    = each.value
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//secretmanager.googleapis.com/projects/${var.project_id}/secrets/${google_secret_manager_secret.this.secret_id}"
+  tag_value = each.value
+}
+

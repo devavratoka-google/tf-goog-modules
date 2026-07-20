@@ -36,3 +36,9 @@ resource "google_compute_region_backend_service" "this" {
     }
   }
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//compute.googleapis.com/projects/${google_compute_region_backend_service.this.project}/regions/${var.region}/backendServices/${google_compute_region_backend_service.this.name}"
+  tag_value = each.value
+}

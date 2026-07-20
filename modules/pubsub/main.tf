@@ -105,3 +105,10 @@ resource "google_pubsub_subscription_iam_member" "this" {
   role         = each.value.role
   member       = each.value.member
 }
+
+resource "google_tags_tag_binding" "binding" {
+  for_each  = var.tag_bindings
+  parent    = "//pubsub.googleapis.com/projects/${var.project_id}/topics/${google_pubsub_topic.this.name}"
+  tag_value = each.value
+}
+
