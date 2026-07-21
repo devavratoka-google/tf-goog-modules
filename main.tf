@@ -320,7 +320,7 @@ module "service_directories" {
       service_id = ep.service_id
       address    = ep.address
       port       = ep.port
-      network    = ep.network_name != null ? module.networks[ep.network_name].network_self_link : ep.network
+      network    = ep.network_name != null ? "projects/${module.networks[ep.network_name].network_project}/locations/global/networks/${ep.network_name}" : ep.network
       metadata   = ep.metadata
     }
   }
