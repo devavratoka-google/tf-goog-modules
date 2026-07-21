@@ -17,7 +17,7 @@ subnetworks = {
   #   purpose                  = "PRIVATE"
   #   private_ip_google_access = true
   #   # Optional Resource Manager Tag Bindings: key => tag value id format
-  #   # tag_bindings = {
+  #   # resource_manager_tags = {
   #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
   #   # }
   #   log_config               = {}

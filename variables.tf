@@ -120,6 +120,7 @@ variable "cloud_routers" {
         key  = string
       })), {})
     }))
+    tag_bindings = optional(map(string), {})
   }))
 }
 
@@ -166,6 +167,7 @@ variable "cloud_nats" {
         source_nat_drain_ips  = list(string)
       })
     })), {})
+    tag_bindings = optional(map(string), {})
   }))
 }
 
@@ -197,6 +199,7 @@ variable "policy_based_routes" {
     dest_range            = string
     ip_protocol           = optional(string, "ALL")
     protocol_version      = optional(string, "IPV4")
+    tag_bindings          = optional(map(string), {})
   }))
 }
 
@@ -215,6 +218,7 @@ variable "vlan_attachments" {
     aggregation_interval     = optional(string, "INTERVAL_10_MIN")
     flow_sampling            = optional(number, 1.0)
     metadata                 = optional(string, "INCLUDE_ALL_METADATA")
+    tag_bindings             = optional(map(string), {})
   }))
 }
 
@@ -241,8 +245,10 @@ variable "ncc_hubs" {
       description          = string
       auto_accept_projects = list(string)
     })), {})
+    tag_bindings = optional(map(string), {})
   }))
 }
+
 
 variable "ncc_spokes" {
   type = map(object({
@@ -292,6 +298,7 @@ variable "ncc_spokes" {
         ip_address      = string
       }))
     })), {})
+    tag_bindings = optional(map(string), {})
   }))
 }
 
@@ -316,9 +323,10 @@ variable "dns_zones" {
       ttl     = number
       rrdatas = list(string)
     })), {})
-    project = optional(string, null)
-    labels  = optional(map(string), {})
-    member  = optional(string, null)
+    project      = optional(string, null)
+    labels       = optional(map(string), {})
+    member       = optional(string, null)
+    tag_bindings = optional(map(string), {})
   }))
   default = {}
 }
@@ -383,6 +391,7 @@ variable "addresses" {
     region          = optional(string, null)
     project         = optional(string, null)
     labels          = optional(map(string), {})
+    tag_bindings    = optional(map(string), {})
   }))
   default = {}
 
@@ -413,6 +422,7 @@ variable "global_addresses" {
     address_type  = optional(string, "INTERNAL")
     purpose       = optional(string, "PRIVATE_SERVICE_CONNECT")
     network_name  = string
+    tag_bindings  = optional(map(string), {})
   }))
 }
 
@@ -438,8 +448,10 @@ variable "firewall_endpoints" {
       tls_inspection_policy      = optional(string, null)
       disabled                   = optional(bool, false)
     }))
+    tag_bindings = optional(map(string), {})
   }))
 }
+
 
 variable "hierarchical_fw_policies" {
   type = map(object({
@@ -564,6 +576,7 @@ variable "network_attachments" {
     subnetwork_name       = list(string)
     producer_accept_lists = optional(list(string), [])
     producer_reject_lists = optional(list(string), [])
+    tag_bindings          = optional(map(string), {})
   }))
 }
 
@@ -631,10 +644,12 @@ variable "pscendpoints" {
       service                  = optional(string, null)
       service_directory_region = optional(string, null)
     }), null)
+    tag_bindings = optional(map(string), {})
   }))
   default     = {}
   description = "Map of PSC Endpoints configurations."
 }
+
 
 variable "gcs_buckets" {
   type = map(object({
@@ -765,10 +780,12 @@ variable "firestore_databases" {
       descending_index_query_scope = optional(set(string), [])
       array_index_query_scope      = optional(set(string), [])
     })), [])
+    tag_bindings = optional(map(string), {})
   }))
   default     = {}
   description = "Map of Firestore database configurations. Key is used as the database_id. Interface follows GoogleCloudPlatform/firestore/google."
 }
+
 
 variable "cloud_run_v2" {
   type = map(object({
@@ -1066,6 +1083,7 @@ variable "vertex_ai_endpoints" {
         value = string
       })), [])
     }))
+    tag_bindings = optional(map(string), {})
   }))
   default     = {}
   description = "Map of Vertex AI Endpoint and Model Garden foundation model configurations."
@@ -1106,6 +1124,8 @@ variable "pubsub_topics" {
       }), null)
       iam = optional(map(list(string)), {})
     })), {})
+    tag_bindings = optional(map(string), {})
   }))
   default = {}
 }
+
