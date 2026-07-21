@@ -20,7 +20,7 @@ variable "vpcs" {
     bgp_best_path_selection_mode              = optional(string, "LEGACY")
     bgp_always_compare_med                    = optional(bool, false)
     bgp_inter_region_cost                     = optional(string, null)
-    tag_bindings                              = optional(map(string), {})
+    resource_manager_tags                     = optional(map(string), null)
   }))
 }
 
@@ -53,7 +53,7 @@ variable "subnetworks" {
 
     stack_type                       = optional(string, "IPV4_ONLY")
     send_secondary_ip_range_if_empty = optional(bool, false)
-    tag_bindings                     = optional(map(string), {})
+    resource_manager_tags            = optional(map(string), null)
   }))
 }
 
@@ -356,6 +356,28 @@ variable "dns_record_sets" {
     condition     = alltrue([for r in var.dns_record_sets : contains(["A", "AAAA", "CNAME"], r.type)])
     error_message = "Only A, AAAA, and CNAME record types are allowed in DNS record sets."
   }
+}
+
+variable "service_directories" {
+  description = "A map of Service Directory namespaces, services, and endpoints to create."
+  type = map(object({
+    project_id   = optional(string, null)
+    location     = string
+    namespace_id = optional(string, null)
+    labels       = optional(map(string), {})
+    services = optional(map(object({
+      metadata = optional(map(string), {})
+    })), {})
+    endpoints = optional(map(object({
+      service_id   = string
+      address      = string
+      port         = optional(number, 443)
+      network      = optional(string, null)
+      network_name = optional(string, null)
+      metadata     = optional(map(string), {})
+    })), {})
+  }))
+  default = {}
 }
 
 variable "addresses" {

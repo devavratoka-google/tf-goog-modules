@@ -18,7 +18,7 @@ module "networks" {
   bgp_best_path_selection_mode              = each.value.bgp_best_path_selection_mode
   bgp_always_compare_med                    = each.value.bgp_always_compare_med
   bgp_inter_region_cost                     = each.value.bgp_inter_region_cost
-  tag_bindings                              = try(each.value.tag_bindings, {})
+  resource_manager_tags                     = each.value.resource_manager_tags
 }
 
 module "subnetworks" {
@@ -45,7 +45,7 @@ module "subnetworks" {
   secondary_ip_range               = each.value.secondary_ip_range
   log_config                       = each.value.log_config
   project                          = module.networks[each.value.network_name].network_project
-  tag_bindings                     = try(each.value.tag_bindings, {})
+  resource_manager_tags            = each.value.resource_manager_tags
 }
 
 
@@ -302,6 +302,28 @@ module "dns_record_sets" {
   type         = each.value.type
   ttl          = each.value.ttl
   rrdatas      = each.value.rrdatas
+}
+
+module "service_directories" {
+  depends_on = [module.networks]
+
+  source   = "./modules/service_directory"
+  for_each = var.service_directories
+
+  project_id   = coalesce(each.value.project_id, var.env_project_id)
+  location     = each.value.location
+  namespace_id = coalesce(each.value.namespace_id, each.key)
+  labels       = each.value.labels
+  services     = each.value.services
+  endpoints = {
+    for k, ep in each.value.endpoints : k => {
+      service_id = ep.service_id
+      address    = ep.address
+      port       = ep.port
+      network    = ep.network_name != null ? "projects/${module.networks[ep.network_name].network_project}/locations/global/networks/${ep.network_name}" : ep.network
+      metadata   = ep.metadata
+    }
+  }
 }
 
 module "addresses" {

@@ -16,12 +16,12 @@ resource "google_compute_network" "this" {
   bgp_best_path_selection_mode              = var.bgp_best_path_selection_mode
   bgp_always_compare_med                    = var.bgp_best_path_selection_mode == "STANDARD" ? var.bgp_always_compare_med : null
   bgp_inter_region_cost                     = var.bgp_best_path_selection_mode == "STANDARD" ? var.bgp_inter_region_cost : null
-}
-
-resource "google_tags_tag_binding" "binding" {
-  for_each  = var.tag_bindings
-  parent    = "//compute.googleapis.com/projects/${var.project_id}/global/networks/${google_compute_network.this.name}"
-  tag_value = each.value
+  dynamic "params" {
+    for_each = var.resource_manager_tags != null ? (length(var.resource_manager_tags) > 0 ? [1] : []) : []
+    content {
+      resource_manager_tags = var.resource_manager_tags
+    }
+  }
 }
 
 ################ End VPCs ################

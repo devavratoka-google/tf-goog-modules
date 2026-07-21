@@ -31,9 +31,9 @@ variable "default_port" {
 # ... (Keep existing variables) ...
 
 variable "endpoints" {
-  description = "A map of endpoints to attach to a Zonal NEG. Ignored for Serverless NEGs."
+  description = "A map of endpoints to attach to a Zonal NEG. Ignored for Serverless NEGs. For Hybrid NEGs (NON_GCP_PRIVATE_IP_PORT), instance can be omitted."
   type = map(object({
-    instance   = string
+    instance   = optional(string, null)
     ip_address = string
     port       = number
   }))

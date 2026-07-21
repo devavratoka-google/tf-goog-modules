@@ -153,10 +153,21 @@ variable "negs" {
     }))
 
     endpoints = optional(map(object({
-      instance   = string
+      instance   = optional(string, null)
       ip_address = string
       port       = number
     })), {})
+  }))
+  default = {}
+}
+
+variable "tcp_routing_configs" {
+  description = "A map of regional target TCP proxy configurations to create."
+  type = map(object({
+    region          = string
+    description     = optional(string)
+    backend_service = string
+    proxy_header    = optional(string)
   }))
   default = {}
 }

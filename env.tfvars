@@ -3,9 +3,9 @@ env_project_id = "infra-proj-id"
 vpcs = {
   # "tf-vpc-01" : {
   #   # Optional Resource Manager Tag Bindings: key => tag value id format
-  #   # tag_bindings = {
-  #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
-  #   # }
+  #   resource_manager_tags = {
+  #     "tagKeys/281484934839792" = "tagValues/281481636069700"
+  #   }
   # },
 }
 
@@ -17,7 +17,7 @@ subnetworks = {
   #   purpose                  = "PRIVATE"
   #   private_ip_google_access = true
   #   # Optional Resource Manager Tag Bindings: key => tag value id format
-  #   # tag_bindings = {
+  #   # resource_manager_tags = {
   #   #   "tagKeys/281480126525795" = "tagValues/281477869187443"
   #   # }
   #   log_config               = {}
@@ -289,6 +289,33 @@ dns_record_sets = {
   #   type         = "A"
   #   ttl          = 300
   #   rrdatas      = ["10.100.1.10"]
+  # }
+}
+
+service_directories = {
+  # "nyl-aws-namespace" : {
+  #   location = "us-east4"
+  #   labels = {
+  #     application_id      = "lakehouse-federation-01"
+  #     environment         = "prod"
+  #     business_unit       = "data-engineering"
+  #     data_classification = "confidential"
+  #     owner_team          = "data-platform"
+  #     managed_by          = "terraform"
+  #   }
+  #   services = {
+  #     "nyl-aws-s3-service" = {
+  #       metadata = { catalog_type = "databricks-unity" }
+  #     }
+  #   }
+  #   endpoints = {
+  #     "nyl-s3-private-lb-endpoint" = {
+  #       service_id   = "nyl-aws-s3-service"
+  #       address      = "10.100.1.50" # ILB Forwarding Rule IP
+  #       port         = 443
+  #       network_name = "tf-vpc-01"   # References the VPC network managed by root orchestration
+  #     }
+  #   }
   # }
 }
 

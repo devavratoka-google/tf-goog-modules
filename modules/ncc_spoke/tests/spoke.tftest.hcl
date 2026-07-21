@@ -80,4 +80,14 @@ run "verify_spoke_with_vpc_network" {
     condition     = length(google_network_connectivity_spoke.this.linked_vpc_network) == 1
     error_message = "Expected one linked VPC network connection."
   }
+
+  assert {
+    condition     = google_network_connectivity_spoke.this.linked_vpc_network[0].uri == "projects/test-project-123/global/networks/test-vpc"
+    error_message = "Linked VPC network URI did not match input."
+  }
+
+  assert {
+    condition     = google_network_connectivity_spoke.this.linked_vpc_network[0].exclude_export_ranges[0] == "10.0.0.0/8"
+    error_message = "Linked VPC network exclude_export_ranges did not match input."
+  }
 }
