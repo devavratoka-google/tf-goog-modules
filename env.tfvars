@@ -233,12 +233,12 @@ ncc_spokes = {
 }
 
 dns_zones = {
-  "ny1360-data" : {
-    dns_name    = "ny1360-data.dev.gcpinternal.newyorklife.com."
-    description = "Private zone for ny1360-data.dev.gcpinternal.newyorklife.com"
+  "cxapp-data" : {
+    dns_name    = "cxapp-data.dev.gcpinternal.newyorklife.com."
+    description = "Private zone for cxapp-data.dev.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
-    project     = "nyl-pr-ny1360-data-dev-01"
+    project     = "cx-pr-cxapp-data-dev-01"
     member      = "serviceAccount:my-service-account@my-project.iam.gserviceaccount.com"
     record_sets = {}
   },
@@ -293,7 +293,7 @@ dns_record_sets = {
 }
 
 service_directories = {
-  # "nyl-aws-namespace" : {
+  # "cx-aws-namespace" : {
   #   location = "us-east4"
   #   labels = {
   #     application_id      = "lakehouse-federation-01"
@@ -304,13 +304,13 @@ service_directories = {
   #     managed_by          = "terraform"
   #   }
   #   services = {
-  #     "nyl-aws-s3-service" = {
+  #     "cx-aws-s3-service" = {
   #       metadata = { catalog_type = "databricks-unity" }
   #     }
   #   }
   #   endpoints = {
-  #     "nyl-s3-private-lb-endpoint" = {
-  #       service_id   = "nyl-aws-s3-service"
+  #     "cx-s3-private-lb-endpoint" = {
+  #       service_id   = "cx-aws-s3-service"
   #       address      = "10.100.1.50" # ILB Forwarding Rule IP
   #       port         = 443
   #       network_name = "tf-vpc-01"   # References the VPC network managed by root orchestration
@@ -717,7 +717,7 @@ bigquery_datasets = {
 
 gcs_buckets = {
   # "my-app-data-bucket" = {
-  #   project_id               = "nyl01-iac-deploy"
+  #   project_id               = "cx01-iac-deploy"
   #   location                 = "us-east4"
   #   force_destroy            = false
   #   storage_class            = "STANDARD"
@@ -728,7 +728,7 @@ gcs_buckets = {
   #   labels = {
   #     application_id      = "app-123"
   #     environment         = "dev"
-  #     business_unit       = "nyl"
+  #     business_unit       = "cx"
   #     data_classification = "confidential"
   #     owner_team          = "devops"
   #     managed_by          = "terraform"

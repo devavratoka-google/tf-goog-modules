@@ -9,7 +9,7 @@ module "service_directory" {
   source       = "./modules/service_directory"
   project_id   = "my-project-id"
   location     = "us-east4"
-  namespace_id = "nyl-aws-namespace"
+  namespace_id = "cx-aws-namespace"
   labels = {
     application_id      = "lakehouse-federation-01"
     environment         = "prod"
@@ -20,14 +20,14 @@ module "service_directory" {
   }
 
   services = {
-    "nyl-aws-s3-service" = {
+    "cx-aws-s3-service" = {
       metadata = { catalog_type = "databricks-unity" }
     }
   }
 
   endpoints = {
-    "nyl-s3-private-lb-endpoint" = {
-      service_id = "nyl-aws-s3-service"
+    "cx-s3-private-lb-endpoint" = {
+      service_id = "cx-aws-s3-service"
       address    = "10.100.1.50"
       port       = 443
     }

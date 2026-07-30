@@ -3,21 +3,21 @@
 name: "compliance_tier"
 description: "Data sensitivity and compliance classification tag key"
 id: "123456789012/compliance_tier"
-network: "projects/nyl-vpc-host-01/global/networks/vpc-prod"
+network: "projects/cx-vpc-host-01/global/networks/vpc-prod"
 iam:
   roles/resourcemanager.tagAdmin:
-    - "group:gcp-security-admins@nyl.com"
+    - "group:gcp-security-admins@cx.com"
 
 iam_bindings:
   tag_viewer_binding:
     role: "roles/resourcemanager.tagViewer"
     members:
-      - "group:gcp-devops@nyl.com"
+      - "group:gcp-devops@cx.com"
 
 iam_bindings_additive:
   additive_tag_user:
     role: "roles/resourcemanager.tagUser"
-    member: "serviceAccount:deploy-sa@nyl.iam.gserviceaccount.com"
+    member: "serviceAccount:deploy-sa@cx.iam.gserviceaccount.com"
 
 values:
   pci:
@@ -26,12 +26,12 @@ values:
     id: "tagValues/11111111"
     iam:
       roles/resourcemanager.tagUser:
-        - "group:gcp-secops-admins@nyl.com"
+        - "group:gcp-secops-admins@cx.com"
     iam_bindings:
       value_viewer:
         role: "roles/resourcemanager.tagViewer"
         members:
-          - "group:gcp-support@nyl.com"
+          - "group:gcp-support@cx.com"
   hipaa:
     name: "hipaa"
     description: "HIPAA Protected Health Information Scope"

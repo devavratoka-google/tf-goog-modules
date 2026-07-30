@@ -3,16 +3,16 @@ import sys
 import re
 
 def parse_project(project_name):
-    # Regex pattern to match: nyl-<env>-<function>-<sdlc>-<suffix>
+    # Regex pattern to match: cx-<env>-<function>-<sdlc>-<suffix>
     # <env>: pr or np
     # <sdlc>: test, dev, qa, stg, prd
     # <suffix>: \d{2}
-    pattern = r"^nyl-(?:pr|np)-(?P<function>.+)-(?P<sdlc>test|dev|qa|stg|prd)-\d{2}$"
+    pattern = r"^cx-(?:pr|np)-(?P<function>.+)-(?P<sdlc>test|dev|qa|stg|prd)-\d{2}$"
     match = re.match(pattern, project_name)
     if not match:
         raise ValueError(
             f"Project name '{project_name}' does not match the expected format: "
-            "nyl-<env>-<function>-<sdlc>-<suffix> (e.g., nyl-pr-nyl360-data-dev-01)"
+            "cx-<env>-<function>-<sdlc>-<suffix> (e.g., cx-pr-cxapp-data-dev-01)"
         )
     return match.group("function"), match.group("sdlc")
 
@@ -35,23 +35,23 @@ def generate_tfvars(project_names):
   }},'''
         zones_content.append(private_zone)
 
-        # 2. Peering DNS managed zone in nyl-pr-ssvcs-transit-nw-01
+        # 2. Peering DNS managed zone in cx-pr-ssvcs-transit-nw-01
         peering_zone = f'''  "peering-{function_name}-{sdlc}-gcpinternal-newyorklife-com" : {{
     dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
     description = "DNS Peering zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
-    project     = "nyl-pr-ssvcs-transit-nw-01"
+    project     = "cx-pr-ssvcs-transit-nw-01"
     peering_config = {{
-      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-{sdlc}-01/global/networks/vpc-name"
+      target_network = "https://www.googleapis.com/compute/v1/projects/cx-pr-infra-nw-{sdlc}-01/global/networks/vpc-name"
     }}
   }},'''
         zones_content.append(peering_zone)
         
     inner_content = "\n".join(zones_content)
     tfvars = f'''# NOTE:
-# - Private zone tfvars belong in the appropriate <sdlc>.tfvars in the nyl-gcp-prod-network-iac repo.
-# - Peering zone tfvars belong in the appropriate <sdlc>.tfvars in the nyl-gcp-transit-network-iac repo.
+# - Private zone tfvars belong in the appropriate <sdlc>.tfvars in the cx-gcp-prod-network-iac repo.
+# - Peering zone tfvars belong in the appropriate <sdlc>.tfvars in the cx-gcp-transit-network-iac repo.
 
 dns_zones = {{\n{inner_content}\n}}'''
     return tfvars

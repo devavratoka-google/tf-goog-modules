@@ -19,16 +19,16 @@ asset_feeds:
       - "compute.googleapis.com/Instance"
     feed_output_config:
       pubsub_destination:
-        topic: "projects/nyl-sample-all/topics/folder-feed-topic"
+        topic: "projects/cx-sample-all/topics/folder-feed-topic"
     condition:
       expression: "resource.type == 'compute.googleapis.com/Instance'"
       title: "Folder level compute monitoring"
 
 automation:
   prefix: "aut"
-  project: "projects/nyl-automation-01"
+  project: "projects/cx-automation-01"
   bucket:
-    name: "nyl-folder-state-bucket"
+    name: "cx-folder-state-bucket"
     description: "Folder state store"
     force_destroy: false
     storage_class: "STANDARD"
@@ -36,32 +36,32 @@ automation:
     versioning: true
 
 autokey_config:
-  project: "projects/nyl-kms-autokey-01"
+  project: "projects/cx-kms-autokey-01"
 
 billing_budgets:
   - "folder-budget-01"
 
 contacts:
   SECURITY:
-    - "security@nyl.com"
+    - "security@cx.com"
 
 data_access_logs:
   allServices:
     ADMIN_READ:
       exempted_members:
-        - "group:gcp-security-admins@nyl.com"
+        - "group:gcp-security-admins@cx.com"
 
 firewall_policy:
   name: "folder-hierarchical-fw-policy"
   policy: "locations/global/firewallPolicies/1122334455"
 
 logging:
-  kms_key_name: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+  kms_key_name: "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
   storage_location: "us-east4"
   sinks:
     folder-audit-sink:
       description: "Folder hierarchical log export"
-      destination: "bigquery.googleapis.com/projects/nyl-sam/datasets/audit_logs"
+      destination: "bigquery.googleapis.com/projects/cx-sam/datasets/audit_logs"
       filter: "severity >= NOTICE"
       type: "bigquery"
 
@@ -72,25 +72,25 @@ factories_config:
 
 iam:
   roles/viewer:
-    - "group:gcp-devops@nyl.com"
+    - "group:gcp-devops@cx.com"
 
 iam_bindings:
   folder_admin_binding:
     role: "roles/resourcemanager.folderViewer"
     members:
-      - "group:gcp-security-admins@nyl.com"
+      - "group:gcp-security-admins@cx.com"
 
 iam_bindings_additive:
   additive_folder_viewer:
     role: "roles/resourcemanager.folderViewer"
-    member: "serviceAccount:folder-scanner@nyl.iam.gserviceaccount.com"
+    member: "serviceAccount:folder-scanner@cx.iam.gserviceaccount.com"
 
 iam_by_principals:
-  "group:gcp-security-admins@nyl.com":
+  "group:gcp-security-admins@cx.com":
     - "roles/resourcemanager.folderAdmin"
 
 iam_by_principals_conditional:
-  "group:gcp-devops@nyl.com":
+  "group:gcp-devops@cx.com":
     condition:
       expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
       title: "Temporary Folder Admin"
@@ -107,14 +107,14 @@ pam_entitlements:
   folder-pam-entitlement:
     max_request_duration: "3600s"
     eligible_users:
-      - "group:gcp-devops@nyl.com"
+      - "group:gcp-devops@cx.com"
     privileged_access:
       - role: "roles/resourcemanager.folderAdmin"
     manual_approvals:
       require_approver_justification: true
       steps:
         - approvers:
-            - "group:gcp-security-admins@nyl.com"
+            - "group:gcp-security-admins@cx.com"
           approvals_needed: 1
 
 assured_workload_config:

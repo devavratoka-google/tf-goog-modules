@@ -3,14 +3,14 @@
 parent: "$folder_ids:sample-folder"
 name: "sample-project-all"
 descriptive_name: "Comprehensive Sample Project Demonstrating All Available Options"
-prefix: "nyl-sam"
+prefix: "cx-sam"
 billing_account: "01C826-9D9E9E-3AA235"
 deletion_policy: "PREVENT"
 
 project_reuse:
   use_data_source: false
   attributes:
-    name: "nyl-existing-project"
+    name: "cx-existing-project"
     number: 123456789012
     services_enabled:
       - "compute.googleapis.com"
@@ -19,12 +19,12 @@ project_template: "templates/standard-project.yaml"
 
 automation:
   prefix: "aut"
-  project: "projects/nyl-automation-01"
+  project: "projects/cx-automation-01"
   bucket:
-    name: "nyl-automation-state-bucket"
+    name: "cx-automation-state-bucket"
     create: true
     description: "Automation state storage"
-    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    encryption_key: "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
     force_destroy: false
     labels:
       purpose: "automation"
@@ -40,7 +40,7 @@ automation:
       prefix: "dep"
       iam:
         roles/storage.objectAdmin:
-          - "group:gcp-devops@nyl.com"
+          - "group:gcp-devops@cx.com"
 
 asset_feeds:
   feed-pubsub:
@@ -50,7 +50,7 @@ asset_feeds:
       - "compute.googleapis.com/Instance"
     feed_output_config:
       pubsub_destination:
-        topic: "projects/nyl-sample-all/topics/feed-topic"
+        topic: "projects/cx-sample-all/topics/feed-topic"
     condition:
       expression: "resource.type == 'compute.googleapis.com/Instance'"
       title: "Monitor compute instances"
@@ -61,10 +61,10 @@ billing_budgets:
 
 buckets:
   data-bucket:
-    name: "nyl-sam-data-bucket"
+    name: "cx-sam-data-bucket"
     create: true
     description: "Primary project data storage"
-    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    encryption_key: "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
     force_destroy: false
     labels:
       environment: "production"
@@ -79,15 +79,15 @@ buckets:
 
 contacts:
   SECURITY:
-    - "security@nyl.com"
+    - "security@cx.com"
   TECHNICAL:
-    - "devops@nyl.com"
+    - "devops@cx.com"
 
 data_access_logs:
   allServices:
     ADMIN_READ:
       exempted_members:
-        - "group:gcp-security-admins@nyl.com"
+        - "group:gcp-security-admins@cx.com"
     DATA_READ:
       exempted_members: []
     DATA_WRITE:
@@ -97,7 +97,7 @@ datasets:
   sample_dataset:
     friendly_name: "Comprehensive Analytical Dataset"
     location: "US"
-    encryption_key: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    encryption_key: "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
     options:
       default_table_expiration_ms: 31536000000
       default_partition_expiration_ms: 2592000000
@@ -114,26 +114,26 @@ factories_config:
 
 iam:
   roles/viewer:
-    - "group:gcp-devops@nyl.com"
+    - "group:gcp-devops@cx.com"
 
 iam_bindings:
   custom_viewer_binding:
     role: "roles/browser"
     members:
-      - "group:gcp-security-admins@nyl.com"
+      - "group:gcp-security-admins@cx.com"
 
 iam_bindings_additive:
   additive_storage_viewer:
     role: "roles/storage.objectViewer"
-    member: "serviceAccount:app-sa@nyl-sam.iam.gserviceaccount.com"
+    member: "serviceAccount:app-sa@cx-sam.iam.gserviceaccount.com"
 
 iam_by_principals:
-  "group:gcp-security-admins@nyl.com":
+  "group:gcp-security-admins@cx.com":
     - "roles/cloudasset.viewer"
     - "roles/securityreview.viewer"
 
 iam_by_principals_conditional:
-  "group:gcp-devops@nyl.com":
+  "group:gcp-devops@cx.com":
     condition:
       expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
       title: "Temporary DevOps Access"
@@ -169,7 +169,7 @@ log_buckets:
       enable: true
 
 metric_scopes:
-  - "projects/nyl-monitoring-central-01"
+  - "projects/cx-monitoring-central-01"
 
 org_policies:
   iam.disableServiceAccountKeyCreation:
@@ -199,7 +199,7 @@ service_accounts:
 
 service_encryption_key_ids:
   storage.googleapis.com:
-    - "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+    - "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
 
 services:
   - "compute.googleapis.com"
@@ -211,7 +211,7 @@ shared_vpc_host_config:
   service_projects: []
 
 shared_vpc_service_config:
-  host_project: "projects/nyl-vpc-host-01"
+  host_project: "projects/cx-vpc-host-01"
   service_iam_grants:
     - "networkUser"
 
@@ -238,6 +238,6 @@ workload_identity_pools:
     providers:
       wip-github-provider:
         display_name: "GitHub Provider"
-        attribute_condition: "assertion.repository_owner == 'nyl'"
+        attribute_condition: "assertion.repository_owner == 'cx'"
         attribute_mapping:
           "google.subject": "assertion.sub"

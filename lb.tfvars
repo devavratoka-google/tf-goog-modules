@@ -409,9 +409,9 @@ forwarding_rules = {
 lb_traffic_extensions = {
   "dev-flex-gateway-modelarmor-extension" = {
     location              = "us-east4"
-    project               = "nyl-pr-ssvcs-security-01"
+    project               = "cx-pr-ssvcs-security-01"
     load_balancing_scheme = "INTERNAL_MANAGED"
-    forwarding_rules      = ["projects/nyl-pr-ssvcs-security-01/regions/us-east4/forwardingRules/dev-flex-gateway-forwarding-rule"]
+    forwarding_rules      = ["projects/cx-pr-ssvcs-security-01/regions/us-east4/forwardingRules/dev-flex-gateway-forwarding-rule"]
     extension_chains = [
       {
         name = "chain1"
@@ -427,7 +427,7 @@ lb_traffic_extensions = {
             timeout          = "10s"
             supported_events = ["REQUEST_HEADERS", "REQUEST_BODY", "REQUEST_TRAILERS", "RESPONSE_HEADERS", "RESPONSE_BODY", "RESPONSE_TRAILERS"]
             metadata = {
-              model_armor_settings = "[{\"model\":\"default\",\"model_response_template_id\":\"projects/nyl-pr-ssvcs-security-01/locations/us-east4/templates/prj-nyl-dev-pr-template-01\",\"user_prompt_template_id\":\"projects/nyl-pr-ssvcs-security-01/locations/us-east4/locations/us-east4/templates/prj-nyl-dev-pr-template-01\"}]"
+              model_armor_settings = "[{\"model\":\"default\",\"model_response_template_id\":\"projects/cx-pr-ssvcs-security-01/locations/us-east4/templates/prj-cx-dev-pr-template-01\",\"user_prompt_template_id\":\"projects/cx-pr-ssvcs-security-01/locations/us-east4/locations/us-east4/templates/prj-cx-dev-pr-template-01\"}]"
             }
           }
         ]

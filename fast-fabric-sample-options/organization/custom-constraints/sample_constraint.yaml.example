@@ -4,7 +4,7 @@ custom.disableUnapprovedKmsKeys:
   display_name: "Disable unapproved KMS keys"
   description: "Ensures only authorized enterprise KMS keys are used across services."
   action_type: "DENY"
-  condition: "resource.kmsKeyName != 'projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01'"
+  condition: "resource.kmsKeyName != 'projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01'"
   method_types:
     - "CREATE"
     - "UPDATE"

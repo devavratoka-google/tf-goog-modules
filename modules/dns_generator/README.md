@@ -1,7 +1,7 @@
 # DNS Zone tfvars Generator
 
 This helper script automates creating a Terraform `.tfvars` DNS zone entry from a standard GCP project name matching the naming convention:
-`nyl-<env>-<function>-<sdlc>-<suffix>`
+`cx-<env>-<function>-<sdlc>-<suffix>`
 
 ## Usage
 
@@ -14,7 +14,7 @@ python3 modules/dns_generator/generate.py <gcp-project-name-1> [gcp-project-name
 ### Example
 
 ```bash
-python3 modules/dns_generator/generate.py nyl-pr-abcd-dev-01 nyl-pr-agentgw-dev-01
+python3 modules/dns_generator/generate.py cx-pr-abcd-dev-01 cx-pr-agentgw-dev-01
 ```
 
 **Output:**
@@ -25,7 +25,7 @@ dns_zones = {
     description = "Private zone for abcd.dev.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
-    project     = "nyl-pr-abcd-dev-01"
+    project     = "cx-pr-abcd-dev-01"
     record_sets = {}
   },
   "peering-abcd-dev-gcpinternal-newyorklife-com" : {
@@ -33,9 +33,9 @@ dns_zones = {
     description = "DNS Peering zone for abcd.dev.gcpinternal.newyorklife.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
-    project     = "nyl-pr-ssvcs-transit-nw-01"
+    project     = "cx-pr-ssvcs-transit-nw-01"
     peering_config = {
-      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-dev-01/global/networks/vpc-name"
+      target_network = "https://www.googleapis.com/compute/v1/projects/cx-pr-infra-nw-dev-01/global/networks/vpc-name"
     }
   },
   "agentgw" : {
@@ -43,7 +43,7 @@ dns_zones = {
     description = "Private zone for agentgw.dev.gcpinternal.newyorklife.com"
     visibility  = "private"
     networks    = ["vpc-name"]
-    project     = "nyl-pr-agentgw-dev-01"
+    project     = "cx-pr-agentgw-dev-01"
     record_sets = {}
   },
   "peering-agentgw-dev-gcpinternal-newyorklife-com" : {
@@ -51,9 +51,9 @@ dns_zones = {
     description = "DNS Peering zone for agentgw.dev.gcpinternal.newyorklife.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
-    project     = "nyl-pr-ssvcs-transit-nw-01"
+    project     = "cx-pr-ssvcs-transit-nw-01"
     peering_config = {
-      target_network = "https://www.googleapis.com/compute/v1/projects/nyl-pr-infra-nw-dev-01/global/networks/vpc-name"
+      target_network = "https://www.googleapis.com/compute/v1/projects/cx-pr-infra-nw-dev-01/global/networks/vpc-name"
     }
   },
 }
@@ -61,6 +61,6 @@ dns_zones = {
 
 ## Deployment Notes
 
-- **Private Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file (e.g., `dev.tfvars`, `prd.tfvars`) inside the **`nyl-gcp-prod-network-iac`** repository.
-- **Peering Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file inside the **`nyl-gcp-transit-network-iac`** repository.
+- **Private Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file (e.g., `dev.tfvars`, `prd.tfvars`) inside the **`cx-gcp-prod-network-iac`** repository.
+- **Peering Zone tfvars**: Place these entries in the appropriate `<sdlc>.tfvars` file inside the **`cx-gcp-transit-network-iac`** repository.
 

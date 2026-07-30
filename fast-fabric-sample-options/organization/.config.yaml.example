@@ -4,9 +4,9 @@ id: 123456789012
 
 contacts:
   SECURITY:
-    - "security@nyl.com"
+    - "security@cx.com"
   BILLING:
-    - "billing@nyl.com"
+    - "billing@cx.com"
 
 asset_feeds:
   org-asset-feed:
@@ -16,7 +16,7 @@ asset_feeds:
       - "compute.googleapis.com/Instance"
     feed_output_config:
       pubsub_destination:
-        topic: "projects/nyl-sample-all/topics/org-feed-topic"
+        topic: "projects/cx-sample-all/topics/org-feed-topic"
     condition:
       expression: "resource.type == 'compute.googleapis.com/Instance'"
       title: "Organization level compute feed"
@@ -25,7 +25,7 @@ data_access_logs:
   allServices:
     ADMIN_READ:
       exempted_members:
-        - "group:gcp-security-admins@nyl.com"
+        - "group:gcp-security-admins@cx.com"
     DATA_READ:
       exempted_members: []
     DATA_WRITE:
@@ -33,13 +33,13 @@ data_access_logs:
 
 iam:
   roles/billing.viewer:
-    - "group:gcp-billing-admins@nyl.com"
+    - "group:gcp-billing-admins@cx.com"
 
 iam_bindings:
   org_policy_admin_binding:
     role: "roles/orgpolicy.policyAdmin"
     members:
-      - "group:gcp-organization-admins@nyl.com"
+      - "group:gcp-organization-admins@cx.com"
     condition:
       expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
       title: "Temporary Org Policy Admin"
@@ -47,15 +47,15 @@ iam_bindings:
 iam_bindings_additive:
   additive_org_viewer:
     role: "roles/resourcemanager.organizationViewer"
-    member: "serviceAccount:org-scanner@nyl.iam.gserviceaccount.com"
+    member: "serviceAccount:org-scanner@cx.iam.gserviceaccount.com"
 
 iam_by_principals:
-  "group:gcp-organization-admins@nyl.com":
+  "group:gcp-organization-admins@cx.com":
     - "roles/resourcemanager.organizationAdmin"
     - "roles/resourcemanager.folderAdmin"
 
 iam_by_principals_conditional:
-  "group:gcp-devops@nyl.com":
+  "group:gcp-devops@cx.com":
     condition:
       expression: "request.time < timestamp('2027-01-01T00:00:00Z')"
       title: "Temporary DevOps Admin"
@@ -63,16 +63,16 @@ iam_by_principals_conditional:
       - "roles/resourcemanager.projectCreator"
 
 iam_by_principals_additive:
-  "serviceAccount:audit-sa@nyl.iam.gserviceaccount.com":
+  "serviceAccount:audit-sa@cx.iam.gserviceaccount.com":
     - "roles/logging.viewer"
 
 logging:
-  kms_key_name: "projects/nyl-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
+  kms_key_name: "projects/cx-kms-01/locations/us-east4/keyRings/kr-01/cryptoKeys/key-01"
   storage_location: "us-east4"
   sinks:
     org-central-audit-sink:
       description: "Organization-wide centralized logging export"
-      destination: "bigquery.googleapis.com/projects/nyl-sam/datasets/org_audit_logs"
+      destination: "bigquery.googleapis.com/projects/cx-sam/datasets/org_audit_logs"
       filter: "severity >= NOTICE"
       type: "bigquery"
 
@@ -86,14 +86,14 @@ pam_entitlements:
   org-pam-entitlement:
     max_request_duration: "3600s"
     eligible_users:
-      - "group:gcp-organization-admins@nyl.com"
+      - "group:gcp-organization-admins@cx.com"
     privileged_access:
       - role: "roles/resourcemanager.organizationAdmin"
     manual_approvals:
       require_approver_justification: true
       steps:
         - approvers:
-            - "group:gcp-security-admins@nyl.com"
+            - "group:gcp-security-admins@cx.com"
           approvals_needed: 1
 
 tags:
@@ -121,5 +121,5 @@ workforce_identity_pools:
         attribute_mapping_template: "okta"
         disabled: false
         identity_provider:
-          issuer_uri: "https://nyl.okta.com/oauth2/default"
+          issuer_uri: "https://cx.okta.com/oauth2/default"
           client_id: "okta-client-id"
