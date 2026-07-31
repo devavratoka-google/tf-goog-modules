@@ -62,6 +62,11 @@ flowchart TD
         SAccount[modules/iam-service-account]
     end
 
+    subgraph Certificates PKI [7. Certificates & PKI]
+        CertIssuance[modules/certmgr_issuance_config]
+        Cert[modules/certmgr_certificate]
+    end
+
     %% 1. Base Networking Dependencies
     VPC -->|depends_on / network_self_link| Subnets
     VPC -->|depends_on / network_self_link| StaticRoutes
@@ -107,6 +112,9 @@ flowchart TD
 
     %% 6. Identity Dependencies
     CRole -->|local.iam_custom_roles_ctx| SAccount
+
+    %% 7. Certificates & PKI Dependencies
+    CertIssuance -->|data lookup by project and short_region| Cert
 ```
 
 ---
@@ -155,3 +163,9 @@ Below is an exhaustive list of module dependency mappings defined across root or
 | **[iam-service-account](file:///Users/devavratoka/Documents/tf-goog-modules/modules/iam-service-account)** | **[iam-custom-role](file:///Users/devavratoka/Documents/tf-goog-modules/modules/iam-custom-role)** | `local.iam_custom_roles_ctx` (for role names map) | Custom roles are auto-injected into service accounts context so they can be referenced directly in IAM bindings. |
 | **[subnet_iam_binding](file:///Users/devavratoka/Documents/tf-goog-modules/modules/subnet_iam_binding)** | **[subnetworks](file:///Users/devavratoka/Documents/tf-goog-modules/modules/subnetworks)** | `module.subnetworks[subnetwork_name].subnets_name` | Subnet IAM bindings target an active subnetwork name. |
 | **[ngfw_hfw](file:///Users/devavratoka/Documents/tf-goog-modules/modules/ngfw_hfw)** | **[secure_tags](file:///Users/devavratoka/Documents/tf-goog-modules/modules/secure_tags)** | (Implicit `depends_on` block) | Hierarchical firewalls target secure tags to secure resource boundaries. |
+
+### Layer 6: Certificates & PKI (Orchestrated in `main.tf`)
+| Module Name | Depends Directly On | Bound Output Attribute | Description |
+| :--- | :--- | :--- | :--- |
+| **[certmgr_certificate](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_certificate)** | **[certmgr_issuance_config](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_issuance_config)** | `data.google_certificate_manager_certificate_issuance_config.default.id` | Regional managed certificates look up their issuance config (`<project-id>-issuance-config-<short_region>`) via data block. |
+

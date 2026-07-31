@@ -25,11 +25,12 @@ graph TD
 
 ## 2. Module Catalog
 
-The repository contains 38 submodules inside the [modules/](file:///Users/devavratoka/Documents/tf-goog-modules/modules) directory:
+The repository contains 40 submodules inside the [modules/](file:///Users/devavratoka/Documents/tf-goog-modules/modules) directory:
 
 * **Networking & Routing**: `vpc`, `subnetworks`, `cloud_router`, `cloud_nat`, `vpc_peering`, `static_routes`, `policy_based_routes`, `vlan-attachments`.
 * **Load Balancing (LB)**: Located under `modules/lb/` (`region_health_check`, `region_backend_service`, `umig`, `neg`, `http_routing`, `tcp_routing`, `forwarding_rule`).
 * **Security & NGFW**: `ngfw_endpoint`, `ngfw_hfw`, `ngfw_nwfw`, `vpc_firewall`, `secure_tags`.
+* **Certificates & PKI**: `certmgr_issuance_config`, `certmgr_certificate`.
 * **Databases & Storage**: `cloud-sql-mysql`, `cloud-sql-postgresql`, `cloud-sql-mssql`, `firestore`, `bigquery`, `gcs`.
 * **Application & Compute**: `cloud-run-v2`, `ilbanh` (Internal Load Balancing Active Network Appliance Clusters).
 * **Identity & Access Management (IAM)**: `iam-custom-role`, `iam-service-account`, `subnet_iam_binding`.
