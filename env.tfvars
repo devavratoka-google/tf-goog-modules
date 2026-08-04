@@ -1175,3 +1175,17 @@ iam_service_accounts = {
 #     }
 #   }
 # }
+#
+# certmgr_certificates = {
+#   "my-app-regional-cert" = {
+#     project     = "infra-proj-id"
+#     location    = "us-east4"
+#     domains     = ["api.example.com"]
+#     description = "Regional API Certificate in us-east4"
+#     labels      = { env = "dev", service = "api" }
+#
+#     # Optional overrides:
+#     # short_region         = "use4"
+#     # issuance_config_name = "infra-proj-id-issuance-config-use4"
+#   }
+# }

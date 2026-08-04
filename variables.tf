@@ -1129,3 +1129,20 @@ variable "pubsub_topics" {
   default = {}
 }
 
+variable "certmgr_certificates" {
+  description = "Map of Certificate Manager regional certificate configurations to deploy."
+  type = map(object({
+    name                 = optional(string, null)
+    project              = optional(string, null)
+    location             = string
+    domains              = list(string)
+    description          = optional(string, null)
+    labels               = optional(map(string), {})
+    scope                = optional(string, null)
+    dns_authorizations   = optional(list(string), null)
+    short_region         = optional(string, null)
+    issuance_config_name = optional(string, null)
+  }))
+  default = {}
+}
+

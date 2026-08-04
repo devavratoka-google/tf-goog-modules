@@ -25,12 +25,7 @@ locals {
 
   # Follow customer naming convention: <project-id>-issuance-config-<region>
   issuance_config_name = var.issuance_config_name != null ? var.issuance_config_name : "${var.project}-issuance-config-${local.region_short_name}"
-}
-
-data "google_certificate_manager_certificate_issuance_config" "default" {
-  name     = local.issuance_config_name
-  location = var.location
-  project  = var.project
+  issuance_config_id   = "projects/${var.project}/locations/${var.location}/certificateIssuanceConfigs/${local.issuance_config_name}"
 }
 
 resource "google_certificate_manager_certificate" "this" {
@@ -43,7 +38,7 @@ resource "google_certificate_manager_certificate" "this" {
 
   managed {
     domains            = var.domains
-    issuance_config    = data.google_certificate_manager_certificate_issuance_config.default.id
+    issuance_config    = local.issuance_config_id
     dns_authorizations = var.dns_authorizations
   }
 }

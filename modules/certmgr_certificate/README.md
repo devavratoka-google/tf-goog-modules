@@ -61,7 +61,6 @@ module "regional_cert" {
 | Name | Type |
 |------|------|
 | [google_certificate_manager_certificate.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/certificate_manager_certificate) | resource |
-| [google_certificate_manager_certificate_issuance_config.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/certificate_manager_certificate_issuance_config) | data source |
 
 ## Inputs
 
@@ -86,6 +85,6 @@ module "regional_cert" {
 | <a name="output_name"></a> [name](#output\_name) | The name of the Certificate Manager certificate. |
 | <a name="output_location"></a> [location](#output\_location) | The location of the Certificate Manager certificate. |
 | <a name="output_project"></a> [project](#output\_project) | The project ID of the Certificate Manager certificate. |
-| <a name="output_issuance_config_id"></a> [issuance\_config\_id](#output\_issuance\_config\_id) | The ID of the Certificate Manager Issuance Config found via data block. |
-| <a name="output_issuance_config_name"></a> [issuance\_config\_name](#output\_issuance\_config\_name) | The name of the Certificate Manager Issuance Config found via data block. |
+| <a name="output_issuance_config_id"></a> [issuance\_config\_id](#output\_issuance\_config\_id) | The ID of the Certificate Manager Issuance Config resolved by convention. |
+| <a name="output_issuance_config_name"></a> [issuance\_config\_name](#output\_issuance\_config\_name) | The name of the Certificate Manager Issuance Config resolved by convention. |
 <!-- END_TF_DOCS -->

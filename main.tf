@@ -939,3 +939,19 @@ module "pubsub_topics" {
   tag_bindings               = try(each.value.tag_bindings, {})
 }
 
+module "certmgr_certificates" {
+  source   = "./modules/certmgr_certificate"
+  for_each = var.certmgr_certificates
+
+  name                 = coalesce(each.value.name, each.key)
+  project              = coalesce(each.value.project, var.env_project_id)
+  location             = each.value.location
+  domains              = each.value.domains
+  description          = each.value.description
+  labels               = each.value.labels
+  scope                = each.value.scope
+  dns_authorizations   = each.value.dns_authorizations
+  short_region         = each.value.short_region
+  issuance_config_name = each.value.issuance_config_name
+}
+

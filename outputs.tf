@@ -71,3 +71,8 @@ output "service_directory_service_ids" {
   description = "A map of created Service Directory service resource IDs per namespace key."
   value       = { for k, v in module.service_directories : k => v.service_ids }
 }
+
+output "certmgr_certificate_ids" {
+  description = "IDs of the created Certificate Manager regional certificates."
+  value       = { for k, v in module.certmgr_certificates : k => v.id }
+}

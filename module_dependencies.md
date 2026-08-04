@@ -167,5 +167,5 @@ Below is an exhaustive list of module dependency mappings defined across root or
 ### Layer 6: Certificates & PKI (Orchestrated in `main.tf`)
 | Module Name | Depends Directly On | Bound Output Attribute | Description |
 | :--- | :--- | :--- | :--- |
-| **[certmgr_certificate](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_certificate)** | **[certmgr_issuance_config](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_issuance_config)** | `data.google_certificate_manager_certificate_issuance_config.default.id` | Regional managed certificates look up their issuance config (`<project-id>-issuance-config-<short_region>`) via data block. |
+| **[certmgr_certificate](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_certificate)** | **[certmgr_issuance_config](file:///Users/devavratoka/Documents/tf-goog-modules/modules/certmgr_issuance_config)** | `local.issuance_config_id` | Regional managed certificates look up their issuance config (`<project-id>-issuance-config-<short_region>`) via naming convention. |
 
