@@ -13,7 +13,8 @@ description: All GKE clusters must be configured to disable the public endpoint 
 
 ### Enforce this constraint ###
 
-name: projects/MY_FOO_BAR_PROJECT/policies/custom.requireGkePrivateEndpoint
+name: organizations/MY_ORGANIZATION_ID/policies/custom.requireGkePrivateEndpoint
 spec:
   rules:
   - enforce: true
+
