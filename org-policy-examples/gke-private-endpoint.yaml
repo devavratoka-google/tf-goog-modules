@@ -1,0 +1,19 @@
+### Create yaml file custom_constraint_gke_private_endpoint.yaml ###
+
+name: organizations/MY_ORGANIZATION_ID/customConstraints/custom.requireGkePrivateEndpoint
+resourceTypes:
+- container.googleapis.com/Cluster
+methodTypes:
+- CREATE
+- UPDATE
+condition: "resource.controlPlaneEndpointsConfig.ipEndpointsConfig.enablePublicEndpoint == false"
+actionType: ALLOW
+displayName: Require GKE Private Control Plane Endpoint
+description: All GKE clusters must be configured to disable the public endpoint for the control plane, ensuring access is private.
+
+### Enforce this constraint ###
+
+name: projects/MY_FOO_BAR_PROJECT/policies/custom.requireGkePrivateEndpoint
+spec:
+  rules:
+  - enforce: true
