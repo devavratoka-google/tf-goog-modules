@@ -234,8 +234,8 @@ ncc_spokes = {
 
 dns_zones = {
   "cxapp-data" : {
-    dns_name    = "cxapp-data.dev.gcpinternal.newyorklife.com."
-    description = "Private zone for cxapp-data.dev.gcpinternal.newyorklife.com"
+    dns_name    = "cxapp-data.dev.gcpinternal.cxname.com."
+    description = "Private zone for cxapp-data.dev.gcpinternal.cxname.com"
     visibility  = "private"
     networks    = ["vpc-name"]
     project     = "cx-pr-cxapp-data-dev-01"

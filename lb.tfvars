@@ -416,7 +416,7 @@ lb_traffic_extensions = {
       {
         name = "chain1"
         match_condition = {
-          cel_expression = "request.host == \"dev.aigw.newyorklife.com\""
+          cel_expression = "request.host == \"dev.aigw.cxname.com\""
         }
         extensions = [
           {

@@ -21,16 +21,16 @@ python3 modules/dns_generator/generate.py cx-pr-abcd-dev-01 cx-pr-agentgw-dev-01
 ```hcl
 dns_zones = {
   "abcd" : {
-    dns_name    = "abcd.dev.gcpinternal.newyorklife.com."
-    description = "Private zone for abcd.dev.gcpinternal.newyorklife.com"
+    dns_name    = "abcd.dev.gcpinternal.cxname.com."
+    description = "Private zone for abcd.dev.gcpinternal.cxname.com"
     visibility  = "private"
     networks    = ["vpc-name"]
     project     = "cx-pr-abcd-dev-01"
     record_sets = {}
   },
-  "peering-abcd-dev-gcpinternal-newyorklife-com" : {
-    dns_name    = "abcd.dev.gcpinternal.newyorklife.com."
-    description = "DNS Peering zone for abcd.dev.gcpinternal.newyorklife.com."
+  "peering-abcd-dev-gcpinternal-cxname-com" : {
+    dns_name    = "abcd.dev.gcpinternal.cxname.com."
+    description = "DNS Peering zone for abcd.dev.gcpinternal.cxname.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
     project     = "cx-pr-ssvcs-transit-nw-01"
@@ -39,16 +39,16 @@ dns_zones = {
     }
   },
   "agentgw" : {
-    dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
-    description = "Private zone for agentgw.dev.gcpinternal.newyorklife.com"
+    dns_name    = "agentgw.dev.gcpinternal.cxname.com."
+    description = "Private zone for agentgw.dev.gcpinternal.cxname.com"
     visibility  = "private"
     networks    = ["vpc-name"]
     project     = "cx-pr-agentgw-dev-01"
     record_sets = {}
   },
-  "peering-agentgw-dev-gcpinternal-newyorklife-com" : {
-    dns_name    = "agentgw.dev.gcpinternal.newyorklife.com."
-    description = "DNS Peering zone for agentgw.dev.gcpinternal.newyorklife.com."
+  "peering-agentgw-dev-gcpinternal-cxname-com" : {
+    dns_name    = "agentgw.dev.gcpinternal.cxname.com."
+    description = "DNS Peering zone for agentgw.dev.gcpinternal.cxname.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
     project     = "cx-pr-ssvcs-transit-nw-01"

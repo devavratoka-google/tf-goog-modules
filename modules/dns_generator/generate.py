@@ -26,8 +26,8 @@ def generate_tfvars(project_names):
         
         # 1. Private DNS managed zone
         private_zone = f'''  "{function_name}" : {{
-    dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
-    description = "Private zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com"
+    dns_name    = "{function_name}.{sdlc}.gcpinternal.cxname.com."
+    description = "Private zone for {function_name}.{sdlc}.gcpinternal.cxname.com"
     visibility  = "private"
     networks    = ["vpc-name"]
     project     = "{project_name}"
@@ -36,9 +36,9 @@ def generate_tfvars(project_names):
         zones_content.append(private_zone)
 
         # 2. Peering DNS managed zone in cx-pr-ssvcs-transit-nw-01
-        peering_zone = f'''  "peering-{function_name}-{sdlc}-gcpinternal-newyorklife-com" : {{
-    dns_name    = "{function_name}.{sdlc}.gcpinternal.newyorklife.com."
-    description = "DNS Peering zone for {function_name}.{sdlc}.gcpinternal.newyorklife.com."
+        peering_zone = f'''  "peering-{function_name}-{sdlc}-gcpinternal-cxname-com" : {{
+    dns_name    = "{function_name}.{sdlc}.gcpinternal.cxname.com."
+    description = "DNS Peering zone for {function_name}.{sdlc}.gcpinternal.cxname.com."
     visibility  = "private"
     networks    = ["vpc-g-ssvcs-transit"]
     project     = "cx-pr-ssvcs-transit-nw-01"
